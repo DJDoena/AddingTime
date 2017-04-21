@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{46863891-CA1D-4073-B9D5-0591B2EEA7AD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DoenaSoft.DVDProfiler.AddingTime</RootNamespace>
+    <AssemblyName>AddingTime</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <ApplicationIcon>DJDSOFT.ICO</ApplicationIcon>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\AddingTime\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>DoenaSoft.DVDProfiler.AddingTime.App</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FAKE|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\FAKE\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;FAKE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="Xceed.Wpf.Toolkit, Version=2.9.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.9\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AddingTime.AssemblyInfo.cs">
+      <Link>Properties\AddingTime.AssemblyInfo.cs</Link>
+    </Compile>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="DiscTime\Implementations\DiscTimeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Main\Implementations\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DiscTime\IDriveViewModel.cs" />
+    <Compile Include="DiscTime\Implementations\DiscTimeDataModel.cs" />
+    <Compile Include="DiscTime\Implementations\DiscTimeViewModel.cs" />
+    <Compile Include="DiscTime\Implementations\DiscTimeWindow.xaml.cs">
+      <DependentUpon>DiscTimeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DiscTime\Implementations\DriveViewModel.cs" />
+    <Compile Include="DiscTime\Implementations\RunningTimeTreeViewItemSelector.cs" />
+    <Compile Include="DiscTime\Implementations\TreeNode.cs" />
+    <Compile Include="DiscTime\CloseEventArgs.cs" />
+    <Compile Include="DiscTime\IDiscTimeDataModel.cs" />
+    <Compile Include="DiscTime\IDiscTimeViewModel.cs" />
+    <Compile Include="DiscTime\Implementations\DiscTimeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DiscTime\Implementations\DiscTimeForm.Designer.cs">
+      <DependentUpon>DiscTimeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DiscTime\ITreeNode.cs" />
+    <Compile Include="Implementations\FormFactory.cs" />
+    <Compile Include="Implementations\WindowFactory.cs" />
+    <Compile Include="IWindowFactory.cs" />
+    <Compile Include="Main\Implementations\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Main\IMainOutputModel.cs" />
+    <Compile Include="Main\MainHelper.cs" />
+    <Compile Include="Main\Implementations\MainOutputModel.cs" />
+    <Compile Include="Main\Implementations\MainDataModel.cs" />
+    <Compile Include="Main\IMainDataModel.cs" />
+    <Compile Include="Main\IMainViewModel.cs" />
+    <Compile Include="Main\Implementations\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\Implementations\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\Implementations\MainViewModel.cs" />
+    <Compile Include="Program.cs" />
+    <EmbeddedResource Include="DiscTime\Implementations\DiscTimeForm.resx">
+      <DependentUpon>DiscTimeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\Implementations\MainForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DJDSOFT.ICO">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="Readme\readme.html">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AbstractionLayer\AbstractionLayer\AbstractionLayer.csproj">
+      <Project>{491b235a-1d56-4732-b491-338a3dd2246d}</Project>
+      <Name>AbstractionLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DVDProfilerHelper\DVDProfilerHelper\DVDProfilerHelper.csproj">
+      <Project>{461dacca-8ebf-4c03-ad1a-c438e4eb3b36}</Project>
+      <Name>DVDProfilerHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ToolBox\ToolBox\ToolBox.csproj">
+      <Project>{4782e10e-b5cc-4c2d-9d7f-d132cb5a50a0}</Project>
+      <Name>ToolBox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AddingTimeLib\AddingTimeLib.csproj">
+      <Project>{2ff1451a-d1c9-45b8-9f61-694d02c13a22}</Project>
+      <Name>AddingTimeLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"%25ProgramFiles%25\Inno Setup 5\iscc.exe"  ..\..\..\..\AddingTimeSetup\Setup.iss</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

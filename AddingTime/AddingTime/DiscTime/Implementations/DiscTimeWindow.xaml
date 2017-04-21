@@ -1,0 +1,115 @@
+﻿<Window x:Class="DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations.DiscTimeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="Read from Drive" Height="450" Width="450" ResizeMode="NoResize" Icon="pack://siteoforigin:,,,/DJDSOFT.ICO"
+        Loaded="OnLoaded">
+    <Window.Resources>
+        <local:RunningTimeTreeViewItemSelector x:Key="RunningTimeTreeViewItemSelector">
+            <local:RunningTimeTreeViewItemSelector.RunningTime>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding IsChecked}"
+                                  Margin="5,5,5,5" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Text}"
+                                   Margin="5,5,5,5" VerticalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </local:RunningTimeTreeViewItemSelector.RunningTime>
+            <local:RunningTimeTreeViewItemSelector.Header>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Nodes}">
+                    <TextBlock Text="{Binding Text}"
+                               Margin="5,5,5,5" VerticalAlignment="Center" />
+                </HierarchicalDataTemplate>
+            </local:RunningTimeTreeViewItemSelector.Header>
+        </local:RunningTimeTreeViewItemSelector>
+    </Window.Resources>
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0"
+                       Text="Drive:"
+                       Margin="5,5,5,5" VerticalAlignment="Center" />
+
+            <ComboBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="4"
+                      ItemsSource="{Binding Drives}" SelectedItem="{Binding SelectedDrive}" IsSynchronizedWithCurrentItem="True" DisplayMemberPath="Label"
+                      Margin="5,5,5,5" VerticalAlignment="Center" />
+
+            <Button Grid.Column="5" Grid.Row="0" 
+                    Command="{Binding SetDramaLengthCommand}" Content="Drama"
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+
+            <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
+                       Text="Minimum Track Length in Minutes:"
+                       Margin="5,5,5,5" VerticalAlignment="Center" />
+
+            <xctk:IntegerUpDown Grid.Column="3" Grid.Row="1"
+                                Minimum="1" Maximum="60" Value="{Binding MinimumLength}"
+                                Margin="5,5,5,5" VerticalAlignment="Center" />
+
+            <Button Grid.Column="4" Grid.Row="1" 
+                    Command="{Binding SetSitcomLengthCommand}" Content="Sitcom"
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+            <Button Grid.Column="5" Grid.Row="1" 
+                    Command="{Binding SetMovieLengthCommand}" Content="Movie"
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+
+            <TreeView Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="5" Grid.RowSpan="7"
+                      ItemsSource="{Binding DiscTree}" ItemTemplateSelector="{Binding Source={StaticResource RunningTimeTreeViewItemSelector}}"
+                      Margin="5,5,5,5">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+
+
+            <Button Grid.Column="5" Grid.Row="2" 
+                    Command="{Binding ScanCommand}" Content="Scan"
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+
+            <Button Grid.Column="5" Grid.Row="8" 
+                    Command="{Binding CheckAllNodesCommand}" Content="Select All"
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+
+            <Button Grid.Column="4" Grid.Row="9" 
+                    Command="{Binding AcceptCommand}"  Content="OK"
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+            <Button Grid.Column="5" Grid.Row="9" 
+                    Command="{Binding CancelCommand}"  Content="Cancel"
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        </Grid>
+    </Grid>
+</Window>

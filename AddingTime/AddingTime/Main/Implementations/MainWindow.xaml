@@ -1,0 +1,198 @@
+﻿<Window x:Class="DoenaSoft.DVDProfiler.AddingTime.Main.Implementations.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DoenaSoft.DVDProfiler.AddingTime.Main.Implementations"
+        mc:Ignorable="d"
+        Title="AddingTime" Height="500" Width="825" ResizeMode="NoResize" Icon="pack://siteoforigin:,,,/DJDSOFT.ICO"
+        FocusManager.FocusedElement="{Binding ElementName=InputTextBox}">
+    <Grid>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="Read from _Drive" Command="{Binding OpenReadFromDriveWindowCommand}" />
+                <MenuItem Header="_Help">
+                    <MenuItem Header="_Read Me" Command="{Binding OpenHelpWindowCommand}" />
+                    <MenuItem Header="_Check for Update" Command="{Binding CheckForNewVersionCommand}" />
+                    <MenuItem Header="_About" Command="{Binding OpenAboutWindowCommand}" />
+                </MenuItem>
+            </Menu>
+
+            <Grid DockPanel.Dock="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+                     Text="Episodes"
+                     Margin="5,5,5,5" TextAlignment="Center" VerticalAlignment="Center">
+                </TextBlock>
+                
+                <TextBox Grid.Column="0" Grid.Row="1" Name="InputTextBox"
+                     Text="{Binding Path=Input, UpdateSourceTrigger=PropertyChanged}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Enter the time as hours:minutes:seconds or minutes:seconds - but you can use &quot;:&quot;, &quot;.&quot; or &quot;,&quot; as seperator">
+                    <TextBox.InputBindings>
+                        <KeyBinding Command="{Binding AddEpisodeCommand}" Key="Return" />
+                    </TextBox.InputBindings>
+                </TextBox>
+
+                <ListView Grid.Column="0" Grid.Row="2" Grid.RowSpan="4" 
+                      ItemsSource="{Binding Path=Episodes, Mode=OneWay}" SelectedIndex="{Binding SelectedEpisode}"
+                      Margin="5,5,5,5" ToolTip="Shows the added times" />
+
+                <TextBox Grid.Column="0" Grid.Row="6" 
+                     Text="{Binding Path=EpisodesFullTime, Mode=OneWay}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Shows the summed up times as hours:minutes:seconds" />
+
+                <TextBox Grid.Column="0" Grid.Row="7" 
+                     Text="{Binding Path=EpisodesMiddleTime, Mode=OneWay}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Shows the summed up times as minutes with 2 decimals" />
+
+                <TextBox Grid.Column="0" Grid.Row="8" 
+                     Text="{Binding Path=EpisodesShortTime, Mode=OneWay}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Shows the summed up times as minutes with 0 decimals" />
+
+
+                <Button Grid.Column="1" Grid.Row="1" 
+                    Command="{Binding AddEpisodeCommand}" Content="Add" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Adds the time entered in the TextBox into the episodes list" />
+
+                <Button Grid.Column="1" Grid.Row="2" 
+                    Command="{Binding AddFromClipboardCommand}" Content="Add from Clipboard" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Adds the time from the clipboard into the episodes list" />
+
+                <Button Grid.Column="1" Grid.Row="4" 
+                    Command="{Binding RemoveEpisodeCommand}" Content="Remove" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Removes the selected entry from the episodes list" />
+
+                <Button Grid.Column="1" Grid.Row="5" 
+                    Command="{Binding ClearEpisodesCommand}" Content="Clear" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Clears all contents from the episodes list" />
+
+                <Button Grid.Column="1" Grid.Row="6" 
+                    Command="{Binding MoveEpisodesCommand}" Content="Move to Discs List" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Moves the summed up time to the discs list" />
+
+                <Button Grid.Column="1" Grid.Row="7" 
+                    Command="{Binding CopyEpisodesCommand}" Content="Copy" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times as minutes with 0 decimals into the clipboard" />
+
+                <Button Grid.Column="1" Grid.Row="8" 
+                    Command="{Binding CopyAllEpisodesCommand}" Content="Copy All" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times as hours:minutes:seconds and as minutes with 0 decimals into the clipboard" />
+
+
+                <TextBlock Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2"
+                     Text="Discs"
+                     Margin="5,5,5,5" TextAlignment="Center" VerticalAlignment="Center">
+                </TextBlock>
+                
+                <ListView Grid.Column="2" Grid.Row="2" Grid.RowSpan="4" 
+                      ItemsSource="{Binding Path=Discs, Mode=OneWay}" SelectedIndex="{Binding SelectedDisc}"
+                      Margin="5,5,5,5" ToolTip="Shows the added times" />
+
+                <TextBox Grid.Column="2" Grid.Row="6" 
+                     Text="{Binding Path=DiscsFullTime, Mode=OneWay}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Shows the summed up times as hours:minutes:seconds" />
+
+                <TextBox Grid.Column="2" Grid.Row="7" 
+                     Text="{Binding Path=DiscsMiddleTime, Mode=OneWay}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Shows the summed up times as minutes with 2 decimals" />
+
+                <TextBox Grid.Column="2" Grid.Row="8" 
+                     Text="{Binding Path=DiscsShortTime, Mode=OneWay}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Shows the summed up times as minutes with 0 decimals" />
+
+
+                <Button Grid.Column="3" Grid.Row="4" 
+                    Command="{Binding RemoveDiscCommand}" Content="Remove" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Removes the selected entry from the discs list" />
+
+                <Button Grid.Column="3" Grid.Row="5" 
+                    Command="{Binding ClearDiscsCommand}" Content="Clear" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Clears all contents from the discs list" />
+
+                <Button Grid.Column="3" Grid.Row="6" 
+                    Command="{Binding MoveDiscsCommand}" Content="Move to Season List" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Moves the summed up time to the discs list" />
+                
+                <Button Grid.Column="3" Grid.Row="7" 
+                    Command="{Binding CopyDiscsCommand}" Content="Copy" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times as minutes with 0 decimals into the clipboard" />
+
+                <Button Grid.Column="3" Grid.Row="8" 
+                    Command="{Binding CopyAllDiscsCommand}" Content="Copy All" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times as hours:minutes:seconds and as minutes with 0 decimals into the clipboard" />
+
+                <Button Grid.Column="3" Grid.Row="9" 
+                    Command="{Binding CopyFullDiscsCommand}" Content="Copy Full"
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times fancily formatted into the clipboard" />
+
+
+                <TextBlock Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2"
+                     Text="Seasons"
+                     Margin="5,5,5,5" TextAlignment="Center" VerticalAlignment="Center">
+                </TextBlock>
+
+                <ListView Grid.Column="4" Grid.Row="2" Grid.RowSpan="4" 
+                      ItemsSource="{Binding Path=Seasons, Mode=OneWay}" SelectedIndex="{Binding SelectedSeason}"
+                      Margin="5,5,5,5" ToolTip="Shows the added times" />
+
+                <TextBox Grid.Column="4" Grid.Row="6" 
+                     Text="{Binding Path=SeasonsFullTime, Mode=OneWay}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Shows the summed up times as hours:minutes:seconds" />
+
+                <TextBox Grid.Column="4" Grid.Row="7" 
+                     Text="{Binding Path=SeasonsMiddleTime, Mode=OneWay}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Shows the summed up times as minutes with 2 decimals" />
+
+                <TextBox Grid.Column="4" Grid.Row="8" 
+                     Text="{Binding Path=SeasonsShortTime, Mode=OneWay}" 
+                     Margin="5,5,5,5" VerticalAlignment="Center" ToolTip="Shows the summed up times as minutes with 0 decimals" />
+
+
+                <Button Grid.Column="5" Grid.Row="1" 
+                    Command="{Binding ClearAllCommand}" Content="Clear All" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Clears all contents" />
+
+                <Button Grid.Column="5" Grid.Row="4" 
+                    Command="{Binding RemoveSeasonCommand}" Content="Remove" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Removes the selected entry from the seasons list" />
+
+                <Button Grid.Column="5" Grid.Row="5" 
+                    Command="{Binding ClearSeasonsCommand}" Content="Clear" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Clears all contents from the seasons list" />
+
+                <Button Grid.Column="5" Grid.Row="7" 
+                    Command="{Binding CopySeasonsCommand}" Content="Copy" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times as minutes with 0 decimals into the clipboard" />
+
+                <Button Grid.Column="5" Grid.Row="8" 
+                    Command="{Binding CopyAllSeasonsCommand}" Content="Copy All" 
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times as hours:minutes:seconds and as minutes with 0 decimals into the clipboard" />
+
+                <Button Grid.Column="5" Grid.Row="9" 
+                    Command="{Binding CopyFullSeasonsCommand}" Content="Copy Full"
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times fancily formatted into the clipboard" />
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>
