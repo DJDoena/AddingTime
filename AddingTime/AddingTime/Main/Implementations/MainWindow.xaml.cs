@@ -1,10 +1,7 @@
-﻿using System.Windows;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    using System.Windows;
+
     public partial class MainWindow : Window
     {
         public MainWindow()

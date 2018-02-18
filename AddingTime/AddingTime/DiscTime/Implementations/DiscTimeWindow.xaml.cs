@@ -1,12 +1,9 @@
-﻿using System;
-using System.Windows;
-using DoenaSoft.AbstractionLayer.UIServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 {
-    /// <summary>
-    /// Interaction logic for DiscTimeWindow.xaml
-    /// </summary>
+    using System;
+    using System.Windows;
+    using AbstractionLayer.UIServices;
+
     public partial class DiscTimeWindow : Window
     {
         public DiscTimeWindow()

@@ -1,11 +1,11 @@
-﻿using System;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.Main
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.Main
 {
+    using System;
+
     internal static class MainHelper
     {
         internal static Decimal CalcFractalMinutes(Int32 seconds)
-            => (seconds / 60.0m);
+            => seconds / 60m;
 
         internal static Int32 CalcSeconds(String text)
         {

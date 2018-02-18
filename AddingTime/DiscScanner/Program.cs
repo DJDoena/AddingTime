@@ -1,40 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.AbstractionLayer.IOServices.Implementations;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscScanner
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscScanner
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AbstractionLayer.IOServices;
+    using AbstractionLayer.IOServices.Implementations;
+    using ToolBox.Extensions;
+
     public static class Program
     {
-        private static readonly IIOServices IOServices;
+        private static readonly IIOServices _IOServices;
 
         static Program()
-        {
-            IOServices = new IOServices();
-        }
+            => _IOServices = new IOServices();
 
         public static void Main()
         {
 
 #if FAKE
 
-            IEnumerable<IDriveInfo> drives = IOServices.GetDriveInfos(System.IO.DriveType.CDRom).Union(new[] { new FakeDrive() });
+            IEnumerable<IDriveInfo> drives = _IOServices.GetDriveInfos(System.IO.DriveType.CDRom).Union(new[] { new FakeDrive() });
 
 #else
 
-            IEnumerable<IDriveInfo> drives = IOServices.GetDriveInfos(System.IO.DriveType.CDRom);
+            IEnumerable<IDriveInfo> drives = _IOServices.GetDriveInfos(System.IO.DriveType.CDRom);
 
 #endif
 
-            foreach (IDriveInfo drive in drives)
-            {
-                if (drive.IsReady)
-                {
-                    Process(drive);
-                }
-            }
+            drives.Where(drive => drive.IsReady).ForEach(Process);
 
             Console.WriteLine("Press <Enter> to exit.");
 
@@ -57,7 +50,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscScanner
 
         private static void TryProcess(IDriveInfo drive)
         {
-            IDiscInfo discInfo = DiscInfoFactory.GetDiscInfo(drive, IOServices);
+            IDiscInfo discInfo = DiscInfoFactory.GetDiscInfo(drive, _IOServices);
 
             if (discInfo != null)
             {

@@ -1,32 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.AbstractionLayer.IOServices.Implementations;
-using DoenaSoft.AbstractionLayer.UIServices;
-using DoenaSoft.AbstractionLayer.UIServices.Implementations;
-using DoenaSoft.DVDProfiler.AddingTime.DiscTime;
-using DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations;
-using DoenaSoft.DVDProfiler.AddingTime.Main;
-using DoenaSoft.DVDProfiler.AddingTime.Main.Implementations;
-using DoenaSoft.DVDProfiler.DVDProfilerHelper;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.Implementations
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows.Forms;
+    using AbstractionLayer.IOServices;
+    using AbstractionLayer.IOServices.Implementations;
+    using AbstractionLayer.UIServices;
+    using AbstractionLayer.UIServices.Implementations;
+    using DiscTime;
+    using DiscTime.Implementations;
+    using DVDProfilerHelper;
+    using Main;
+    using Main.Implementations;
+
     internal sealed class WindowFactory : IWindowFactory
     {
-        private readonly IUIServices UIServices;
+        private readonly IUIServices _UIServices;
 
-        private readonly IClipboardServices ClipboardServices;
+        private readonly IClipboardServices _ClipboardServices;
 
-        private readonly IIOServices IOServices;
+        private readonly IIOServices _IOServices;
 
         public WindowFactory()
         {
-            IOServices = new IOServices();
-            UIServices = new WindowUIServices();
-            ClipboardServices = new WindowClipboardServices();            
+            _IOServices = new IOServices();
+
+            _UIServices = new WindowUIServices();
+
+            _ClipboardServices = new WindowClipboardServices();
 
             //For the old forms
             Application.EnableVisualStyles();
@@ -37,11 +39,11 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Implementations
 
         public void OpenMainWindow()
         {
-            IMainDataModel dataModel = new MainDataModel(UIServices);
+            IMainDataModel dataModel = new MainDataModel(_UIServices);
 
-            IMainOutputModel outputModel = new MainOutputModel(dataModel, ClipboardServices);
+            IMainOutputModel outputModel = new MainOutputModel(dataModel, _ClipboardServices);
 
-            IMainViewModel viewModel = new MainViewModel(dataModel, outputModel, ClipboardServices, this, UIServices);
+            IMainViewModel viewModel = new MainViewModel(dataModel, outputModel, _ClipboardServices, this, _UIServices);
 
             MainWindow window = new MainWindow();
 
@@ -68,13 +70,14 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Implementations
 
         public IEnumerable<TimeSpan> OpenReadFromDriveWindow()
         {
-            IDiscTimeDataModel dataModel = new DiscTimeDataModel(IOServices, UIServices);
+            IDiscTimeDataModel dataModel = new DiscTimeDataModel(_IOServices, _UIServices);
 
-            IDiscTimeViewModel viewModel = new DiscTimeViewModel(dataModel, IOServices, UIServices);
+            IDiscTimeViewModel viewModel = new DiscTimeViewModel(dataModel, _IOServices, _UIServices);
 
-            DiscTimeWindow window = new DiscTimeWindow();
-
-            window.DataContext = viewModel;
+            DiscTimeWindow window = new DiscTimeWindow()
+            {
+                DataContext = viewModel
+            };
 
             if (window.ShowDialog() == true)
             {

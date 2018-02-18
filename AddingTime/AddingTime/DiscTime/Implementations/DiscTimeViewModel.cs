@@ -1,59 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Input;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.AbstractionLayer.UIServices;
-using DoenaSoft.ToolBox.Commands;
-using DoenaSoft.ToolBox.Extensions;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Windows.Input;
+    using AbstractionLayer.IOServices;
+    using AbstractionLayer.UIServices;
+    using ToolBox.Commands;
+    using ToolBox.Extensions;
+
     internal sealed class DiscTimeViewModel : IDiscTimeViewModel
     {
-        private readonly IDiscTimeDataModel DataModel;
+        private readonly IDiscTimeDataModel _DataModel;
 
-        private readonly IUIServices UIServices;
+        private readonly IUIServices _UIServices;
 
-        private static IDriveViewModel s_SelectedDrive;
+        private static IDriveViewModel _SelectedDrive;
 
-        private static Int32 s_MinimumLength;
+        private static Int32 _MinimumLength;
 
-        private static Boolean ShowAnyDVDWarning { get; set; }
+        static Boolean _ShowAnyDVDWarning;
 
         static DiscTimeViewModel()
         {
-            s_SelectedDrive = null;
-            s_MinimumLength = 5;
-            ShowAnyDVDWarning = true;
+            _SelectedDrive = null;
+
+            _MinimumLength = 5;
+
+            _ShowAnyDVDWarning = true;
         }
 
         internal DiscTimeViewModel(IDiscTimeDataModel dataModel
             , IIOServices ioServices
             , IUIServices uiServices)
         {
-            if (dataModel == null)
-            {
-                throw (new ArgumentNullException(nameof(dataModel)));
-            }
-
             if (ioServices == null)
             {
                 throw (new ArgumentNullException(nameof(ioServices)));
             }
 
-            if (uiServices == null)
-            {
-                throw (new ArgumentNullException(nameof(uiServices)));
-            }
+            _DataModel = dataModel ?? throw new ArgumentNullException(nameof(dataModel));
 
-            DataModel = dataModel;
-            UIServices = uiServices;
+            _UIServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
 
-            DataModel.MinimumTrackLength = MinimumLength;
+            _DataModel.MinimumTrackLength = MinimumLength;
 
             Drives = GetDrives(ioServices);
 
@@ -63,23 +56,19 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 
 #endif
 
-            SelectedDrive = (s_SelectedDrive == null) ? SelectDefaultDrive() : s_SelectedDrive;
+            SelectedDrive = Drives.FirstOrDefault();
         }
 
         #region  IDiscTimeViewModel
 
         public IDriveViewModel SelectedDrive
         {
-            get
-            {
-                return (s_SelectedDrive);
-            }
-
+            get => _SelectedDrive;
             set
             {
-                if (value != s_SelectedDrive)
+                if (value != _SelectedDrive)
                 {
-                    s_SelectedDrive = value;
+                    _SelectedDrive = value;
 
                     RaisePropertyChanged(nameof(SelectedDrive));
                 }
@@ -88,18 +77,14 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 
         public Int32 MinimumLength
         {
-            get
-            {
-                return (s_MinimumLength);
-            }
-
+            get => _MinimumLength;
             set
             {
-                DataModel.MinimumTrackLength = value;
+                _DataModel.MinimumTrackLength = value;
 
-                if (value != s_MinimumLength)
+                if (value != _MinimumLength)
                 {
-                    s_MinimumLength = value;
+                    _MinimumLength = value;
 
                     RaisePropertyChanged(nameof(MinimumLength));
                 }
@@ -107,48 +92,48 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
         }
 
         public IEnumerable<TimeSpan> RunningTimes
-            => (DataModel.GetCheckedNodes().Select(node => node.RunningTime));
+            => _DataModel.GetCheckedNodes().Select(node => node.RunningTime);
 
-        public ObservableCollection<IDriveViewModel> Drives { get; private set; }
+        public ObservableCollection<IDriveViewModel> Drives { get; }
 
         public ICommand ScanCommand
-            => (new RelayCommand(Scan, CanScan));
+            => new RelayCommand(Scan, CanScan);
 
         public ICommand SetSitcomLengthCommand
-            => (new RelayCommand(SetSitcomLength));
+            => new RelayCommand(SetSitcomLength);
 
         public ICommand SetDramaLengthCommand
-            => (new RelayCommand(SetDramaLength));
+            => new RelayCommand(SetDramaLength);
 
         public ICommand SetMovieLengthCommand
-            => (new RelayCommand(SetMovieLength));
+            => new RelayCommand(SetMovieLength);
 
         public ObservableCollection<ITreeNode> DiscTree
-            => (DataModel.DiscTree);
+            => _DataModel.DiscTree;
 
         public ICommand CheckAllNodesCommand
-            => (new RelayCommand(CheckAllNodes));
+            => new RelayCommand(CheckAllNodes);
 
         public void CheckForDecrypter()
         {
             IEnumerable<Process> anydvd = Process.GetProcessesByName("AnyDVDtray").Union(Process.GetProcessesByName("DVDFabPasskey"));
 
-            if ((anydvd.HasItems() == false) && (ShowAnyDVDWarning))
+            if ((anydvd.HasItems() == false) && (_ShowAnyDVDWarning))
             {
-                UIServices.ShowMessageBox("For Blu-ray discs, make sure RedFox AnyDVD or DVDFab Passkey is enabled or else you will not get useful results."
+                _UIServices.ShowMessageBox("For Blu-ray discs, make sure RedFox AnyDVD or DVDFab Passkey is enabled or else you will not get useful results."
                     + Environment.NewLine + "For DVDs it will not hurt either.", "AnyDVD / Passkey", Buttons.OK, Icon.Information);
 
-                ShowAnyDVDWarning = false;
+                _ShowAnyDVDWarning = false;
             }
         }
 
         public event EventHandler<CloseEventArgs> Closing;
 
         public ICommand AcceptCommand
-            => (new RelayCommand(Accept));
+            => new RelayCommand(Accept);
 
         public ICommand CancelCommand
-            => (new RelayCommand(Cancel));
+            => new RelayCommand(Cancel);
 
         #endregion
 
@@ -159,85 +144,45 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
         #endregion
 
         private void RaisePropertyChanged(String attribute)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
-        }
-
-        private IDriveViewModel SelectDefaultDrive()
-        {
-            foreach (IDriveViewModel drive in Drives)
-            {
-                if (drive.Actual.IsReady)
-                {
-                    return (drive);
-                }
-            }
-
-            return ((Drives.Count > 0) ? Drives[0] : null);
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
 
         private void Scan()
         {
             RefreshDrives();
 
-            DataModel.Scan(SelectedDrive.Actual);
+            _DataModel.Scan(SelectedDrive.Actual);
 
             RaisePropertyChanged(nameof(DiscTree));
         }
 
         private void RefreshDrives()
-        {
-            foreach (IDriveViewModel drive in Drives)
-            {
-                drive.Refresh();
-            }
-        }
+            => Drives.ForEach(drive => drive.Refresh());
 
         private Boolean CanScan()
-            => (SelectedDrive != null);
+            => SelectedDrive != null;
 
         private void SetSitcomLength()
-        {
-            MinimumLength = 15;
-        }
+            => MinimumLength = 15;
 
         private void SetDramaLength()
-        {
-            MinimumLength = 35;
-        }
+            => MinimumLength = 35;
 
         private void SetMovieLength()
-        {
-            MinimumLength = 60;
-        }
+            => MinimumLength = 60;
 
         private void CheckAllNodes()
-        {
-            DataModel.CheckAllNodes();
-        }
+            => _DataModel.CheckAllNodes();
 
         private void Accept()
-        {
-            Close(Result.OK);
-        }
+            => Close(Result.OK);
 
         private void Cancel()
-        {
-            Close(Result.Cancel);
-        }
+            => Close(Result.Cancel);
 
         private void Close(Result result)
-        {
-            Closing?.Invoke(this, new CloseEventArgs(result));
-        }
+            => Closing?.Invoke(this, new CloseEventArgs(result));
 
         private ObservableCollection<IDriveViewModel> GetDrives(IIOServices ioServices)
-        {
-            IEnumerable<IDriveInfo> drives = ioServices.GetDriveInfos(System.IO.DriveType.CDRom);
-
-            IEnumerable<IDriveViewModel> viewModelDrives = drives.Select(drive => new DriveViewModel(drive));
-
-            return (new ObservableCollection<IDriveViewModel>(viewModelDrives));
-        }
+            => new ObservableCollection<IDriveViewModel>(ioServices.GetDriveInfos(System.IO.DriveType.CDRom).Select(drive => new DriveViewModel(drive)));
     }
 }

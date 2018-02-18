@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using DvdNavigatorCrm;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using DvdNavigatorCrm;
+
     internal sealed class DvdSubsetInfo : SubsetInfoBase
     {
-        #region Constants
+        #region Readonlies
 
-        private readonly DvdTitleSet TitleSet;
+        private readonly DvdTitleSet _TitleSet;
 
         #endregion
 
         #region Constructor
 
         public DvdSubsetInfo(DvdTitleSet titleSet)
-        {
-            TitleSet = titleSet;
-        }
+            => _TitleSet = titleSet;
 
         #endregion
 
@@ -30,7 +29,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         {
             get
             {
-                FileInfo fi = new FileInfo(TitleSet.FileName);
+                FileInfo fi = new FileInfo(_TitleSet.FileName);
 
                 String[] parts = fi.Name.Split('_');
 
@@ -41,7 +40,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         }
 
         public override Boolean IsValid
-            => (TitleSet.IsValidTitleSet);
+            => _TitleSet.IsValidTitleSet;
 
         #endregion
 
@@ -50,22 +49,13 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         #region Methods
 
         protected override IEnumerable<ITrackInfo> GetTracks()
-        {
-            IEnumerable<ProgramGroupChain> chains = GetChains();
-
-            foreach (ProgramGroupChain chain in chains)
-            {
-                ITrackInfo trackInfo = new DvdTrackInfo(chain);
-
-                yield return (trackInfo);
-            }
-        }
+            => GetChains().Select(chain => new DvdTrackInfo(chain));
 
         private IEnumerable<ProgramGroupChain> GetChains()
         {
-            for (Int32 i = 1; i <= TitleSet.ChainCount; i++)
+            for (Int32 i = 1; i <= _TitleSet.ChainCount; i++)
             {
-                ProgramGroupChain chain = TitleSet.GetChain(i);
+                ProgramGroupChain chain = _TitleSet.GetChain(i);
 
                 yield return (chain);
             }

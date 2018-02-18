@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+
     internal sealed class TreeNode : ITreeNode
     {
-        private Boolean m_IsChecked;
+        private Boolean _IsChecked;
 
         internal TreeNode(String text)
             : this(text, new TimeSpan())
-        {
-            CanBeChecked = false;
-        }
+            => CanBeChecked = false;
 
         internal TreeNode(String text,
             TimeSpan runningTime)
         {
             Text = text;
+
             RunningTime = runningTime;
 
             CanBeChecked = true;
@@ -27,18 +26,15 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 
         #region ITreeNode
 
-        public TimeSpan RunningTime { get; private set; }
+        public TimeSpan RunningTime { get; }
 
-        public String Text { get; private set; }
+        public String Text { get; }
 
-        public ObservableCollection<ITreeNode> Nodes { get; private set; }
+        public ObservableCollection<ITreeNode> Nodes { get; }
 
         public Boolean IsChecked
         {
-            get
-            {
-                return (m_IsChecked);
-            }
+            get => _IsChecked;
             set
             {
                 if (CanBeChecked == false)
@@ -46,16 +42,16 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
                     throw (new ArgumentException("This node cannot be checked"));
                 }
 
-                if (value != m_IsChecked)
+                if (value != _IsChecked)
                 {
-                    m_IsChecked = value;
+                    _IsChecked = value;
 
                     RaisePropertyChanged(nameof(IsChecked));
                 }
             }
         }
 
-        public Boolean CanBeChecked { get; private set; }
+        public Boolean CanBeChecked { get; }
 
         #endregion
 
@@ -66,8 +62,6 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
         #endregion
 
         private void RaisePropertyChanged(String attribute)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
     }
 }

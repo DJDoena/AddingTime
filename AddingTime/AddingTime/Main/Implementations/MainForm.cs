@@ -1,30 +1,24 @@
-using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Forms;
-using System.Windows.Input;
-using DoenaSoft.DVDProfiler.DVDProfilerHelper;
-
 namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 {
+    using System;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Windows.Forms;
+    using System.Windows.Input;
+
     internal partial class MainForm : Form
     {
-        private readonly IMainViewModel ViewModel;
+        private readonly IMainViewModel _ViewModel;
 
         public MainForm(IMainViewModel viewModel)
         {
-            if (viewModel == null)
-            {
-                throw (new ArgumentNullException(nameof(viewModel)));
-            }
-
-            ViewModel = viewModel;
+            _ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
 
             InitializeComponent();
 
             Load += OnFormLoad;
 
-            ViewModel.PropertyChanged += OnViewModelChanged;
+            _ViewModel.PropertyChanged += OnViewModelChanged;
 
             RegisterControlEvents();
 
@@ -36,7 +30,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         {
             FormClosed -= OnFormClosed;
 
-            ViewModel.PropertyChanged -= OnViewModelChanged;
+            _ViewModel.PropertyChanged -= OnViewModelChanged;
 
             UnregisterControlEvents();
 
@@ -116,55 +110,55 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         {
             switch (e.PropertyName)
             {
-                case (nameof(ViewModel.Input)):
+                case (nameof(_ViewModel.Input)):
                     {
                         OnViewModelInputChanged();
 
                         break;
                     }
-                case (nameof(ViewModel.Episodes)):
+                case (nameof(_ViewModel.Episodes)):
                     {
                         OnViewModelEpisodesChanged();
 
                         break;
                     }
-                case (nameof(ViewModel.SelectedEpisode)):
+                case (nameof(_ViewModel.SelectedEpisode)):
                     {
-                        RemoveEpisodeButton.Enabled = CanExecute(ViewModel.RemoveEpisodeCommand);
+                        RemoveEpisodeButton.Enabled = CanExecute(_ViewModel.RemoveEpisodeCommand);
 
                         break;
                     }
-                case (nameof(ViewModel.EpisodesFullTime)):
+                case (nameof(_ViewModel.EpisodesFullTime)):
                     {
                         OnViewModelEpisodesFullTimeChanged();
 
                         break;
                     }
-                case (nameof(ViewModel.EpisodesMiddleTime)):
+                case (nameof(_ViewModel.EpisodesMiddleTime)):
                     {
-                        EpisodesMiddleTimeTextBox.Text = ViewModel.EpisodesMiddleTime;
+                        EpisodesMiddleTimeTextBox.Text = _ViewModel.EpisodesMiddleTime;
 
                         break;
                     }
-                case (nameof(ViewModel.EpisodesShortTime)):
+                case (nameof(_ViewModel.EpisodesShortTime)):
                     {
-                        EpisodesShortTimeTextBox.Text = ViewModel.EpisodesShortTime;
+                        EpisodesShortTimeTextBox.Text = _ViewModel.EpisodesShortTime;
 
                         break;
                     }
-                case (nameof(ViewModel.Discs)):
+                case (nameof(_ViewModel.Discs)):
                     {
                         OnViewModelDiscsChanged();
 
                         break;
                     }
-                case (nameof(ViewModel.SelectedDisc)):
+                case (nameof(_ViewModel.SelectedDisc)):
                     {
-                        RemoveDiscButton.Enabled = CanExecute(ViewModel.RemoveDiscCommand);
+                        RemoveDiscButton.Enabled = CanExecute(_ViewModel.RemoveDiscCommand);
 
                         break;
                     }
-                case (nameof(ViewModel.DiscsFullTime)):
+                case (nameof(_ViewModel.DiscsFullTime)):
                     {
                         OnViewModelDiscsFullTimeChanged();
 
@@ -175,142 +169,116 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         private void OnViewModelDiscsFullTimeChanged()
         {
-            DiscsFullTimeTextBox.Text = ViewModel.DiscsFullTime;
+            DiscsFullTimeTextBox.Text = _ViewModel.DiscsFullTime;
 
-            CopyDiscsButton.Enabled = CanExecute(ViewModel.CopyDiscsCommand);
+            CopyDiscsButton.Enabled = CanExecute(_ViewModel.CopyDiscsCommand);
 
-            CopyAllDiscsButton.Enabled = CanExecute(ViewModel.CopyAllDiscsCommand);
+            CopyAllDiscsButton.Enabled = CanExecute(_ViewModel.CopyAllDiscsCommand);
 
-            CopyFullDiscsButton.Enabled = CanExecute(ViewModel.CopyFullDiscsCommand);
+            CopyFullDiscsButton.Enabled = CanExecute(_ViewModel.CopyFullDiscsCommand);
         }
 
         private void OnViewModelDiscsChanged()
         {
             DiscsListBox.Items.Clear();
 
-            DiscsListBox.Items.AddRange(ViewModel.Discs.ToArray());
+            DiscsListBox.Items.AddRange(_ViewModel.Discs.ToArray());
 
-            ClearDiscsButton.Enabled = CanExecute(ViewModel.ClearDiscsCommand);
+            ClearDiscsButton.Enabled = CanExecute(_ViewModel.ClearDiscsCommand);
 
-            ClearAllButton.Enabled = CanExecute(ViewModel.ClearAllCommand);
+            ClearAllButton.Enabled = CanExecute(_ViewModel.ClearAllCommand);
         }
 
         private void OnViewModelEpisodesFullTimeChanged()
         {
-            EpisodesFullTimeTextBox.Text = ViewModel.EpisodesFullTime;
+            EpisodesFullTimeTextBox.Text = _ViewModel.EpisodesFullTime;
 
-            MoveEpisodeButton.Enabled = CanExecute(ViewModel.MoveEpisodesCommand);
+            MoveEpisodeButton.Enabled = CanExecute(_ViewModel.MoveEpisodesCommand);
 
-            CopyEpisodesButton.Enabled = CanExecute(ViewModel.CopyEpisodesCommand);
+            CopyEpisodesButton.Enabled = CanExecute(_ViewModel.CopyEpisodesCommand);
 
-            CopyAllEpisodesButton.Enabled = CanExecute(ViewModel.CopyAllEpisodesCommand);
+            CopyAllEpisodesButton.Enabled = CanExecute(_ViewModel.CopyAllEpisodesCommand);
         }
 
         private void OnViewModelEpisodesChanged()
         {
             EpisodesListBox.Items.Clear();
 
-            EpisodesListBox.Items.AddRange(ViewModel.Episodes.ToArray());
+            EpisodesListBox.Items.AddRange(_ViewModel.Episodes.ToArray());
 
-            ClearEpisodesButton.Enabled = CanExecute(ViewModel.ClearEpisodesCommand);
+            ClearEpisodesButton.Enabled = CanExecute(_ViewModel.ClearEpisodesCommand);
 
-            ClearAllButton.Enabled = CanExecute(ViewModel.ClearAllCommand);
+            ClearAllButton.Enabled = CanExecute(_ViewModel.ClearAllCommand);
         }
 
         private void OnViewModelInputChanged()
         {
-            InputTextBox.Text = ViewModel.Input;
+            InputTextBox.Text = _ViewModel.Input;
 
-            AddButton.Enabled = CanExecute(ViewModel.AddEpisodeCommand);
+            AddButton.Enabled = CanExecute(_ViewModel.AddEpisodeCommand);
         }
 
         private static Boolean CanExecute(ICommand command)
-            => (command.CanExecute(null));
+            => command.CanExecute(null);
 
         private static void ExecuteCommand(ICommand command)
-        {
-            command.Execute(null);
-        }
+            => command.Execute(null);
 
         private void OnAddButtonClick(Object sender
             , EventArgs e)
         {
-            ExecuteCommand(ViewModel.AddEpisodeCommand);
+            ExecuteCommand(_ViewModel.AddEpisodeCommand);
 
             InputTextBox.Focus();
         }
 
         private void OnClearButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.ClearEpisodesCommand);
-        }
+            => ExecuteCommand(_ViewModel.ClearEpisodesCommand);
 
         private void OnCopyButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.CopyEpisodesCommand);
-        }
+            => ExecuteCommand(_ViewModel.CopyEpisodesCommand);
 
         private void OnCopyAllButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.CopyAllEpisodesCommand);
-        }
+            => ExecuteCommand(_ViewModel.CopyAllEpisodesCommand);
 
         private void OnAddFromClipboardButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.AddFromClipboardCommand);
-        }
+            => ExecuteCommand(_ViewModel.AddFromClipboardCommand);
 
         private void OnRemoveEpisodeButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.RemoveEpisodeCommand);
-        }
+            => ExecuteCommand(_ViewModel.RemoveEpisodeCommand);
 
         private void OnRemoveDiscButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.RemoveDiscCommand);
-        }
+            => ExecuteCommand(_ViewModel.RemoveDiscCommand);
 
         private void OnClearDiscsButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.ClearDiscsCommand);
-        }
+            => ExecuteCommand(_ViewModel.ClearDiscsCommand);
 
         private void OnCopyDiscsButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.CopyDiscsCommand);
-        }
+            => ExecuteCommand(_ViewModel.CopyDiscsCommand);
 
         private void OnCopyAllDiscsButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.CopyAllDiscsCommand);
-        }
+            => ExecuteCommand(_ViewModel.CopyAllDiscsCommand);
 
         private void OnMoveEpisodeButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.MoveEpisodesCommand);
-        }
+            => ExecuteCommand(_ViewModel.MoveEpisodesCommand);
 
         private void OnClearAllButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.ClearAllCommand);
-        }
+            => ExecuteCommand(_ViewModel.ClearAllCommand);
 
         private void OnCopyFullDiscsButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.CopyFullDiscsCommand);
-        }
+            => ExecuteCommand(_ViewModel.CopyFullDiscsCommand);
 
         private void OnFormLoad(Object sender
             , EventArgs e)
@@ -365,50 +333,34 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         }
 
         private void CheckForNewVersion()
-        {
-            ExecuteCommand(ViewModel.CheckForNewVersionCommand);
-        }
+            => ExecuteCommand(_ViewModel.CheckForNewVersionCommand);
 
         private void OnReadMeToolStripMenuItemClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.OpenHelpWindowCommand);
-        }
+            => ExecuteCommand(_ViewModel.OpenHelpWindowCommand);
 
         private void OnAboutToolStripMenuItemClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.OpenAboutWindowCommand);
-        }
+            => ExecuteCommand(_ViewModel.OpenAboutWindowCommand);
 
         private void OnCheckForUpdateToolStripMenuItemClick(Object sender
             , EventArgs e)
-        {
-            CheckForNewVersion();
-        }
+            => CheckForNewVersion();
 
         private void OnDiscsListBoxSelectedIndexChanged(Object sender
             , EventArgs e)
-        {
-            ViewModel.SelectedDisc = DiscsListBox.SelectedIndex;
-        }
+            => _ViewModel.SelectedDisc = DiscsListBox.SelectedIndex;
 
         private void OnInputTextBoxTextChanged(Object sender
             , EventArgs e)
-        {
-            ViewModel.Input = InputTextBox.Text;
-        }
+            => _ViewModel.Input = InputTextBox.Text;
 
         private void OnEpisodeListBoxSelectedIndexChanged(Object sender
             , EventArgs e)
-        {
-            ViewModel.SelectedEpisode = EpisodesListBox.SelectedIndex;
-        }
+            => _ViewModel.SelectedEpisode = EpisodesListBox.SelectedIndex;
 
         private void OnReadFromDriveToolStripMenuItemClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.OpenReadFromDriveWindowCommand);
-        }
+            => ExecuteCommand(_ViewModel.OpenReadFromDriveWindowCommand);
     }
 }

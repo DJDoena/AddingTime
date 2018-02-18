@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+
     internal interface ITreeNode : INotifyPropertyChanged
     {
         String Text { get; }

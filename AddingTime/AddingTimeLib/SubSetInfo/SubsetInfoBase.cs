@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+
     [DebuggerDisplay("{Name} {GetType()}")]
     internal abstract class SubsetInfoBase : ISubsetInfo
     {
@@ -15,22 +15,10 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         public abstract String Name { get; }
 
         public abstract Boolean IsValid { get; }
-        
+
         public IEnumerable<ITrackInfo> Tracks
         {
-            get
-            {
-                IEnumerable<ITrackInfo> tracks = Enumerable.Empty<ITrackInfo>();
-
-                if (IsValid)
-                {
-                    tracks = GetTracks();
-                }
-
-                tracks = tracks.ToList();
-
-                return (tracks);
-            }
+            get => IsValid ? GetTracks().ToList() : Enumerable.Empty<ITrackInfo>();
         }
 
         #endregion
@@ -42,7 +30,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         #region Methods
 
         public Int32 CompareTo(ISubsetInfo other)
-            => ((other != null) ? (Name.CompareTo(other.Name)) : 1);
+            => (other != null) ? (Name.CompareTo(other.Name)) : 1;
 
         #endregion
 

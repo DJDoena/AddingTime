@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Input;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Windows.Input;
+
     internal interface IDiscTimeViewModel : INotifyPropertyChanged
     {
         IDriveViewModel SelectedDrive { get; set; }

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+
     internal interface IWindowFactory
     {
         void OpenMainWindow();

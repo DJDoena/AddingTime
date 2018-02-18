@@ -1,7 +1,7 @@
-﻿using DoenaSoft.AbstractionLayer.IOServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using AbstractionLayer.IOServices;
+
     public interface IDiscReader
     {
         #region Methods

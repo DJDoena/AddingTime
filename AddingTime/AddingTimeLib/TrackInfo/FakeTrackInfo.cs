@@ -1,17 +1,17 @@
 ﻿#if FAKE
 
-using System;
-
 namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+
     internal sealed class FakeTrackInfo : TrackInfoBase
     {
-        private static Int32 s_Counter = 1;
+        private static Int32 _Counter = 1;
 
-        private Int32 m_Counter = s_Counter++;
+        private readonly Int32 _Hours = _Counter++;
 
         public override TimeSpan RunningTime
-            => (new TimeSpan(m_Counter, 2, 3));
+            => new TimeSpan(_Hours, 2, 3);
     }
 }
 

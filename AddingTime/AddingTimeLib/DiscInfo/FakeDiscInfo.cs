@@ -1,20 +1,20 @@
 ﻿#if FAKE
 
-using System;
-using System.Collections.Generic;
-
 namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+
     internal sealed class FakeDiscInfo : IDiscInfo
     {
         public String DiscLabel
-            => ("FakeDisc");
+            => "FakeDisc";
 
         public String DriveLetter
-            => ("F");
+            => "F";
 
         public Boolean IsValid
-            => (true);
+            => true;
 
         public IEnumerable<ISubsetInfo> Subsets
         {

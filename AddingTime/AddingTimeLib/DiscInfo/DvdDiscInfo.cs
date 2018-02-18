@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.ToolBox.Extensions;
-using DvdNavigatorCrm;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AbstractionLayer.IOServices;
+    using DvdNavigatorCrm;
+    using ToolBox.Extensions;
+
     internal sealed class DvdDiscInfo : DiscInfoBase
     {
-        #region Properties
+        #region Fields
 
-        private IEnumerable<DvdTitleSet> TitleSets { get; set; }
+        private IEnumerable<DvdTitleSet> _TitleSets;
 
         #endregion
 
@@ -19,9 +19,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
         public DvdDiscInfo(IIOServices ioServices)
             : base(ioServices)
-        {
-            TitleSets = Enumerable.Empty<DvdTitleSet>();
-        }
+            => _TitleSets = Enumerable.Empty<DvdTitleSet>();
 
         #endregion
 
@@ -29,11 +27,10 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
         #region Properties
 
-        public override Boolean IsValid
-            => (TitleSets.HasItems());
+        public override Boolean IsValid => _TitleSets.HasItems();
 
         public override IEnumerable<ISubsetInfo> Subsets
-            => (GetSubsets().ToList());
+            => _TitleSets.Select(titleSet => new DvdSubsetInfo(titleSet)).ToList();
 
         #endregion
 
@@ -54,46 +51,13 @@ namespace DoenaSoft.DVDProfiler.AddingTime
             {
                 String path = (String)parameter;
 
-                TitleSets = GetTitleSets(path);
+                _TitleSets = _IOServices.Folder.GetFiles(path, "*.IFO").Select(TryGetTitleSetFromFile).SelectMany(item => item).ToList();
             }
             catch
             { }
         }
 
         #region GetSubsets
-
-        private IEnumerable<ISubsetInfo> GetSubsets()
-        {
-            foreach (DvdTitleSet titleSet in TitleSets)
-            {
-                ISubsetInfo subset = new DvdSubsetInfo(titleSet);
-
-                yield return (subset);
-            }
-        }
-
-        private IEnumerable<DvdTitleSet> GetTitleSets(String path)
-        {
-            IEnumerable<IEnumerable<DvdTitleSet>> nested = GetTitleSetsFromPath(path);
-
-            IEnumerable<DvdTitleSet> flat = nested.SelectMany(item => item);
-
-            flat = flat.ToList();
-
-            return (flat);
-        }
-
-        private IEnumerable<IEnumerable<DvdTitleSet>> GetTitleSetsFromPath(String path)
-        {
-            String[] files = IOServices.Directory.GetFiles(path, "*.IFO");
-
-            foreach (String file in files)
-            {
-                IEnumerable<DvdTitleSet> titleSets = TryGetTitleSetFromFile(file);
-
-                yield return (titleSets);
-            }
-        }
 
         private static IEnumerable<DvdTitleSet> TryGetTitleSetFromFile(String file)
         {

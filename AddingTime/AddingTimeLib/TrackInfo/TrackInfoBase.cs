@@ -1,9 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using DvdNavigatorCrm;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Diagnostics;
+
     [DebuggerDisplay("{RunningTime} {GetType()}")]
     internal abstract class TrackInfoBase : ITrackInfo
     {

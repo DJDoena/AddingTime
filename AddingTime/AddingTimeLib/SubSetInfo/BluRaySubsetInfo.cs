@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using BDInfoLib.BDROM;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using BDInfoLib.BDROM;
+
     internal sealed class BluRaySubsetInfo : SubsetInfoBase
     {
-        #region Constants
+        #region Readonlies
 
-        private readonly TSPlaylistFile PlayList;
+        private readonly TSPlaylistFile _PlayList;
 
         #endregion
 
         #region Constructor
 
         public BluRaySubsetInfo(TSPlaylistFile playList)
-        {
-            PlayList = playList;
-        }
+            => _PlayList = playList;
 
         #endregion
 
@@ -26,24 +25,10 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         #region Properties
 
         public override String Name
-        {
-            get
-            {
-                String name = PlayList.Name;
-
-                foreach (TSStreamClip clip in PlayList.StreamClips)
-                {
-                    name = clip.Name;
-
-                    break;
-                }
-
-                return (name);
-            }
-        }
+            => _PlayList.StreamClips.FirstOrDefault()?.Name ?? _PlayList.Name;
 
         public override Boolean IsValid
-            => (PlayList.IsValid);
+            => _PlayList.IsValid;
 
         #endregion
 
@@ -52,14 +37,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         #region Methods
 
         protected override IEnumerable<ITrackInfo> GetTracks()
-        {
-            foreach (TSStreamClip clip in PlayList.StreamClips)
-            {
-                ITrackInfo trackInfo = new BluRayTrackInfo(clip);
-
-                yield return (trackInfo);
-            }
-        }
+            => _PlayList.StreamClips.Select(clip => new BluRayTrackInfo(clip));
 
         #endregion
     }

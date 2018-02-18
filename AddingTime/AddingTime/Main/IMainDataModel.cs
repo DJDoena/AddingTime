@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.Main
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.Main
 {
+    using System;
+    using System.Collections.Generic;
+
     internal interface IMainDataModel
     {
         #region Episodes

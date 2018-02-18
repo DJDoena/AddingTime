@@ -1,31 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DoenaSoft.AbstractionLayer.UIServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using AbstractionLayer.UIServices;
+    using ToolBox.Extensions;
+
     internal sealed class MainOutputModel : IMainOutputModel
     {
-        private readonly IMainDataModel DataModel;
+        private readonly IMainDataModel _DataModel;
 
-        private readonly IClipboardServices ClipboardServices;
+        private readonly IClipboardServices _ClipboardServices;
 
         public MainOutputModel(IMainDataModel dataModel
             , IClipboardServices clipboardServices)
         {
-            if (dataModel == null)
-            {
-                throw (new ArgumentNullException(nameof(dataModel)));
-            }
+            _DataModel = dataModel ?? throw new ArgumentNullException(nameof(dataModel));
 
-            if (clipboardServices == null)
-            {
-                throw (new ArgumentNullException(nameof(clipboardServices)));
-            }
-
-            DataModel = dataModel;
-            ClipboardServices = clipboardServices;
+            _ClipboardServices = clipboardServices ?? throw new ArgumentNullException(nameof(clipboardServices));
         }
 
         #region IMainOutputModel
@@ -33,33 +25,23 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         #region Episodes
 
         public void CopyEpisodes()
-        {
-            ClipboardServices.SetText(DataModel.EpisodesShortTime);
-        }
+            => _ClipboardServices.SetText(_DataModel.EpisodesShortTime);
 
         public void CopyAllEpisodes()
-        {
-            ClipboardServices.SetText(DataModel.EpisodesFullTime + "\t" + DataModel.EpisodesShortTime);
-        }
+            => _ClipboardServices.SetText(_DataModel.EpisodesFullTime + "\t" + _DataModel.EpisodesShortTime);
 
         #endregion
 
         #region Discs
 
         public void CopyDiscs()
-        {
-            ClipboardServices.SetText(DataModel.DiscsShortTime);
-        }
+            => _ClipboardServices.SetText(_DataModel.DiscsShortTime);
 
         public void CopyAllDiscs()
-        {
-            ClipboardServices.SetText(DataModel.DiscsFullTime + "\t" + DataModel.DiscsShortTime);
-        }
+            => _ClipboardServices.SetText(_DataModel.DiscsFullTime + "\t" + _DataModel.DiscsShortTime);
 
         public void CopyFullDiscs()
-        {
-            CopyFull(DataModel.DiscsFullTime, DataModel.DiscsShortTime, DataModel.Discs);
-        }
+            => CopyFull(_DataModel.DiscsFullTime, _DataModel.DiscsShortTime, _DataModel.Discs);
 
         #endregion
 
@@ -67,19 +49,13 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         #region Seasons
 
         public void CopySeasons()
-        {
-            ClipboardServices.SetText(DataModel.SeasonsShortTime);
-        }
+            => _ClipboardServices.SetText(_DataModel.SeasonsShortTime);
 
         public void CopyAllSeasons()
-        {
-            ClipboardServices.SetText(DataModel.SeasonsFullTime + "\t" + DataModel.SeasonsShortTime);
-        }
+            => _ClipboardServices.SetText(_DataModel.SeasonsFullTime + "\t" + _DataModel.SeasonsShortTime);
 
         public void CopyFullSeasons()
-        {
-            CopyFull(DataModel.SeasonsFullTime, DataModel.SeasonsShortTime, DataModel.Seasons);
-        }
+            => CopyFull(_DataModel.SeasonsFullTime, _DataModel.SeasonsShortTime, _DataModel.Seasons);
 
         #endregion
 
@@ -91,18 +67,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (String entry in entries)
-            {
-                Int32 seconds = MainHelper.CalcSeconds(entry);
-
-                Decimal fractalMinutes = MainHelper.CalcFractalMinutes(seconds);
-
-                fractalMinutes = Math.Round(fractalMinutes, 0, MidpointRounding.AwayFromZero);
-
-                sb.Append(entry);
-                sb.Append("\t");
-                sb.AppendLine(fractalMinutes.ToString());
-            }
+            entries.ForEach(entry => PrintEntry(entry, sb));
 
             Int32 discsFullTimeLength = fullTime?.Length ?? 0;
 
@@ -118,7 +83,21 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
             DrawLine(sb, length);
 
-            ClipboardServices.SetText(sb.ToString());
+            _ClipboardServices.SetText(sb.ToString());
+        }
+
+        private static void PrintEntry(String entry
+            , StringBuilder sb)
+        {
+            Int32 seconds = MainHelper.CalcSeconds(entry);
+
+            Decimal fractalMinutes = MainHelper.CalcFractalMinutes(seconds);
+
+            fractalMinutes = Math.Round(fractalMinutes, 0, MidpointRounding.AwayFromZero);
+
+            sb.Append(entry);
+            sb.Append("\t");
+            sb.AppendLine(fractalMinutes.ToString());
         }
 
         private static void DrawLine(StringBuilder sb

@@ -1,28 +1,28 @@
 ﻿#if FAKE
 
-using System;
-using DoenaSoft.AbstractionLayer.IOServices;
-
 namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using AbstractionLayer.IOServices;
+
     public sealed class FakeDrive : IDriveInfo
     {
         #region IDriveInfo
 
         public Boolean IsReady
-            => (true);
+            => true;
 
         public String Label
-            => (DriveLetter + " [Fake]");
+            => DriveLetter + " [Fake]";
 
-        public String RootDirectory
-            => (@"F:\");
+        public String RootFolder
+            => @"F:\";
 
         public String DriveLetter
-            => (RootDirectory.Substring(0, 2));
+            => RootFolder.Substring(0, 2);
 
-        public Int64 AvailableFreeSpace
-            => (0);
+        public UInt64 AvailableFreeSpace
+            => 0;
 
         #endregion
     }

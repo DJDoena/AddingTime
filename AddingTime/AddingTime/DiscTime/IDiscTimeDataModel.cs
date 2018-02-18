@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using DoenaSoft.AbstractionLayer.IOServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using AbstractionLayer.IOServices;
+
     internal interface IDiscTimeDataModel
     {
         ObservableCollection<ITreeNode> DiscTree { get; }

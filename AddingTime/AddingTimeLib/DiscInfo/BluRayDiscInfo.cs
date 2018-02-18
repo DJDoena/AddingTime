@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BDInfoLib;
-using BDInfoLib.BDROM;
-using DoenaSoft.AbstractionLayer.IOServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AbstractionLayer.IOServices;
+    using BDInfoLib;
+    using BDInfoLib.BDROM;
+    using ToolBox.Extensions;
+
     internal sealed class BluRayDiscInfo : DiscInfoBase
     {
         #region Properties
 
-        private BDROM BluRay { get; set; }
+        private BDROM _BluRay;
 
         #endregion
 
@@ -19,9 +20,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
         public BluRayDiscInfo(IIOServices ioServices)
             : base(ioServices)
-        {
-            BluRay = null;
-        }
+            => _BluRay = null;
 
         #endregion
 
@@ -30,23 +29,13 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         #region Properties
 
         public override Boolean IsValid
-            => (BluRay != null);
+            => _BluRay != null;
 
         public override IEnumerable<ISubsetInfo> Subsets
         {
-            get
-            {
-                IEnumerable<ISubsetInfo> subsets = Enumerable.Empty<ISubsetInfo>();
-
-                if (BluRay != null)
-                {
-                    subsets = GetSubsets();
-                }
-
-                subsets = subsets.ToList();
-
-                return (subsets);
-            }
+            get => _BluRay != null
+                ? _BluRay.PlaylistFiles.Values.Where(playlist => playlist.StreamClips.Count > 0).Select(playlist => new BluRaySubsetInfo(playlist)).ToList()
+                : Enumerable.Empty<ISubsetInfo>();
         }
 
         #endregion
@@ -74,30 +63,16 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
                 bluRay.Scan();
 
-                BluRay = bluRay;
+                _BluRay = bluRay;
             }
             catch (OutOfMemoryException)
             {
-
                 GC.Collect();
 
                 GC.WaitForPendingFinalizers();
             }
             catch
             { }
-        }
-
-        private IEnumerable<ISubsetInfo> GetSubsets()
-        {
-            foreach (TSPlaylistFile playlist in BluRay.PlaylistFiles.Values)
-            {
-                if (playlist.StreamClips.Count > 0)
-                {
-                    ISubsetInfo subset = new BluRaySubsetInfo(playlist);
-
-                    yield return (subset);
-                }
-            }
         }
 
         #endregion

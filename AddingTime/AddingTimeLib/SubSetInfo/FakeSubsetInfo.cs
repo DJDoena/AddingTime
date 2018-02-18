@@ -1,21 +1,21 @@
 ﻿#if FAKE
 
-using System;
-using System.Collections.Generic;
-
 namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+
     internal sealed class FakeSubsetInfo : SubsetInfoBase
     {
-        private static Int32 s_Counter = 1;
+        private static Int32 _Counter = 1;
 
-        private Int32 m_Counter = s_Counter++;
+        private Int32 m_Counter = _Counter++;
 
         public override Boolean IsValid
-            => (true);
+            => true;
 
         public override String Name
-            => ("Fake Subset " + m_Counter);
+            => "Fake Subset " + m_Counter;
 
         protected override IEnumerable<ITrackInfo> GetTracks()
         {

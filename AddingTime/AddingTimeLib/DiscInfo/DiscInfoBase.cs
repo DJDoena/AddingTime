@@ -1,30 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
-using DoenaSoft.AbstractionLayer.IOServices;
-using Timers = System.Timers;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Threading;
+    using AbstractionLayer.IOServices;
+    using Timers = System.Timers;
+
     [DebuggerDisplay("{DriveLetter} [{DiscLabel}] {GetType()}")]
     internal abstract class DiscInfoBase : IDiscInfo
     {
         #region Readonlies
 
-        private readonly Object ThreadLock;
+        private readonly Object _ThreadLock;
 
-        protected readonly IIOServices IOServices;
+        protected readonly IIOServices _IOServices;
 
         #endregion
 
-        #region Properties
+        #region Fields
 
-        private IDriveInfo DriveInfo { get; set; }
+        private IDriveInfo _DriveInfo;
 
-        private Thread DiscScanner { get; set; }
+        private Thread _DiscScanner;
 
-        private Timers.Timer Timer { get; set; }
+        private Timers.Timer _Timer;
 
         #endregion
 
@@ -33,7 +33,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         #region Properties
 
         public String DiscLabel
-            => (DriveInfo.Label);
+            => _DriveInfo.Label;
 
         public abstract Boolean IsValid { get; }
 
@@ -47,9 +47,9 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
         protected DiscInfoBase(IIOServices ioServices)
         {
-            IOServices = ioServices;
+            _IOServices = ioServices;
 
-            ThreadLock = new Object();
+            _ThreadLock = new Object();
         }
 
         #endregion
@@ -62,23 +62,23 @@ namespace DoenaSoft.DVDProfiler.AddingTime
             {
                 throw (new ArgumentNullException(nameof(path)));
             }
-            else if (IOServices.Directory.Exists(path) == false)
+            else if (_IOServices.Folder.Exists(path) == false)
             {
                 throw (new ArgumentException("Path does not exist.", nameof(path)));
             }
 
-            DriveInfo = GetDriveInfo(path);
+            _DriveInfo = GetDriveInfo(path);
         }
 
         protected void ScanAsync(Object parameter)
         {
-            DiscScanner = new Thread(new ParameterizedThreadStart(Scan));
+            _DiscScanner = new Thread(new ParameterizedThreadStart(Scan));
 
-            DiscScanner.Start(parameter);
+            _DiscScanner.Start(parameter);
 
             StartTimer();
 
-            while (DiscScanner.ThreadState == System.Threading.ThreadState.Running)
+            while (_DiscScanner.ThreadState == System.Threading.ThreadState.Running)
             {
                 Thread.Sleep(250);
             }
@@ -92,26 +92,27 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
         private void StartTimer()
         {
-            Timer = new Timers.Timer();
+            _Timer = new Timers.Timer()
+            {
+                Interval = 90000
+            };
 
-            Timer.Interval = 90000;
+            _Timer.Elapsed += OnTimerElapsed;
 
-            Timer.Elapsed += OnTimerElapsed;
-
-            Timer.Start();
+            _Timer.Start();
         }
 
         private void StopTimer()
         {
-            lock (ThreadLock)
+            lock (_ThreadLock)
             {
-                if (Timer != null)
+                if (_Timer != null)
                 {
-                    Timer.Stop();
+                    _Timer.Stop();
 
-                    Timer.Elapsed -= OnTimerElapsed;
+                    _Timer.Elapsed -= OnTimerElapsed;
 
-                    Timer = null;
+                    _Timer = null;
                 }
             }
         }
@@ -126,11 +127,11 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
         private void TryAbortThread()
         {
-            if ((DiscScanner != null) && (DiscScanner.ThreadState == System.Threading.ThreadState.Running))
+            if ((_DiscScanner != null) && (_DiscScanner.ThreadState == System.Threading.ThreadState.Running))
             {
                 try
                 {
-                    DiscScanner.Abort();
+                    _DiscScanner.Abort();
                 }
                 catch
                 { }
@@ -140,15 +141,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         #endregion
 
         private IDriveInfo GetDriveInfo(String path)
-        {
-            IDirectoryInfo dirInfo = IOServices.GetDirectoryInfo(path);
-
-            dirInfo = dirInfo.Root;
-
-            IDriveInfo drive = IOServices.GetDriveInfo(dirInfo.Name);
-
-            return (drive);
-        }
+            => _IOServices.GetDriveInfo(_IOServices.GetFolderInfo(path).Root.Name);
 
         #endregion
     }

@@ -1,23 +1,20 @@
-﻿using System;
-using System.Diagnostics;
-using DvdNavigatorCrm;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
-   internal sealed class DvdTrackInfo : TrackInfoBase
-    {
-        #region Constants
+    using System;
+    using DvdNavigatorCrm;
 
-        private readonly ProgramGroupChain Chain;
+    internal sealed class DvdTrackInfo : TrackInfoBase
+    {
+        #region Readonlies
+
+        private readonly ProgramGroupChain _Chain;
 
         #endregion
 
         #region Constructor
 
         public DvdTrackInfo(ProgramGroupChain chain)
-        {
-            Chain = chain;
-        }
+            => _Chain = chain;
 
         #endregion
 
@@ -26,16 +23,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         #region Properties
 
         public override TimeSpan RunningTime
-        {
-            get
-            {
-                Int32 seconds = (Int32)(Chain.PlaybackTime);
-
-                TimeSpan time = new TimeSpan(0, 0, seconds);
-
-                return (time);
-            }
-        }
+            => new TimeSpan(0, 0, (Int32)(_Chain.PlaybackTime));
 
         #endregion
 

@@ -1,22 +1,20 @@
-﻿using System;
-using BDInfoLib.BDROM;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using BDInfoLib.BDROM;
+
     internal sealed class BluRayTrackInfo : TrackInfoBase
     {
-        #region Constants
+        #region Readonlies
 
-        private readonly TSStreamClip Clip;
+        private readonly TSStreamClip _Clip;
 
         #endregion
 
         #region Constructor
 
         public BluRayTrackInfo(TSStreamClip clip)
-        {
-            Clip = clip;
-        }
+            => _Clip = clip;
 
         #endregion
 
@@ -28,7 +26,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         {
             get
             {
-                Int64 ticks = (Int64)(Clip.Length * Math.Pow(10, 7));
+                Int64 ticks = (Int64)(_Clip.Length * Math.Pow(10, 7));
 
                 TimeSpan time = new TimeSpan(ticks);
 

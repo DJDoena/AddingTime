@@ -1,33 +1,24 @@
-﻿using System;
-using DoenaSoft.AbstractionLayer.IOServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using AbstractionLayer.IOServices;
+
     public sealed class DvdDiscReader : IDiscReader
     {
-        private readonly IIOServices IOServices;
+        private readonly IIOServices _IOServices;
 
         public DvdDiscReader(IIOServices ioServices)
-        {
-            if (ioServices == null)
-            {
-                throw (new ArgumentNullException(nameof(ioServices)));
-            }
-
-            IOServices = ioServices;
-        }
+            => _IOServices = ioServices ?? throw new ArgumentNullException(nameof(ioServices));
 
         #region Methods
 
         public IDiscInfo GetDiscInfo(IDriveInfo drive)
         {
-            DiscInfoBase discInfo;
+            String path = _IOServices.Path.Combine(drive.RootFolder, "VIDEO_TS");
 
-            String path = IOServices.Path.Combine(drive.RootDirectory, "VIDEO_TS");
+            DiscInfoBase discInfo = new DvdDiscInfo(_IOServices);
 
-            discInfo = new DvdDiscInfo(IOServices);
-
-            if (IOServices.File.Exists(IOServices.Path.Combine(path, "VIDEO_TS.IFO")))
+            if (_IOServices.File.Exists(_IOServices.Path.Combine(path, "VIDEO_TS.IFO")))
             {
                 discInfo.Init(path);
             }

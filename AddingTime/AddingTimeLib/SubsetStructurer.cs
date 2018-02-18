@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using ToolBox.Extensions;
+
     public static class SubsetStructurer
     {
         #region Methods
@@ -12,54 +13,21 @@ namespace DoenaSoft.DVDProfiler.AddingTime
         {
             Dictionary<String, List<ISubsetInfo>> structuredSubsets = new Dictionary<String, List<ISubsetInfo>>();
 
-            IEnumerable<ISubsetInfo> subsets = GetFilteredSubsets(discInfo);
-
-            foreach (ISubsetInfo subset in subsets)
-            {
-                AddSubset(structuredSubsets, subset);
-            }
+            discInfo.Subsets.Where(subset => subset.IsValid).OrderBy(subset => subset).ForEach(subset => AddSubset(structuredSubsets, subset));
 
             return (structuredSubsets);
         }
 
-        private static IEnumerable<ISubsetInfo> GetFilteredSubsets(IDiscInfo discInfo)
-        {
-            IEnumerable<ISubsetInfo> subsets = GetSubsets(discInfo);
-
-            subsets = subsets.Where(subset => subset.IsValid);
-
-            subsets = subsets.ToList();
-
-            return (subsets);
-        }
-
-        private static List<ISubsetInfo> GetSubsets(IDiscInfo discInfo)
-        {
-            IEnumerable<ISubsetInfo> subsets = discInfo.Subsets;
-
-            List<ISubsetInfo> list = subsets.ToList();
-
-            list.Sort();
-
-            return (list);
-        }
-
         private static void AddSubset(Dictionary<String, List<ISubsetInfo>> subsets
             , ISubsetInfo subset)
-        {
-            List<ISubsetInfo> list = GetSubsetList(subsets, subset);
-
-            list.Add(subset);
-        }
+            => GetSubsetList(subsets, subset).Add(subset);
 
         private static List<ISubsetInfo> GetSubsetList(Dictionary<String, List<ISubsetInfo>> subsets
             , ISubsetInfo subset)
         {
-            List<ISubsetInfo> list;
-
             String key = subset.Name;
 
-            if (subsets.TryGetValue(key, out list) == false)
+            if (subsets.TryGetValue(key, out List<ISubsetInfo> list) == false)
             {
                 list = new List<ISubsetInfo>();
 

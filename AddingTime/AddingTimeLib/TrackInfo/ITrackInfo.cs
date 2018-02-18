@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+
     public interface ITrackInfo
     {
         #region Properties

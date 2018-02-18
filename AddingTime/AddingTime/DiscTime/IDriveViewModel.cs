@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using DoenaSoft.AbstractionLayer.IOServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
 {
+    using System;
+    using System.ComponentModel;
+    using AbstractionLayer.IOServices;
+
     interface IDriveViewModel : INotifyPropertyChanged
     {
         String Label { get; }

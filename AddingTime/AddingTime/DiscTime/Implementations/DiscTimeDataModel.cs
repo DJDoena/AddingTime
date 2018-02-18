@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.AbstractionLayer.UIServices;
-using DoenaSoft.ToolBox.Extensions;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using AbstractionLayer.IOServices;
+    using AbstractionLayer.UIServices;
+    using ToolBox.Extensions;
+
     internal sealed class DiscTimeDataModel : IDiscTimeDataModel
     {
-        private readonly IIOServices IOServices;
+        private readonly IIOServices _IOServices;
 
-        private readonly IUIServices UIServices;
+        private readonly IUIServices _UIServices;
 
         internal DiscTimeDataModel(IIOServices ioServices
             , IUIServices uiServices)
         {
-            IOServices = ioServices;
-            UIServices = uiServices;
-            
+            _IOServices = ioServices;
+
+            _UIServices = uiServices;
+
             DiscTree = new ObservableCollection<ITreeNode>();
         }
 
@@ -35,69 +36,46 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 
             if (drive.IsReady)
             {
-                IDiscInfo discInfo = DiscInfoFactory.GetDiscInfo(drive, IOServices);
+                IDiscInfo discInfo = DiscInfoFactory.GetDiscInfo(drive, _IOServices);
 
                 if (discInfo != null)
                 {
                     Scan(discInfo);
 
-                    UIServices.ShowMessageBox("Done.", String.Empty, Buttons.OK, Icon.Information);
+                    _UIServices.ShowMessageBox("Done.", String.Empty, Buttons.OK, Icon.Information);
                 }
                 else
                 {
-                    UIServices.ShowMessageBox("Disc could not be read!", "Error", Buttons.OK, Icon.Warning);
+                    _UIServices.ShowMessageBox("Disc could not be read!", "Error", Buttons.OK, Icon.Warning);
                 }
             }
             else
             {
-                UIServices.ShowMessageBox("The drive is not ready!", "Error", Buttons.OK, Icon.Warning);
+                _UIServices.ShowMessageBox("The drive is not ready!", "Error", Buttons.OK, Icon.Warning);
             }
         }
 
         public IEnumerable<ITreeNode> GetCheckedNodes()
-            => (GetSubNodes(IsChecked));
+            => GetSubNodes(node => node.IsChecked);
 
         public void CheckAllNodes()
-        {
-            foreach (ITreeNode node in GetCheckableNodes())
-            {
-                node.IsChecked = true;
-            }
-        }
+            => GetSubNodes(node => node.CanBeChecked).ForEach(node => node.IsChecked = true);
 
         #endregion
 
         private void Scan(IDiscInfo discInfo)
-        {
-            Dictionary<String, List<ISubsetInfo>> structuredSubsets = SubsetStructurer.GetStructuredSubsets(discInfo);
-
-            foreach (KeyValuePair<String, List<ISubsetInfo>> kvp in structuredSubsets)
-            {
-                TryAddSubsetNode(kvp);
-            }
-        }
+            => SubsetStructurer.GetStructuredSubsets(discInfo).ForEach(kvp => TryAddSubsetNode(kvp));
 
         #region AddSubsetNode
 
         private void TryAddSubsetNode(KeyValuePair<String, List<ISubsetInfo>> subset)
         {
-            IEnumerable<ISubsetInfo> subsets = GetFilteredSubsets(subset.Value);
+            IEnumerable<ISubsetInfo> subsets = subset.Value.Where(item => item.IsValid).Where(SubsetHasTrackWithMinimumLength).ToList();
 
             if (subsets.HasItems())
             {
                 AddSubsetNode(subset.Key, subsets);
             }
-        }
-
-        private IEnumerable<ISubsetInfo> GetFilteredSubsets(IEnumerable<ISubsetInfo> subsets)
-        {
-            subsets = subsets.Where(subset => subset.IsValid);
-
-            subsets = subsets.Where(SubsetHasTrackWithMinimumLength);
-
-            subsets = subsets.ToList();
-
-            return (subsets);
         }
 
         private void AddSubsetNode(String text
@@ -112,137 +90,28 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 
         private void AddTrackNodes(TreeNode subsetNode
             , IEnumerable<ISubsetInfo> subsets)
-        {
-            IEnumerable<TreeNode> tracks = GetTracks(subsets);
-
-            TreeNode[] array = tracks.ToArray();
-
-            foreach (TreeNode item in array)
-            {
-                subsetNode.Nodes.Add(item);
-            }
-        }
+            => subsets.Select(GetTracksFromSubset).SelectMany(track => track).ForEach(track => subsetNode.Nodes.Add(track));
 
         #region GetTracks
 
-        private IEnumerable<TreeNode> GetTracks(IEnumerable<ISubsetInfo> subsets)
-        {
-            IEnumerable<IEnumerable<TreeNode>> nested = GetTracksFromSubsets(subsets);
-
-            IEnumerable<TreeNode> flat = nested.SelectMany(item => item);
-
-            return (flat);
-        }
-
-        private IEnumerable<IEnumerable<TreeNode>> GetTracksFromSubsets(IEnumerable<ISubsetInfo> subsets)
-        {
-            foreach (ISubsetInfo subset in subsets)
-            {
-                IEnumerable<ITrackInfo> tracks = GetFilteredTracks(subset);
-
-                IEnumerable<TreeNode> trackNodes = GetTrackNodesFromTrack(tracks);
-
-                yield return (trackNodes);
-            }
-        }
-
-        private IEnumerable<ITrackInfo> GetFilteredTracks(ISubsetInfo subset)
-        {
-            IEnumerable<ITrackInfo> tracks = subset.Tracks;
-
-            tracks = tracks.Where(TrackHasMinimumLength);
-
-            return (tracks);
-        }
-
-        private IEnumerable<TreeNode> GetTrackNodesFromTrack(IEnumerable<ITrackInfo> tracks)
-        {
-            foreach (ITrackInfo track in tracks)
-            {
-                TreeNode trackNode = GetTrackNode(track);
-
-                yield return (trackNode);
-            }
-        }
-
-        private TreeNode GetTrackNode(ITrackInfo track)
-        {
-            TimeSpan runningTime = track.RunningTime;
-
-            String text = runningTime.ToString();
-
-            TreeNode trackNode = new TreeNode(text, runningTime);
-
-            return (trackNode);
-        }
+        private IEnumerable<TreeNode> GetTracksFromSubset(ISubsetInfo subset)
+            => subset.Tracks.Where(TrackHasMinimumLength).Select(track => new TreeNode(track.RunningTime.ToString(), track.RunningTime));
 
         #endregion
 
         private Boolean SubsetHasTrackWithMinimumLength(ISubsetInfo subset)
-        {
-            Boolean subsetHasTrackWithMinimumLength = subset.Tracks.HasItemsWhere(TrackHasMinimumLength);
-
-            return (subsetHasTrackWithMinimumLength);
-        }
+            => subset.Tracks.HasItemsWhere(TrackHasMinimumLength);
 
         private Boolean TrackHasMinimumLength(ITrackInfo track)
-        {
-            Decimal totalSeconds = Convert.ToDecimal(track.RunningTime.TotalSeconds);
-
-            Decimal minimumSeconds = MinimumTrackLength * 60;
-
-            Boolean trackHasMinimumLength = (totalSeconds >= minimumSeconds);
-
-            return (trackHasMinimumLength);
-        }
+            => Convert.ToDecimal(track.RunningTime.TotalSeconds) >= MinimumTrackLength * 60;
 
         #endregion
 
         #region GetSubNodes
 
         private IEnumerable<ITreeNode> GetSubNodes(Func<ITreeNode, Boolean> predicate)
-        {
-            IEnumerable<IEnumerable<ITreeNode>> nested = GetSubNodesFromNodes(predicate);
-
-            IEnumerable<ITreeNode> flat = nested.SelectMany(item => item);
-
-            return (flat);
-        }
-
-        private IEnumerable<IEnumerable<ITreeNode>> GetSubNodesFromNodes(Func<ITreeNode, Boolean> predicate)
-        {
-            foreach (ITreeNode node in DiscTree)
-            {
-                if (node.Nodes != null)
-                {
-                    IEnumerable<ITreeNode> subNodes = GetSubNodesFromNode(node, predicate);
-
-                    yield return (subNodes);
-                }
-            }
-        }
-
-        private IEnumerable<ITreeNode> GetSubNodesFromNode(ITreeNode node
-            , Func<ITreeNode, Boolean> predicate)
-        {
-            foreach (ITreeNode subNode in node.Nodes)
-            {
-                if (predicate(subNode))
-                {
-                    yield return (subNode);
-                }
-            }
-        }
-
-        private static Boolean CanBeChecked(ITreeNode node)
-            => (node.CanBeChecked);
-
-        private static Boolean IsChecked(ITreeNode node)
-            => (node.IsChecked);
+            => DiscTree.Where(node => node.Nodes != null).Select(node => node.Nodes.Where(predicate)).SelectMany(subNode => subNode);
 
         #endregion
-
-        private IEnumerable<ITreeNode> GetCheckableNodes()
-            => (GetSubNodes(CanBeChecked));
     }
 }

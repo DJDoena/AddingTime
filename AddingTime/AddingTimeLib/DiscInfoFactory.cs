@@ -1,25 +1,14 @@
-﻿using System.Collections.Generic;
-using DoenaSoft.AbstractionLayer.IOServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System.Collections.Generic;
+    using AbstractionLayer.IOServices;
+    using System.Linq;
+
     public static class DiscInfoFactory
     {
         public static IDiscInfo GetDiscInfo(IDriveInfo drive
             , IIOServices ioServices)
-        {
-            foreach (IDiscReader discReader in GetDiscReaders(ioServices))
-            {
-                IDiscInfo discInfo = discReader.GetDiscInfo(drive);
-
-                if (discInfo.IsValid)
-                {
-                    return (discInfo);
-                }
-            }
-
-            return (null);
-        }
+            => GetDiscReaders(ioServices).Select(discReader => discReader.GetDiscInfo(drive)).FirstOrDefault(discInfo => discInfo.IsValid);
 
         private static IEnumerable<IDiscReader> GetDiscReaders(IIOServices ioServices)
         {

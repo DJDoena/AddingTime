@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Input;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.Main
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.Main
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Windows.Input;
+
     internal interface IMainViewModel : INotifyPropertyChanged
     {
         #region Episodes

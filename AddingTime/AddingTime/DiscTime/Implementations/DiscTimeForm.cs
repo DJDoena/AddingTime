@@ -1,27 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows.Input;
-using DoenaSoft.AbstractionLayer.IOServices;
-using DoenaSoft.AbstractionLayer.UIServices;
-using Forms = System.Windows.Forms;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Runtime.InteropServices;
+    using System.Windows.Input;
+    using AbstractionLayer.UIServices;
+    using ToolBox.Extensions;
+    using Forms = System.Windows.Forms;
+
     internal partial class DiscTimeForm : Forms.Form
     {
-        private readonly IDiscTimeViewModel ViewModel;
+        private readonly IDiscTimeViewModel _ViewModel;
 
-        private readonly IUIServices UIServices;
+        private readonly IUIServices _UIServices;
 
         public DiscTimeForm(IDiscTimeViewModel viewModel
             , IUIServices uiServices)
         {
-            ViewModel = viewModel;
-            UIServices = uiServices;
+            _ViewModel = viewModel;
+
+            _UIServices = uiServices;
 
             InitializeComponent();
 
@@ -32,8 +33,8 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
         {
             Load += OnFormLoad;
 
-            ViewModel.PropertyChanged += OnViewModelChanged;
-            ViewModel.Closing += OnViewModelClosing;
+            _ViewModel.PropertyChanged += OnViewModelChanged;
+            _ViewModel.Closing += OnViewModelClosing;
 
             RegisterControlEvents();
 
@@ -46,11 +47,11 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 
         private void FillDrivesComboBox()
         {
-            IEnumerable<String> labels = ViewModel.Drives.Select(drive => drive.Label);
+            IEnumerable<String> labels = _ViewModel.Drives.Select(drive => drive.Label);
 
             DriveComboBox.Items.AddRange(labels.ToArray());
 
-            DriveComboBox.SelectedItem = ViewModel.SelectedDrive;
+            DriveComboBox.SelectedItem = _ViewModel.SelectedDrive;
 
             OnViewModelSelectedDriveChanged();
         }
@@ -67,8 +68,8 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
         {
             FormClosed -= OnFormClosed;
 
-            ViewModel.PropertyChanged -= OnViewModelChanged;
-            ViewModel.Closing -= OnViewModelClosing;
+            _ViewModel.PropertyChanged -= OnViewModelChanged;
+            _ViewModel.Closing -= OnViewModelClosing;
 
             UnregisterControlEvents();
 
@@ -136,18 +137,18 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
         }
 
         private void DestroyTreeView(Forms.TreeNodeCollection nodes)
+            => nodes.OfType<Forms.TreeNode>().ForEach(DestroyTreeNode);
+
+        private void DestroyTreeNode(Forms.TreeNode node)
         {
-            foreach (Forms.TreeNode node in nodes)
+            ITreeNode vmNode = (ITreeNode)(node.Tag);
+
+            if (vmNode.CanBeChecked)
             {
-                ITreeNode vmNode = (ITreeNode)(node.Tag);
-
-                if (vmNode.CanBeChecked)
-                {
-                    vmNode.PropertyChanged -= OnViewModelNodeIsCheckedChanged;
-                }
-
-                DestroyTreeView(node.Nodes);
+                vmNode.PropertyChanged -= OnViewModelNodeIsCheckedChanged;
             }
+
+            DestroyTreeView(node.Nodes);
         }
 
         #endregion
@@ -155,32 +156,32 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
         #region BuildTreeView
 
         private void BuildTreeView()
-        {
-            BuildTreeView(DiscTreeView.Nodes, ViewModel.DiscTree);
-        }
+            => BuildTreeView(DiscTreeView.Nodes, _ViewModel.DiscTree);
 
         private void BuildTreeView(Forms.TreeNodeCollection nodes
             , ObservableCollection<ITreeNode> vmNodes)
+            => vmNodes.ForEach(vmNode => BuildTreeNode(nodes, vmNode));
+
+        private void BuildTreeNode(Forms.TreeNodeCollection nodes
+            , ITreeNode vmNode)
         {
-            foreach (ITreeNode vmNode in vmNodes)
+            Forms.TreeNode node = new Forms.TreeNode(vmNode.Text)
             {
-                Forms.TreeNode node = new Forms.TreeNode(vmNode.Text);
+                Tag = vmNode
+            };
 
-                node.Tag = vmNode;
+            nodes.Add(node);
 
-                nodes.Add(node);
-
-                if (vmNode.CanBeChecked)
-                {
-                    vmNode.PropertyChanged += OnViewModelNodeIsCheckedChanged;
-                }
-                else
-                {
-                    HideCheckBox(DiscTreeView, node);
-                }
-
-                BuildTreeView(node.Nodes, vmNode.Nodes);
+            if (vmNode.CanBeChecked)
+            {
+                vmNode.PropertyChanged += OnViewModelNodeIsCheckedChanged;
             }
+            else
+            {
+                HideCheckBox(DiscTreeView, node);
+            }
+
+            BuildTreeView(node.Nodes, vmNode.Nodes);
         }
 
         #region HideCheckBox
@@ -250,28 +251,26 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 
         private void OnViewModelNodeIsCheckedChanged(Object sender
             , PropertyChangedEventArgs e)
-        {
-            UpdateTreeView(DiscTreeView.Nodes, (ITreeNode)sender);
-        }
+            => UpdateTreeView(DiscTreeView.Nodes, (ITreeNode)sender);
 
         private Boolean UpdateTreeView(Forms.TreeNodeCollection nodes
             , ITreeNode vmCompareNode)
+            => nodes.OfType<Forms.TreeNode>().HasItemsWhere(node => UpdateTreeNode(node, vmCompareNode));
+
+        private Boolean UpdateTreeNode(Forms.TreeNode node, ITreeNode vmCompareNode)
         {
-            foreach (Forms.TreeNode node in nodes)
+            ITreeNode vmCurrentNode = (ITreeNode)(node.Tag);
+
+            if (vmCurrentNode == vmCompareNode)
             {
-                ITreeNode vmCurrentNode = (ITreeNode)(node.Tag);
+                node.Checked = vmCompareNode.IsChecked;
 
-                if (vmCurrentNode == vmCompareNode)
-                {
-                    node.Checked = vmCompareNode.IsChecked;
+                return (true);
+            }
 
-                    return (true);
-                }
-
-                if (UpdateTreeView(node.Nodes, vmCompareNode))
-                {
-                    return (true);
-                }
+            if (UpdateTreeView(node.Nodes, vmCompareNode))
+            {
+                return (true);
             }
 
             return (false);
@@ -281,28 +280,23 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 
         private void OnOKButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.AcceptCommand);
-        }
+            => ExecuteCommand(_ViewModel.AcceptCommand);
 
         private void OnAbortButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.CancelCommand);
-        }
+            => ExecuteCommand(_ViewModel.CancelCommand);
+
         private void OnViewModelDrivesChanges()
         {
-            for (Int32 i = 0; i < ViewModel.Drives.Count; i++)
+            for (Int32 i = 0; i < _ViewModel.Drives.Count; i++)
             {
-                DriveComboBox.Items[i] = ViewModel.Drives[i].Label;
+                DriveComboBox.Items[i] = _ViewModel.Drives[i].Label;
             }
         }
 
         private void OnFormLoad(Object sender
             , EventArgs e)
-        {
-            ViewModel.CheckForDecrypter();
-        }
+            => _ViewModel.CheckForDecrypter();
 
         private void OnDiscTreeViewAfterCheck(Object sender
             , Forms.TreeViewEventArgs e)
@@ -319,25 +313,25 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
         {
             switch (e.PropertyName)
             {
-                case (nameof(ViewModel.Drives)):
+                case (nameof(_ViewModel.Drives)):
                     {
                         OnViewModelDrivesChanges();
 
                         break;
                     }
-                case (nameof(ViewModel.SelectedDrive)):
+                case (nameof(_ViewModel.SelectedDrive)):
                     {
                         OnViewModelSelectedDriveChanged();
 
                         break;
                     }
-                case (nameof(ViewModel.DiscTree)):
+                case (nameof(_ViewModel.DiscTree)):
                     {
                         OnViewModelDiscTreeChanged();
 
                         break;
                     }
-                case (nameof(ViewModel.MinimumLength)):
+                case (nameof(_ViewModel.MinimumLength)):
                     {
                         OnViewModelMinimumLengthChanged();
 
@@ -347,65 +341,47 @@ namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
         }
 
         private void OnViewModelMinimumLengthChanged()
-        {
-            MinimumTrackLengthUpDown.Value = ViewModel.MinimumLength;
-        }
+            => MinimumTrackLengthUpDown.Value = _ViewModel.MinimumLength;
 
         private void OnViewModelSelectedDriveChanged()
         {
-            DriveComboBox.SelectedItem = ViewModel.SelectedDrive;
+            DriveComboBox.SelectedItem = _ViewModel.SelectedDrive;
 
-            ScanButton.Enabled = CanExecute(ViewModel.ScanCommand);
+            ScanButton.Enabled = CanExecute(_ViewModel.ScanCommand);
         }
 
         private void OnMinimumTrackLengthUpDownValueChanged(Object sender
             , EventArgs e)
-        {
-            ViewModel.MinimumLength = Convert.ToInt32(MinimumTrackLengthUpDown.Value);
-        }
+            => _ViewModel.MinimumLength = Convert.ToInt32(MinimumTrackLengthUpDown.Value);
 
         private void OnDriveComboBoxSelectedIndexChanged(Object sender
             , EventArgs e)
-        {
-            ViewModel.SelectedDrive = (IDriveViewModel)(DriveComboBox.SelectedItem);
-        }
+            => _ViewModel.SelectedDrive = (IDriveViewModel)(DriveComboBox.SelectedItem);
 
         private void OnScanButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.ScanCommand);
-        }
+            => ExecuteCommand(_ViewModel.ScanCommand);
 
         private void OnSitcomButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.SetSitcomLengthCommand);
-        }
+            => ExecuteCommand(_ViewModel.SetSitcomLengthCommand);
 
         private void OnDramaButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.SetDramaLengthCommand);
-        }
+            => ExecuteCommand(_ViewModel.SetDramaLengthCommand);
 
         private void OnMovieButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.SetMovieLengthCommand);
-        }
+            => ExecuteCommand(_ViewModel.SetMovieLengthCommand);
 
         private void OnSelectAllButtonClick(Object sender
             , EventArgs e)
-        {
-            ExecuteCommand(ViewModel.CheckAllNodesCommand);
-        }
+            => ExecuteCommand(_ViewModel.CheckAllNodesCommand);
 
         private static Boolean CanExecute(ICommand command)
-            => (command.CanExecute(null));
+            => command.CanExecute(null);
 
         private static void ExecuteCommand(ICommand command)
-        {
-            command.Execute(null);
-        }
+            => command.Execute(null);
     }
 }

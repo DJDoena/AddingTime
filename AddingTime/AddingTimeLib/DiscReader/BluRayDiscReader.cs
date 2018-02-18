@@ -1,31 +1,24 @@
-﻿using System;
-using DoenaSoft.AbstractionLayer.IOServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime
+﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
+    using System;
+    using AbstractionLayer.IOServices;
+
     public sealed class BluRayDiscReader : IDiscReader
     {
-        private readonly IIOServices IOServices;
+        private readonly IIOServices _IOServices;
 
         public BluRayDiscReader(IIOServices ioServices)
-        {
-            if (ioServices == null)
-            {
-                throw (new ArgumentNullException(nameof(ioServices)));
-            }
-
-            IOServices = ioServices;
-        }
+            => _IOServices = ioServices ?? throw new ArgumentNullException(nameof(ioServices));
 
         #region Methods
 
         public IDiscInfo GetDiscInfo(IDriveInfo drive)
         {
-            String path = IOServices.Path.Combine(drive.RootDirectory, "BDMV");
+            String path = _IOServices.Path.Combine(drive.RootFolder, "BDMV");
 
-            DiscInfoBase discInfo = new BluRayDiscInfo(IOServices);
+            DiscInfoBase discInfo = new BluRayDiscInfo(_IOServices);
 
-            if (IOServices.File.Exists(IOServices.Path.Combine(path, "INDEX.BDMV")))
+            if (_IOServices.File.Exists(_IOServices.Path.Combine(path, "INDEX.BDMV")))
             {
                 discInfo.Init(path);
             }

@@ -1,32 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using DoenaSoft.AbstractionLayer.UIServices;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using AbstractionLayer.UIServices;
+
     internal sealed class MainDataModel : IMainDataModel
     {
-        private readonly IUIServices UIServices;
+        private readonly IUIServices _UIServices;
 
-        private List<String> m_Episodes;
+        private List<String> _Episodes;
 
-        private List<String> m_Discs;
+        private List<String> _Discs;
 
-        private List<String> m_Seasons;
+        private List<String> _Seasons;
 
         public MainDataModel(IUIServices uiServices)
         {
-            if (uiServices == null)
-            {
-                throw (new ArgumentNullException(nameof(uiServices)));
-            }
+            _UIServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
 
-            UIServices = uiServices;
+            _Episodes = new List<String>(10);
 
-            m_Episodes = new List<String>(10);
-            m_Discs = new List<String>(6);
-            m_Seasons = new List<String>(5);
+            _Discs = new List<String>(6);
+
+            _Seasons = new List<String>(5);
         }
 
         #region IMainModel
@@ -34,7 +31,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         #region Episodes
 
         public IEnumerable<String> Episodes
-            => (m_Episodes);
+            => _Episodes;
 
         public event EventHandler EpisodesChanged;
 
@@ -52,11 +49,9 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         public Boolean AddEpisode(String input)
         {
-            String text;
-
-            if (FormatInput(input, out text))
+            if (FormatInput(input, out String text))
             {
-                m_Episodes.Add(text);
+                _Episodes.Add(text);
 
                 OnEpisodesChanged();
 
@@ -68,19 +63,19 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         public void ClearEpisodes()
         {
-            m_Episodes.Clear();
+            _Episodes.Clear();
 
             OnEpisodesChanged();
         }
 
         public void RemoveEpisode(Int32 index)
         {
-            if (index >= m_Episodes.Count)
+            if (index >= _Episodes.Count)
             {
                 throw (new ArgumentException("Invalid index", nameof(index)));
             }
 
-            m_Episodes.RemoveAt(index);
+            _Episodes.RemoveAt(index);
 
             OnEpisodesChanged();
         }
@@ -90,7 +85,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         #region Discs
 
         public IEnumerable<String> Discs
-            => (m_Discs);
+            => _Discs;
 
         public event EventHandler DiscsChanged;
 
@@ -108,11 +103,9 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         public void AddDisc(String input)
         {
-            String text;
-
-            if (FormatInput(input, out text))
+            if (FormatInput(input, out String text))
             {
-                m_Discs.Add(text);
+                _Discs.Add(text);
 
                 OnDiscsChanged();
             }
@@ -120,19 +113,19 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         public void RemoveDisc(Int32 index)
         {
-            if (index >= m_Discs.Count)
+            if (index >= _Discs.Count)
             {
                 throw (new ArgumentException("Invalid index", nameof(index)));
             }
 
-            m_Discs.RemoveAt(index);
+            _Discs.RemoveAt(index);
 
             OnDiscsChanged();
         }
 
         public void ClearDiscs()
         {
-            m_Discs.Clear();
+            _Discs.Clear();
 
             OnDiscsChanged();
         }
@@ -142,7 +135,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         #region Seasons
 
         public IEnumerable<String> Seasons
-            => (m_Seasons);
+            => _Seasons;
 
         public event EventHandler SeasonsChanged;
 
@@ -160,11 +153,9 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         public void AddSeason(String input)
         {
-            String text;
-
-            if (FormatInput(input, out text))
+            if (FormatInput(input, out String text))
             {
-                m_Seasons.Add(text);
+                _Seasons.Add(text);
 
                 OnSeasonsChanged();
             }
@@ -172,19 +163,19 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         public void RemoveSeason(Int32 index)
         {
-            if (index >= m_Seasons.Count)
+            if (index >= _Seasons.Count)
             {
                 throw (new ArgumentException("Invalid index", nameof(index)));
             }
 
-            m_Seasons.RemoveAt(index);
+            _Seasons.RemoveAt(index);
 
             OnSeasonsChanged();
         }
 
         public void ClearSeasons()
         {
-            m_Seasons.Clear();
+            _Seasons.Clear();
 
             OnSeasonsChanged();
         }
@@ -204,7 +195,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
             if ((split.Length != 2) && (split.Length != 3))
             {
-                UIServices.ShowMessageBox("Invalid Time Format!", "Error", Buttons.OK, Icon.Warning);
+                _UIServices.ShowMessageBox("Invalid Time Format!", "Error", Buttons.OK, Icon.Warning);
 
                 return (false);
             }
@@ -213,18 +204,16 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
             foreach (String part in split)
             {
-                Int32 temp;
-
-                if (Int32.TryParse(part, out temp) == false)
+                if (Int32.TryParse(part, out Int32 temp) == false)
                 {
-                    UIServices.ShowMessageBox($"Not a Number: {part}", "Error", Buttons.OK, Icon.Warning);
+                    _UIServices.ShowMessageBox($"Not a Number: {part}", "Error", Buttons.OK, Icon.Warning);
 
                     return (false);
                 }
 
                 if (temp > 59)
                 {
-                    UIServices.ShowMessageBox($"Invalid Time Part: {part}", "Error", Buttons.OK, Icon.Warning);
+                    _UIServices.ShowMessageBox($"Invalid Time Part: {part}", "Error", Buttons.OK, Icon.Warning);
 
                     return (false);
                 }
@@ -244,11 +233,11 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         private void OnEpisodesChanged()
         {
-            Calc(m_Episodes, SetEpisodesFullTime, SetEpisodesMiddleTime, SetEpisodesShortTime);
+            Calc(_Episodes, SetEpisodesFullTime, SetEpisodesMiddleTime, SetEpisodesShortTime);
 
             EpisodesChanged?.Invoke(this, EventArgs.Empty);
         }
-        
+
         private void SetEpisodesFullTime(String text)
         {
             EpisodesFullTime = text;
@@ -276,7 +265,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         private void OnDiscsChanged()
         {
-            Calc(m_Discs, SetDiscsFullTime, SetDiscsMiddleTime, SetDiscsShortTime);
+            Calc(_Discs, SetDiscsFullTime, SetDiscsMiddleTime, SetDiscsShortTime);
 
             DiscsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -308,7 +297,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         private void OnSeasonsChanged()
         {
-            Calc(m_Seasons, SetSeasonsFullTime, SetSeasonsMiddleTime, SetSeasonsShortTime);
+            Calc(_Seasons, SetSeasonsFullTime, SetSeasonsMiddleTime, SetSeasonsShortTime);
 
             SeasonsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -354,10 +343,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
             Int32 seconds = 0;
 
-            foreach (String entry in entries)
-            {
-                seconds += MainHelper.CalcSeconds(entry);
-            }
+            entries.ForEach(entry => seconds += MainHelper.CalcSeconds(entry));
 
             Decimal fractalMinutes = MainHelper.CalcFractalMinutes(seconds);
 
@@ -383,8 +369,6 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
         }
 
         private void RaisePropertyChanged(EventHandler handler)
-        {
-            handler?.Invoke(this, EventArgs.Empty);
-        }
+            => handler?.Invoke(this, EventArgs.Empty);
     }
 }
