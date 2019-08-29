@@ -1,11 +1,11 @@
 [Setup]
 AppName=AddingTime
 AppId=AddingTime
-AppVerName=AddingTime 4.0.0.4
-AppCopyright=Copyright © Doena Soft. 2008 - 2018
+AppVerName=AddingTime 4.0.0.5
+AppCopyright=Copyright © Doena Soft. 2008 - 2019
 AppPublisher=Doena Soft.
 AppPublisherURL=http://doena-journal.net/en/dvd-profiler-tools/
-DefaultDirName={pf32}\Doena Soft.\AddingTime
+DefaultDirName={commonpf32}\Doena Soft.\AddingTime
 DefaultGroupName=AddingTime
 DirExistsWarning=No
 SourceDir=..\AddingTime\bin\x86\AddingTime
@@ -13,16 +13,16 @@ Compression=zip/9
 AppMutex=AddingTime
 OutputBaseFilename=AddingTimeSetup
 OutputDir=..\..\..\..\AddingTimeSetup\Setup\AddingTime
-MinVersion=0,5.1
+MinVersion=0,6.0
 PrivilegesRequired=admin
 WizardImageFile=compiler:wizmodernimage-is.bmp
 WizardSmallImageFile=compiler:wizmodernsmallimage-is.bmp
 DisableReadyPage=yes
 ShowLanguageDialog=no
 VersionInfoCompany=Doena Soft.
-VersionInfoCopyright=2008 - 2018
+VersionInfoCopyright=2008 - 2019
 VersionInfoDescription=AddingTime Setup
-VersionInfoVersion=4.0.0.4
+VersionInfoVersion=4.0.0.5
 UninstallDisplayIcon={app}\djdsoft.ico
 
 [Languages]
@@ -59,7 +59,7 @@ Source: "Readme\readme.html"; DestDir: "{app}\Readme"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\AddingTime"; Filename: "{app}\AddingTime.exe"; WorkingDir: "{app}"; IconFilename: "{app}\djdsoft.ico"
-Name: "{userdesktop}\AddingTime"; Filename: "{app}\AddingTime.exe"; WorkingDir: "{app}"; IconFilename: "{app}\djdsoft.ico"
+Name: "{commondesktop}\AddingTime"; Filename: "{app}\AddingTime.exe"; WorkingDir: "{app}"; IconFilename: "{app}\djdsoft.ico"
 
 [Run]
 

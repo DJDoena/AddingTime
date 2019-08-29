@@ -258,7 +258,11 @@
 
             _DataModel.DiscsFullTimeChanged += OnDiscsFullTimeChanged;
             _DataModel.DiscsMiddleTimeChanged += OnDiscsMiddleTimeChanged;
-            _DataModel.DiscsShortTimeChanged += OnEpisodesShortTimeChanged;
+            _DataModel.DiscsShortTimeChanged += OnDiscsShortTimeChanged;
+
+            _DataModel.SeasonsFullTimeChanged += OnSeasonsFullTimeChanged;
+            _DataModel.SeasonsMiddleTimeChanged += OnSeasonsMiddleTimeChanged;
+            _DataModel.SeasonsShortTimeChanged += OnSeasonsShortTimeChanged;
 
             _DataModel.SeasonsChanged += OnSeasonsChanged;
         }
@@ -278,6 +282,10 @@
             _DataModel.DiscsShortTimeChanged -= OnDiscsShortTimeChanged;
 
             _DataModel.SeasonsChanged -= OnSeasonsChanged;
+
+            _DataModel.SeasonsFullTimeChanged -= OnSeasonsFullTimeChanged;
+            _DataModel.SeasonsMiddleTimeChanged -= OnSeasonsMiddleTimeChanged;
+            _DataModel.SeasonsShortTimeChanged -= OnSeasonsShortTimeChanged;
         }
 
         private void RaisePropertyChanged(String attribute)
