@@ -2,7 +2,7 @@
 AppName=AddingTime
 AppId=AddingTime
 AppVerName=AddingTime 4.0.0.5
-AppCopyright=Copyright © Doena Soft. 2008 - 2019
+AppCopyright=Copyright © Doena Soft. 2008 - 2020
 AppPublisher=Doena Soft.
 AppPublisherURL=http://doena-journal.net/en/dvd-profiler-tools/
 DefaultDirName={commonpf32}\Doena Soft.\AddingTime
@@ -20,7 +20,7 @@ WizardSmallImageFile=compiler:wizmodernsmallimage-is.bmp
 DisableReadyPage=yes
 ShowLanguageDialog=no
 VersionInfoCompany=Doena Soft.
-VersionInfoCopyright=2008 - 2019
+VersionInfoCopyright=2008 - 2020
 VersionInfoDescription=AddingTime Setup
 VersionInfoVersion=4.0.0.5
 UninstallDisplayIcon={app}\djdsoft.ico

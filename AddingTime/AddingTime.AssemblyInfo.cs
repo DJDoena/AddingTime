@@ -5,7 +5,7 @@
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Doena Soft.")]
 [assembly: AssemblyProduct("AddingTime")]
-[assembly: AssemblyCopyright("Copyright © Doena Soft. 2008 - 2019")]
+[assembly: AssemblyCopyright("Copyright © Doena Soft. 2008 - 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
