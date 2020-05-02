@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DoenaSoft.DVDProfiler.AddingTime.Main.Implementations"
         mc:Ignorable="d"
-        Title="AddingTime" Height="500" Width="825" ResizeMode="NoResize" Icon="pack://siteoforigin:,,,/DJDSOFT.ICO"
+        Title="AddingTime" Height="500" Width="825" ResizeMode="NoResize" Icon="/AddingTime;component/DJDSOFT.ICO"
         FocusManager.FocusedElement="{Binding ElementName=InputTextBox}">
     <Grid>
         <DockPanel>

@@ -27,6 +27,8 @@
             InitializeComponent();
 
             PrepareForm();
+
+            Icon = Properties.Resource.djdsoft;
         }
 
         private void PrepareForm()

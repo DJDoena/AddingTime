@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Read from Drive" Height="450" Width="450" ResizeMode="NoResize" Icon="pack://siteoforigin:,,,/DJDSOFT.ICO"
+        Title="Read from Drive" Height="450" Width="450" ResizeMode="NoResize" Icon="/AddingTime;component/DJDSOFT.ICO"
         Loaded="OnLoaded">
     <Window.Resources>
         <local:RunningTimeTreeViewItemSelector x:Key="RunningTimeTreeViewItemSelector">

@@ -23,6 +23,8 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
             RegisterControlEvents();
 
             FormClosed += OnFormClosed;
+
+            Icon = Properties.Resource.djdsoft;
         }
 
         private void OnFormClosed(Object sender
