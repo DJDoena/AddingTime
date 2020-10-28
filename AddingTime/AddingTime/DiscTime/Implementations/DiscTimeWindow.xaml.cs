@@ -28,7 +28,7 @@
 
             viewModel.Closing -= OnViewModelClosing;
 
-            DialogResult = (e.Result == Result.OK) ? true : false;
+            DialogResult = (e.Result == Result.OK);
 
             Close();
         }

@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DoenaSoft.DVDProfiler.AddingTime.Main.Implementations"
         mc:Ignorable="d"
         Title="AddingTime" Height="500" Width="825" ResizeMode="NoResize" Icon="/AddingTime;component/DJDSOFT.ICO"
         FocusManager.FocusedElement="{Binding ElementName=InputTextBox}">
@@ -144,7 +143,7 @@
 
                 <Button Grid.Column="3" Grid.Row="9" 
                     Command="{Binding CopyFullDiscsCommand}" Content="Copy Full"
-                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times fancily formatted into the clipboard" />
+                    Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" ToolTip="Copies the summed up times fancily formatted into the clipboard"/>
 
 
                 <TextBlock Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2"

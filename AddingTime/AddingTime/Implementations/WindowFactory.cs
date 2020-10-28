@@ -41,7 +41,7 @@
         {
             IMainDataModel dataModel = new MainDataModel(_UIServices);
 
-            IMainOutputModel outputModel = new MainOutputModel(dataModel, _ClipboardServices);
+            IMainOutputModel outputModel = new MainOutputModel(dataModel, _UIServices, _ClipboardServices);
 
             IMainViewModel viewModel = new MainViewModel(dataModel, outputModel, _ClipboardServices, this, _UIServices);
 

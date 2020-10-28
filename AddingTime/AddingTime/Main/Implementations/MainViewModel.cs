@@ -359,7 +359,7 @@
 
         private void MoveEpisodes()
         {
-            _DataModel.AddDisc(EpisodesFullTime);
+            _DataModel.AddDisc(EpisodesFullTime, _DataModel.Episodes);
 
             ClearEpisodes();
         }
@@ -416,7 +416,7 @@
 
         private void MoveDiscs()
         {
-            _DataModel.AddSeason(DiscsFullTime);
+            _DataModel.AddSeason(DiscsFullTime, _DataModel.Discs);
 
             ClearDiscs();
         }

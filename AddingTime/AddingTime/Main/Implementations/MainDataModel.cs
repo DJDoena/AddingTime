@@ -3,35 +3,36 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using AbstractionLayer.UIServices;
+    using DoenaSoft.ToolBox.Extensions;
 
     internal sealed class MainDataModel : IMainDataModel
     {
         private readonly IUIServices _UIServices;
 
-        private List<String> _Episodes;
+        private List<string> _Episodes;
 
-        private List<String> _Discs;
+        private List<Tuple<String, List<string>>> _Discs;
 
-        private List<String> _Seasons;
+        private List<Tuple<String, List<string>>> _Seasons;
 
         public MainDataModel(IUIServices uiServices)
         {
             _UIServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
 
-            _Episodes = new List<String>(10);
+            _Episodes = new List<string>(10);
 
-            _Discs = new List<String>(6);
+            _Discs = new List<Tuple<string, List<string>>>(6);
 
-            _Seasons = new List<String>(5);
+            _Seasons = new List<Tuple<string, List<string>>>(6);
         }
 
         #region IMainModel
 
         #region Episodes
 
-        public IEnumerable<String> Episodes
-            => _Episodes;
+        public IEnumerable<string> Episodes => _Episodes.Select(e => e);
 
         public event EventHandler EpisodesChanged;
 
@@ -47,7 +48,7 @@
 
         public event EventHandler EpisodesShortTimeChanged;
 
-        public Boolean AddEpisode(String input)
+        public Boolean AddEpisode(string input)
         {
             if (FormatInput(input, out String text))
             {
@@ -84,8 +85,9 @@
 
         #region Discs
 
-        public IEnumerable<String> Discs
-            => _Discs;
+        public IEnumerable<string> Discs => _Discs.Select(d => d.Item1);
+
+        public IEnumerable<IEnumerable<string>> DiscEpisodes => _Discs.Select(d => d.Item2);
 
         public event EventHandler DiscsChanged;
 
@@ -101,13 +103,46 @@
 
         public event EventHandler DiscsShortTimeChanged;
 
-        public void AddDisc(String input)
+        public void AddDisc(string input)
         {
-            if (FormatInput(input, out String text))
+            if (FormatInput(input, out string text))
             {
-                _Discs.Add(text);
+                _Discs.Add(new Tuple<string, List<string>>(text, new List<string>(0)));
 
                 OnDiscsChanged();
+            }
+        }
+
+        public void AddDisc(string discInput, IEnumerable<string> episodeInputs)
+        {
+            if (episodeInputs != null)
+            {
+                var episodeInputFail = false;
+
+                var episodeTexts = episodeInputs.Select(e =>
+                {
+                    if (FormatInput(e, out var episodeText))
+                    {
+                        return episodeText;
+                    }
+                    else
+                    {
+                        episodeInputFail = true;
+
+                        return string.Empty;
+                    }
+                }).ToList();
+
+                if (!episodeInputFail && FormatInput(discInput, out var discText))
+                {
+                    _Discs.Add(new Tuple<string, List<string>>(discText, episodeTexts));
+
+                    OnDiscsChanged();
+                }
+            }
+            else
+            {
+                AddDisc(discInput);
             }
         }
 
@@ -134,8 +169,9 @@
 
         #region Seasons
 
-        public IEnumerable<String> Seasons
-            => _Seasons;
+        public IEnumerable<string> Seasons => _Seasons.Select(s => s.Item1);
+
+        public IEnumerable<IEnumerable<string>> SeasonDiscs => _Seasons.Select(s => s.Item2);
 
         public event EventHandler SeasonsChanged;
 
@@ -151,17 +187,50 @@
 
         public event EventHandler SeasonsShortTimeChanged;
 
-        public void AddSeason(String input)
+        public void AddSeason(string input)
         {
-            if (FormatInput(input, out String text))
+            if (FormatInput(input, out string text))
             {
-                _Seasons.Add(text);
+                _Seasons.Add(new Tuple<string, List<string>>(text, new List<string>(0)));
 
                 OnSeasonsChanged();
             }
         }
 
-        public void RemoveSeason(Int32 index)
+        public void AddSeason(string seasonInput, IEnumerable<string> discInputs)
+        {
+            if (discInputs != null)
+            {
+                var discInputFail = false;
+
+                var discTexts = discInputs.Select(e =>
+                {
+                    if (FormatInput(e, out var episodeText))
+                    {
+                        return episodeText;
+                    }
+                    else
+                    {
+                        discInputFail = true;
+
+                        return string.Empty;
+                    }
+                }).ToList();
+
+                if (!discInputFail && FormatInput(seasonInput, out var seasonText))
+                {
+                    _Seasons.Add(new Tuple<string, List<string>>(seasonText, discTexts));
+
+                    OnSeasonsChanged();
+                }
+            }
+            else
+            {
+                AddSeason(seasonInput);
+            }
+        }
+
+        public void RemoveSeason(int index)
         {
             if (index >= _Seasons.Count)
             {
@@ -186,36 +255,35 @@
 
         #region Episodes
 
-        private Boolean FormatInput(String input
-            , out String text)
+        private bool FormatInput(string input, out string text)
         {
-            text = input.Replace(".", ":").Replace(",", ":");
+            text = (input ?? string.Empty).Replace(".", ":").Replace(",", ":");
 
-            String[] split = text.Split(':');
+            var split = text.Split(':');
 
             if ((split.Length != 2) && (split.Length != 3))
             {
                 _UIServices.ShowMessageBox("Invalid Time Format!", "Error", Buttons.OK, Icon.Warning);
 
-                return (false);
+                return false;
             }
 
-            text = String.Empty;
+            text = string.Empty;
 
-            foreach (String part in split)
+            foreach (var part in split)
             {
-                if (Int32.TryParse(part, out Int32 temp) == false)
+                if (!int.TryParse(part, out int temp))
                 {
                     _UIServices.ShowMessageBox($"Not a Number: {part}", "Error", Buttons.OK, Icon.Warning);
 
-                    return (false);
+                    return false;
                 }
 
-                if (temp > 59)
+                if (temp < 0 || temp > 59)
                 {
                     _UIServices.ShowMessageBox($"Invalid Time Part: {part}", "Error", Buttons.OK, Icon.Warning);
 
-                    return (false);
+                    return false;
                 }
 
                 text += temp.ToString("00:");
@@ -228,7 +296,7 @@
                 text = "00:" + text;
             }
 
-            return (true);
+            return true;
         }
 
         private void OnEpisodesChanged()
@@ -261,11 +329,11 @@
 
         #endregion
 
-        #region Discs    
+        #region Discs
 
         private void OnDiscsChanged()
         {
-            Calc(_Discs, SetDiscsFullTime, SetDiscsMiddleTime, SetDiscsShortTime);
+            Calc(Discs, SetDiscsFullTime, SetDiscsMiddleTime, SetDiscsShortTime);
 
             DiscsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -297,7 +365,7 @@
 
         private void OnSeasonsChanged()
         {
-            Calc(_Seasons, SetSeasonsFullTime, SetSeasonsMiddleTime, SetSeasonsShortTime);
+            Calc(Seasons, SetSeasonsFullTime, SetSeasonsMiddleTime, SetSeasonsShortTime);
 
             SeasonsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -325,12 +393,9 @@
 
         #endregion
 
-        private static void Calc(List<String> entries
-            , Action<String> setFullTime
-            , Action<String> setMiddleTime
-            , Action<String> setshortTime)
+        private static void Calc(IEnumerable<string> entries, Action<string> setFullTime, Action<string> setMiddleTime, Action<string> setshortTime)
         {
-            if (entries.Count == 0)
+            if (!entries.Any())
             {
                 setFullTime(null);
 

@@ -56,7 +56,7 @@
 
 #endif
 
-            SelectedDrive = Drives.FirstOrDefault();
+            SelectedDrive = Drives.FirstOrDefault(d => d.Actual.DriveLetter == _SelectedDrive?.Actual.DriveLetter) ?? Drives.FirstOrDefault();
         }
 
         #region  IDiscTimeViewModel

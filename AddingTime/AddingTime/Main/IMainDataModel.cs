@@ -35,6 +35,8 @@
 
         IEnumerable<String> Discs { get; }
 
+        IEnumerable<IEnumerable<string>> DiscEpisodes { get; }
+
         event EventHandler DiscsChanged;
 
         String DiscsFullTime { get; }
@@ -49,7 +51,9 @@
 
         event EventHandler DiscsShortTimeChanged;
 
-        void AddDisc(String input);
+        void AddDisc(string input);
+
+        void AddDisc(string discInput, IEnumerable<string> episodeInputs);
 
         void RemoveDisc(Int32 index);
 
@@ -59,7 +63,9 @@
 
         #region Seasons
 
-        IEnumerable<String> Seasons { get; }
+        IEnumerable<string> Seasons { get; }
+
+        IEnumerable<IEnumerable<string>> SeasonDiscs { get; }
 
         event EventHandler SeasonsChanged;
 
@@ -75,7 +81,9 @@
 
         event EventHandler SeasonsShortTimeChanged;
 
-        void AddSeason(String input);
+        void AddSeason(string input);
+
+        void AddSeason(string seasonInput, IEnumerable<string> discInputs);
 
         void RemoveSeason(Int32 index);
 
