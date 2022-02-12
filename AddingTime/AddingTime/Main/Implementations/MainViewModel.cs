@@ -3,6 +3,7 @@
     using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows.Input;
     using AbstractionLayer.UIServices;
     using DVDProfilerHelper;
@@ -65,7 +66,7 @@
             }
         }
 
-        public ObservableCollection<string> Episodes => new ObservableCollection<string>(_dataModel.Episodes);
+        public ObservableCollection<string> Episodes => new ObservableCollection<string>(_dataModel.EpisodeRunningTimes.Select(e => MainHelper.FormatTime(e)));
 
         public int SelectedEpisode
         {
@@ -102,7 +103,7 @@
 
         #region Discs
 
-        public ObservableCollection<string> Discs => new ObservableCollection<string>(_dataModel.Discs);
+        public ObservableCollection<string> Discs => new ObservableCollection<string>(_dataModel.DiscRunningTimes.Select(d => MainHelper.FormatTime(d)));
 
         public int SelectedDisc
         {
@@ -137,7 +138,7 @@
 
         #region Seasons
 
-        public ObservableCollection<string> Seasons => new ObservableCollection<string>(_dataModel.Seasons);
+        public ObservableCollection<string> Seasons => new ObservableCollection<string>(_dataModel.SeasonRunningTimes.Select(s => MainHelper.FormatTime(s)));
 
         public int SelectedSeason
         {
@@ -305,7 +306,7 @@
 
         private void MoveEpisodes()
         {
-            _dataModel.AddDisc(this.EpisodesFullTime, _dataModel.Episodes);
+            _dataModel.AddDisc(_dataModel.EpisodeRunningTimes);
 
             this.ClearEpisodes();
         }
@@ -347,7 +348,7 @@
 
         private void MoveDiscs()
         {
-            _dataModel.AddSeason(this.DiscsFullTime, _dataModel.DiscEpisodes);
+            _dataModel.AddSeason(_dataModel.Discs);
 
             this.ClearDiscs();
         }

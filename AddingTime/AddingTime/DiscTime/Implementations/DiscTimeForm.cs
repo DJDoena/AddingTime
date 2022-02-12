@@ -54,7 +54,7 @@
 
         private void OnViewModelClosing(object sender, CloseEventArgs e)
         {
-            this.DialogResult = (e.Result == Result.OK) ? Forms.DialogResult.OK : Forms.DialogResult.Cancel;
+            this.DialogResult = e.Result == Result.OK ? Forms.DialogResult.OK : Forms.DialogResult.Cancel;
 
             this.Close();
         }

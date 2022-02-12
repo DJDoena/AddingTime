@@ -11,28 +11,28 @@
     {
         private readonly IUIServices _uiServices;
 
-        private readonly List<string> _episodes;
+        private readonly List<int> _episodes;
 
-        private readonly List<DiscEpisodes> _discs;
+        private readonly List<DiscRunningTime> _discs;
 
-        private readonly List<SeasonDiscEpisodes> _seasons;
+        private readonly List<SeasonRunningTime> _seasons;
 
         public MainDataModel(IUIServices uiServices)
         {
             _uiServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
 
-            _episodes = new List<string>(10);
+            _episodes = new List<int>(10);
 
-            _discs = new List<DiscEpisodes>(6);
+            _discs = new List<DiscRunningTime>(6);
 
-            _seasons = new List<SeasonDiscEpisodes>(6);
+            _seasons = new List<SeasonRunningTime>(6);
         }
 
         #region IMainModel
 
         #region Episodes
 
-        public IEnumerable<string> Episodes => _episodes.Select(e => e);
+        public IEnumerable<int> EpisodeRunningTimes => _episodes;
 
         public event EventHandler EpisodesChanged;
 
@@ -52,7 +52,9 @@
         {
             if (this.FormatInput(input, out string text))
             {
-                _episodes.Add(text);
+                var seconds = MainHelper.CalcSeconds(text);
+
+                _episodes.Add(seconds);
 
                 this.OnEpisodesChanged();
 
@@ -85,9 +87,9 @@
 
         #region Discs
 
-        public IEnumerable<string> Discs => _discs.Select(d => d.DiscRunningTime);
+        public IEnumerable<int> DiscRunningTimes => _discs.Select(d => d.RunningTime);
 
-        public IEnumerable<DiscEpisodes> DiscEpisodes => _discs;
+        public IEnumerable<DiscRunningTime> Discs => _discs;
 
         public event EventHandler DiscsChanged;
 
@@ -103,31 +105,11 @@
 
         public event EventHandler DiscsShortTimeChanged;
 
-        public void AddDisc(string input)
+        public void AddDisc(IEnumerable<int> episodeInputs)
         {
-            if (this.FormatInput(input, out string text))
-            {
-                _discs.Add(new DiscEpisodes(text, new List<string>(0)));
+            _discs.Add(new DiscRunningTime(episodeInputs));
 
-                this.OnDiscsChanged();
-            }
-        }
-
-        public void AddDisc(string discInput, IEnumerable<string> episodeInputs)
-        {
-            if (episodeInputs != null)
-            {
-                if (this.FormatInput(discInput, out var discText))
-                {
-                    _discs.Add(new DiscEpisodes(discText, episodeInputs.ToList()));
-
-                    this.OnDiscsChanged();
-                }
-            }
-            else
-            {
-                this.AddDisc(discInput);
-            }
+            this.OnDiscsChanged();
         }
 
         public void RemoveDisc(int index)
@@ -153,9 +135,9 @@
 
         #region Seasons
 
-        public IEnumerable<string> Seasons => _seasons.Select(s => s.SeasonRunningTime);
+        public IEnumerable<int> SeasonRunningTimes => _seasons.Select(s => s.RunningTime);
 
-        public IEnumerable<SeasonDiscEpisodes> SeasonDiscs => _seasons;
+        public IEnumerable<SeasonRunningTime> Seasons => _seasons;
 
         public event EventHandler SeasonsChanged;
 
@@ -171,31 +153,11 @@
 
         public event EventHandler SeasonsShortTimeChanged;
 
-        public void AddSeason(string discInput)
+        public void AddSeason(IEnumerable<DiscRunningTime> discInputs)
         {
-            if (this.FormatInput(discInput, out string discText))
-            {
-                _seasons.Add(new SeasonDiscEpisodes(discText, new List<DiscEpisodes>(0)));
+            _seasons.Add(new SeasonRunningTime(discInputs));
 
-                this.OnSeasonsChanged();
-            }
-        }
-
-        public void AddSeason(string seasonInput, IEnumerable<DiscEpisodes> discInputs)
-        {
-            if (discInputs != null)
-            {
-                if (this.FormatInput(seasonInput, out var seasonText))
-                {
-                    _seasons.Add(new SeasonDiscEpisodes(seasonText, discInputs));
-
-                    this.OnSeasonsChanged();
-                }
-            }
-            else
-            {
-                this.AddSeason(seasonInput);
-            }
+            this.OnSeasonsChanged();
         }
 
         public void RemoveSeason(int index)
@@ -301,7 +263,7 @@
 
         private void OnDiscsChanged()
         {
-            Calc(this.Discs, this.SetDiscsFullTime, this.SetDiscsMiddleTime, this.SetDiscsShortTime);
+            Calc(this.DiscRunningTimes, this.SetDiscsFullTime, this.SetDiscsMiddleTime, this.SetDiscsShortTime);
 
             DiscsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -333,7 +295,7 @@
 
         private void OnSeasonsChanged()
         {
-            Calc(this.Seasons, this.SetSeasonsFullTime, this.SetSeasonsMiddleTime, this.SetSeasonsShortTime);
+            Calc(this.SeasonRunningTimes, this.SetSeasonsFullTime, this.SetSeasonsMiddleTime, this.SetSeasonsShortTime);
 
             SeasonsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -361,7 +323,7 @@
 
         #endregion
 
-        private static void Calc(IEnumerable<string> entries, Action<string> setFullTime, Action<string> setMiddleTime, Action<string> setshortTime)
+        private static void Calc(IEnumerable<int> entries, Action<string> setFullTime, Action<string> setMiddleTime, Action<string> setshortTime)
         {
             if (!entries.Any())
             {
@@ -374,23 +336,13 @@
                 return;
             }
 
-            var seconds = 0;
+            var seconds = entries.Sum();
 
-            entries.ForEach(entry => seconds += MainHelper.CalcSeconds(entry));
-
-            var fractalMinutes = MainHelper.CalcFractalMinutes(seconds);
-
-            var hours = seconds / 3600;
-
-            seconds -= hours * 3600;
-
-            var minutes = seconds / 60;
-
-            seconds -= minutes * 60;
-
-            var text = $"{hours:00}:{minutes:00}:{seconds:00}";
+            var text = MainHelper.FormatTime(seconds);
 
             setFullTime(text);
+
+            var fractalMinutes = MainHelper.CalcFractalMinutes(seconds);
 
             text = Math.Round(fractalMinutes, 2, MidpointRounding.AwayFromZero).ToString(CultureInfo.CurrentCulture);
 

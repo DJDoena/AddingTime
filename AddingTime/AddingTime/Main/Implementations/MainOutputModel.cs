@@ -46,15 +46,17 @@
         {
             if (_uiIServices.ShowMessageBox("Details per disc (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
             {
-                this.CopyFull(_dataModel.DiscsFullTime, _dataModel.DiscsShortTime, _dataModel.Discs, "Season: ", '-');
+                this.CopyFull(_dataModel.DiscsFullTime, _dataModel.DiscsShortTime, _dataModel.DiscRunningTimes, "Season: ", '-');
             }
             else
             {
-                var discEpisodes = _dataModel.DiscEpisodes.Select(de => de.EpisodeRunningTimes);
+                var discs = _dataModel.Discs;
 
-                var discs = _dataModel.DiscEpisodes.Select(de => de.DiscRunningTime);
+                var episodeRunningTimes = discs.Select(d => d.EpisodeRunningTimes);
 
-                this.CopyFullDetails(_dataModel.DiscsFullTime, _dataModel.DiscsShortTime, discEpisodes, discs, "Season: ", "Disc:   ");
+                var discRunningTimes = discs.Select(de => de.RunningTime);
+
+                this.CopyFullDetails(_dataModel.DiscsFullTime, _dataModel.DiscsShortTime, episodeRunningTimes, discRunningTimes, "Season: ", "Disc:   ");
             }
         }
 
@@ -71,17 +73,17 @@
         {
             if (_uiIServices.ShowMessageBox("Details per season (Yes = per season, No = per disc/per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
             {
-                this.CopyFull(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, _dataModel.Seasons, "Series: ", '=');
+                this.CopyFull(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, _dataModel.SeasonRunningTimes, "Series: ", '=');
             }
             else if (_uiIServices.ShowMessageBox("Details per season (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
             {
-                var seasonDiscs = _dataModel.SeasonDiscs.Select(sd => sd.DiscRunningTimes.Select(drt => drt.DiscRunningTime));
+                var seasonRunningTimes = _dataModel.Seasons.Select(s => s.DiscRunningTimes.Select(d => d.RunningTime));
 
-                this.CopyFullDetails(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, seasonDiscs, _dataModel.Seasons, "Series: ", "Season: ");
+                this.CopyFullDetails(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, seasonRunningTimes, _dataModel.SeasonRunningTimes, "Series: ", "Season: ");
             }
             else
             {
-                this.CopyExtendedDetails(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, _dataModel.SeasonDiscs);
+                this.CopyExtendedDetails(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, _dataModel.Seasons);
             }
         }
 
@@ -89,7 +91,7 @@
 
         #endregion
 
-        private void CopyFull(string fullTime, string shortTime, IEnumerable<string> entries, string summaryPrefix, char lineSymbol)
+        private void CopyFull(string fullTime, string shortTime, IEnumerable<int> entries, string summaryPrefix, char lineSymbol)
         {
             var outputBuilder = new StringBuilder();
 
@@ -113,7 +115,7 @@
             _clipboardServices.SetText(outputBuilder.ToString().TrimEnd());
         }
 
-        private void CopyFullDetails(string fullTime, string shortTime, IEnumerable<IEnumerable<string>> subEntries, IEnumerable<string> mainEntries, string superPrefix, string mainPrefix)
+        private void CopyFullDetails(string fullTime, string shortTime, IEnumerable<IEnumerable<int>> subEntries, IEnumerable<int> mainEntries, string superPrefix, string mainPrefix)
         {
             var outputBuilder = new StringBuilder();
 
@@ -144,7 +146,7 @@
             return length;
         }
 
-        private static void PrintEntries(IEnumerable<IEnumerable<string>> subEntries, IEnumerable<string> mainEntries, StringBuilder outputBuilder, int length, char lineSymbol, string mainPrefix, int maxMinutesLength)
+        private static void PrintEntries(IEnumerable<IEnumerable<int>> subEntries, IEnumerable<int> mainEntries, StringBuilder outputBuilder, int length, char lineSymbol, string mainPrefix, int maxMinutesLength)
         {
             var subEntryList = subEntries.ToList();
 
@@ -169,7 +171,7 @@
             }
         }
 
-        private void CopyExtendedDetails(string fullTime, string shortTime, IEnumerable<SeasonDiscEpisodes> seasonDiscs)
+        private void CopyExtendedDetails(string fullTime, string shortTime, IEnumerable<SeasonRunningTime> seasonRunningTimes)
         {
             var outputBuilder = new StringBuilder();
 
@@ -179,22 +181,24 @@
 
             var length = GetLineLength(fullTime, shortTime) + prefixLength;
 
-            seasonDiscs.ForEach(sd =>
+            seasonRunningTimes.ForEach(s =>
             {
-                var discEpisodes = sd.DiscRunningTimes.Select(d => d.EpisodeRunningTimes);
+                var discs = s.DiscRunningTimes;
 
-                var discRunningTimes = sd.DiscRunningTimes.Select(d => d.DiscRunningTime);
+                var episodeRunningTimes = discs.Select(d => d.EpisodeRunningTimes);
 
-                PrintEntries(discEpisodes, discRunningTimes, outputBuilder, length, '~', "Disc:   ", shortTime.Length);
+                var discRunningTimes = discs.Select(d => d.RunningTime);
+
+                PrintEntries(episodeRunningTimes, discRunningTimes, outputBuilder, length, '~', "Disc:   ", shortTime.Length);
 
                 DrawLine(outputBuilder, length, '-');
 
-                var minutesText = GetMinutesText(sd.SeasonRunningTime);
+                var minutesText = GetMinutesText(s.RunningTime);
 
                 outputBuilder.Append("Season: ");
-                outputBuilder.Append(sd.SeasonRunningTime);
+                outputBuilder.Append(MainHelper.FormatTime(s.RunningTime));
                 outputBuilder.Append(string.Empty.PadRight(Padding));
-                outputBuilder.AppendLine(minutesText);
+                outputBuilder.AppendLine(minutesText.PadLeft(shortTime.Length));
 
                 DrawLine(outputBuilder, length, '-');
             });
@@ -211,21 +215,19 @@
             _clipboardServices.SetText(outputBuilder.ToString().TrimEnd());
         }
 
-        private static void PrintEntry(string entry, StringBuilder outputBuilder, int prefixLength, int maxMinuteLength)
+        private static void PrintEntry(int entry, StringBuilder outputBuilder, int prefixLength, int maxMinuteLength)
         {
             var minutesText = GetMinutesText(entry);
 
             outputBuilder.Append(string.Empty.PadRight(prefixLength));
-            outputBuilder.Append(entry);
+            outputBuilder.Append(MainHelper.FormatTime(entry));
             outputBuilder.Append(string.Empty.PadRight(Padding));
             outputBuilder.AppendLine(minutesText.PadLeft(maxMinuteLength));
         }
 
-        private static string GetMinutesText(string entry)
+        private static string GetMinutesText(int entry)
         {
-            var seconds = MainHelper.CalcSeconds(entry);
-
-            var fractalMinutes = MainHelper.CalcFractalMinutes(seconds);
+            var fractalMinutes = MainHelper.CalcFractalMinutes(entry);
 
             fractalMinutes = Math.Round(fractalMinutes, 0, MidpointRounding.AwayFromZero);
 
