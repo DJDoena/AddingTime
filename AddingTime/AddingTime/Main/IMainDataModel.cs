@@ -35,7 +35,7 @@
 
         IEnumerable<String> Discs { get; }
 
-        IEnumerable<IEnumerable<string>> DiscEpisodes { get; }
+        IEnumerable<DiscEpisodes> DiscEpisodes { get; }
 
         event EventHandler DiscsChanged;
 
@@ -65,7 +65,7 @@
 
         IEnumerable<string> Seasons { get; }
 
-        IEnumerable<IEnumerable<string>> SeasonDiscs { get; }
+        IEnumerable<SeasonDiscEpisodes> SeasonDiscs { get; }
 
         event EventHandler SeasonsChanged;
 
@@ -83,7 +83,7 @@
 
         void AddSeason(string input);
 
-        void AddSeason(string seasonInput, IEnumerable<string> discInputs);
+        void AddSeason(string seasonInput, IEnumerable<DiscEpisodes> discInputs);
 
         void RemoveSeason(Int32 index);
 

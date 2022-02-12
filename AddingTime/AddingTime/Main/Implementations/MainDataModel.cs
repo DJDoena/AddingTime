@@ -11,11 +11,11 @@
     {
         private readonly IUIServices _UIServices;
 
-        private List<string> _Episodes;
+        private readonly List<string> _Episodes;
 
-        private List<Tuple<String, List<string>>> _Discs;
+        private readonly List<DiscEpisodes> _Discs;
 
-        private List<Tuple<String, List<string>>> _Seasons;
+        private readonly List<SeasonDiscEpisodes> _Seasons;
 
         public MainDataModel(IUIServices uiServices)
         {
@@ -23,9 +23,9 @@
 
             _Episodes = new List<string>(10);
 
-            _Discs = new List<Tuple<string, List<string>>>(6);
+            _Discs = new List<DiscEpisodes>(6);
 
-            _Seasons = new List<Tuple<string, List<string>>>(6);
+            _Seasons = new List<SeasonDiscEpisodes>(6);
         }
 
         #region IMainModel
@@ -85,9 +85,9 @@
 
         #region Discs
 
-        public IEnumerable<string> Discs => _Discs.Select(d => d.Item1);
+        public IEnumerable<string> Discs => _Discs.Select(d => d.DiscRunningTime);
 
-        public IEnumerable<IEnumerable<string>> DiscEpisodes => _Discs.Select(d => d.Item2);
+        public IEnumerable<DiscEpisodes> DiscEpisodes => _Discs;
 
         public event EventHandler DiscsChanged;
 
@@ -107,7 +107,7 @@
         {
             if (FormatInput(input, out string text))
             {
-                _Discs.Add(new Tuple<string, List<string>>(text, new List<string>(0)));
+                _Discs.Add(new DiscEpisodes(text, new List<string>(0)));
 
                 OnDiscsChanged();
             }
@@ -117,25 +117,9 @@
         {
             if (episodeInputs != null)
             {
-                var episodeInputFail = false;
-
-                var episodeTexts = episodeInputs.Select(e =>
+                if (FormatInput(discInput, out var discText))
                 {
-                    if (FormatInput(e, out var episodeText))
-                    {
-                        return episodeText;
-                    }
-                    else
-                    {
-                        episodeInputFail = true;
-
-                        return string.Empty;
-                    }
-                }).ToList();
-
-                if (!episodeInputFail && FormatInput(discInput, out var discText))
-                {
-                    _Discs.Add(new Tuple<string, List<string>>(discText, episodeTexts));
+                    _Discs.Add(new DiscEpisodes(discText, episodeInputs.ToList()));
 
                     OnDiscsChanged();
                 }
@@ -169,9 +153,9 @@
 
         #region Seasons
 
-        public IEnumerable<string> Seasons => _Seasons.Select(s => s.Item1);
+        public IEnumerable<string> Seasons => _Seasons.Select(s => s.SeasonRunningTime);
 
-        public IEnumerable<IEnumerable<string>> SeasonDiscs => _Seasons.Select(s => s.Item2);
+        public IEnumerable<SeasonDiscEpisodes> SeasonDiscs => _Seasons;
 
         public event EventHandler SeasonsChanged;
 
@@ -187,39 +171,23 @@
 
         public event EventHandler SeasonsShortTimeChanged;
 
-        public void AddSeason(string input)
+        public void AddSeason(string discInput)
         {
-            if (FormatInput(input, out string text))
+            if (FormatInput(discInput, out string discText))
             {
-                _Seasons.Add(new Tuple<string, List<string>>(text, new List<string>(0)));
+                _Seasons.Add(new SeasonDiscEpisodes(discText, new List<DiscEpisodes>(0)));
 
                 OnSeasonsChanged();
             }
         }
 
-        public void AddSeason(string seasonInput, IEnumerable<string> discInputs)
+        public void AddSeason(string seasonInput, IEnumerable<DiscEpisodes> discInputs)
         {
             if (discInputs != null)
             {
-                var discInputFail = false;
-
-                var discTexts = discInputs.Select(e =>
+                if (FormatInput(seasonInput, out var seasonText))
                 {
-                    if (FormatInput(e, out var episodeText))
-                    {
-                        return episodeText;
-                    }
-                    else
-                    {
-                        discInputFail = true;
-
-                        return string.Empty;
-                    }
-                }).ToList();
-
-                if (!discInputFail && FormatInput(seasonInput, out var seasonText))
-                {
-                    _Seasons.Add(new Tuple<string, List<string>>(seasonText, discTexts));
+                    _Seasons.Add(new SeasonDiscEpisodes(seasonText, discInputs.ToList()));
 
                     OnSeasonsChanged();
                 }

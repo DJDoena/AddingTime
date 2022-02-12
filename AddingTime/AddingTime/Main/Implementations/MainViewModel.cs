@@ -416,7 +416,7 @@
 
         private void MoveDiscs()
         {
-            _DataModel.AddSeason(DiscsFullTime, _DataModel.Discs);
+            _DataModel.AddSeason(DiscsFullTime, _DataModel.DiscEpisodes);
 
             ClearDiscs();
         }

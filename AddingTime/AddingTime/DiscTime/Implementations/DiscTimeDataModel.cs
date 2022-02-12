@@ -42,7 +42,7 @@
                 {
                     Scan(discInfo);
 
-                    _UIServices.ShowMessageBox("Done.", String.Empty, Buttons.OK, Icon.Information);
+                    //_UIServices.ShowMessageBox("Done.", String.Empty, Buttons.OK, Icon.Information);
                 }
                 else
                 {
@@ -90,7 +90,23 @@
 
         private void AddTrackNodes(TreeNode subsetNode
             , IEnumerable<ISubsetInfo> subsets)
-            => subsets.Select(GetTracksFromSubset).SelectMany(track => track).ForEach(track => subsetNode.Nodes.Add(track));
+        {
+            var tracks = subsets.Select(GetTracksFromSubset).SelectMany(track => track);
+
+            var times = new HashSet<TimeSpan>();
+
+            foreach (var track in tracks)
+            {
+                subsetNode.Nodes.Add(track);
+
+                if (!times.Contains(track.RunningTime))
+                {
+                    track.IsChecked = true;
+                }
+
+                times.Add(track.RunningTime);
+            }
+        }
 
         #region GetTracks
 

@@ -9,6 +9,8 @@
 
     internal sealed class MainOutputModel : IMainOutputModel
     {
+        private const int Padding = 3;
+
         private readonly IMainDataModel _DataModel;
 
         private readonly IUIServices _UIServices;
@@ -34,7 +36,7 @@
             => _ClipboardServices.SetText(_DataModel.EpisodesShortTime);
 
         public void CopyAllEpisodes()
-            => _ClipboardServices.SetText(_DataModel.EpisodesFullTime + "\t" + _DataModel.EpisodesShortTime);
+            => _ClipboardServices.SetText(_DataModel.EpisodesFullTime + string.Empty.PadRight(Padding) + _DataModel.EpisodesShortTime);
 
         #endregion
 
@@ -44,17 +46,21 @@
             => _ClipboardServices.SetText(_DataModel.DiscsShortTime);
 
         public void CopyAllDiscs()
-            => _ClipboardServices.SetText(_DataModel.DiscsFullTime + "\t" + _DataModel.DiscsShortTime);
+            => _ClipboardServices.SetText(_DataModel.DiscsFullTime + string.Empty.PadRight(Padding) + _DataModel.DiscsShortTime);
 
         public void CopyFullDiscs()
         {
             if (_UIServices.ShowMessageBox("Details per disc (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
             {
-                CopyFull(_DataModel.DiscsFullTime, _DataModel.DiscsShortTime, _DataModel.Discs);
+                CopyFull(_DataModel.DiscsFullTime, _DataModel.DiscsShortTime, _DataModel.Discs, "Season: ", '-');
             }
             else
             {
-                CopyFullDetails(_DataModel.DiscsFullTime, _DataModel.DiscsShortTime, _DataModel.DiscEpisodes, null);
+                var discEpisodes = _DataModel.DiscEpisodes.Select(de => de.EpisodeRunningTimes);
+
+                var discs = _DataModel.DiscEpisodes.Select(de => de.DiscRunningTime);
+
+                CopyFullDetails(_DataModel.DiscsFullTime, _DataModel.DiscsShortTime, discEpisodes, discs, "Season: ", "Disc:   ");
             }
         }
 
@@ -67,17 +73,23 @@
             => _ClipboardServices.SetText(_DataModel.SeasonsShortTime);
 
         public void CopyAllSeasons()
-            => _ClipboardServices.SetText(_DataModel.SeasonsFullTime + "\t" + _DataModel.SeasonsShortTime);
+            => _ClipboardServices.SetText(_DataModel.SeasonsFullTime + string.Empty.PadRight(Padding) + _DataModel.SeasonsShortTime);
 
         public void CopyFullSeasons()
         {
-            if (_UIServices.ShowMessageBox("Details per season (Yes = per season, No = per disc)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
+            if (_UIServices.ShowMessageBox("Details per season (Yes = per season, No = per disc/per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
             {
-                CopyFull(_DataModel.SeasonsFullTime, _DataModel.SeasonsShortTime, _DataModel.Seasons);
+                CopyFull(_DataModel.SeasonsFullTime, _DataModel.SeasonsShortTime, _DataModel.Seasons, "Series: ", '=');
+            }
+            else if (_UIServices.ShowMessageBox("Details per season (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
+            {
+                var seasonDiscs = _DataModel.SeasonDiscs.Select(sd => sd.DiscRunningTimes.Select(drt => drt.DiscRunningTime));
+
+                CopyFullDetails(_DataModel.SeasonsFullTime, _DataModel.SeasonsShortTime, seasonDiscs, _DataModel.Seasons, "Series: ", "Season: ");
             }
             else
             {
-                CopyFullDetails(_DataModel.SeasonsFullTime, _DataModel.SeasonsShortTime, _DataModel.SeasonDiscs, _DataModel.Seasons);
+                CopyExtendedDetails(_DataModel.SeasonsFullTime, _DataModel.SeasonsShortTime, _DataModel.SeasonDiscs);
             }
         }
 
@@ -85,71 +97,139 @@
 
         #endregion
 
-        private void CopyFull(string fullTime, string shortTime, IEnumerable<string> entries)
+        private void CopyFull(string fullTime, string shortTime, IEnumerable<string> entries, string summaryPrefix, char lineSymbol)
         {
-            var sb = new StringBuilder();
-
-            entries.ForEach(entry => PrintEntry(entry, sb));
-
             var discsFullTimeLength = fullTime?.Length ?? 0;
 
             var discsShortTimeLength = shortTime?.Length ?? 0;
 
-            var length = discsFullTimeLength + 8 + discsShortTimeLength;
-
-            DrawLine(sb, length);
-
-            sb.Append(fullTime);
-            sb.Append("\t");
-            sb.AppendLine(shortTime);
-
-            DrawLine(sb, length);
-
-            _ClipboardServices.SetText(sb.ToString().Trim());
-        }
-
-        private void CopyFullDetails(string fullTime, string shortTime, IEnumerable<IEnumerable<string>> entryGroups, IEnumerable<string> entries)
-        {
             var sb = new StringBuilder();
 
+            entries.ForEach(entry => PrintEntry(entry, sb, summaryPrefix.Length, discsShortTimeLength));
+
+            var length = discsFullTimeLength + Padding + discsShortTimeLength + summaryPrefix.Length;
+
+            DrawLine(sb, length, lineSymbol);
+
+            sb.Append(summaryPrefix);
+            sb.Append(fullTime);
+            sb.Append(string.Empty.PadRight(Padding));
+            sb.AppendLine(shortTime);
+
+            DrawLine(sb, length, lineSymbol);
+
+            _ClipboardServices.SetText(sb.ToString().TrimEnd());
+        }
+
+        private void CopyFullDetails(string fullTime, string shortTime, IEnumerable<IEnumerable<string>> subEntries, IEnumerable<string> mainEntries, string superPrefix, string mainPrefix)
+        {
+            var outputBuilder = new StringBuilder();
+
+            var length = GetLineLength(fullTime, shortTime) + superPrefix.Length;
+
+            PrintEntries(subEntries, mainEntries, outputBuilder, length, '-', mainPrefix, shortTime.Length);
+
+            DrawLine(outputBuilder, length, '=');
+
+            outputBuilder.Append(superPrefix);
+            outputBuilder.Append(fullTime);
+            outputBuilder.Append(string.Empty.PadRight(Padding));
+            outputBuilder.AppendLine(shortTime);
+
+            DrawLine(outputBuilder, length, '=');
+
+            _ClipboardServices.SetText(outputBuilder.ToString().TrimEnd());
+        }
+
+        private static int GetLineLength(string fullTime, string shortTime)
+        {
             var fullTimeLength = fullTime?.Length ?? 0;
 
             var shortTimeLength = shortTime?.Length ?? 0;
 
-            var length = fullTimeLength + 8 + shortTimeLength;
+            var length = fullTimeLength + Padding + shortTimeLength;
 
-            var entryGroupList = entryGroups.ToList();
-
-            var entryList = entries?.ToList();
-
-            for (int index = 0; index < entryGroupList.Count; index++)
-            {
-                var entryGroup = entryGroupList[index];
-
-                entryGroup.ForEach(entry => PrintEntry(entry, sb));
-
-                DrawLine(sb, length);
-
-                if (entryList != null)
-                {
-                    PrintEntry(entryList[index], sb);
-
-                    DrawLine(sb, length);
-                }
-            }
-
-            DrawLine(sb, length, '=');
-
-            sb.Append(fullTime);
-            sb.Append("\t");
-            sb.AppendLine(shortTime);
-
-            DrawLine(sb, length, '=');
-
-            _ClipboardServices.SetText(sb.ToString().Trim());
+            return length;
         }
 
-        private static void PrintEntry(string entry, StringBuilder sb)
+        private static void PrintEntries(IEnumerable<IEnumerable<string>> subEntries, IEnumerable<string> mainEntries, StringBuilder outputBuilder, int length, char lineSymbol, string mainPrefix, int maxMinutesLength)
+        {
+            var subEntryList = subEntries.ToList();
+
+            var mainEntryList = mainEntries.ToList();
+
+            for (var subEntryIndex = 0; subEntryIndex < subEntryList.Count; subEntryIndex++)
+            {
+                var subEntry = subEntryList[subEntryIndex];
+
+                subEntry.ForEach(entry => PrintEntry(entry, outputBuilder, mainPrefix.Length, maxMinutesLength));
+
+                DrawLine(outputBuilder, length, lineSymbol);
+
+                if (mainEntryList != null)
+                {
+                    outputBuilder.Append(mainPrefix);
+
+                    PrintEntry(mainEntryList[subEntryIndex], outputBuilder, 0, maxMinutesLength);
+
+                    DrawLine(outputBuilder, length, lineSymbol);
+                }
+            }
+        }
+
+        private void CopyExtendedDetails(string fullTime, string shortTime, IEnumerable<SeasonDiscEpisodes> seasonDiscs)
+        {
+            var outputBuilder = new StringBuilder();
+
+            var superPrefix = "Series: ";
+
+            var prefixLength = superPrefix.Length;
+
+            var length = GetLineLength(fullTime, shortTime) + prefixLength;
+
+            seasonDiscs.ForEach(sd =>
+            {
+                var discEpisodes = sd.DiscRunningTimes.Select(d => d.EpisodeRunningTimes);
+
+                var discRunningTimes = sd.DiscRunningTimes.Select(d => d.DiscRunningTime);
+
+                PrintEntries(discEpisodes, discRunningTimes, outputBuilder, length, '~', "Disc:   ", shortTime.Length);
+
+                DrawLine(outputBuilder, length, '-');
+
+                var minutesText = GetMinutesText(sd.SeasonRunningTime);
+
+                outputBuilder.Append("Season: ");
+                outputBuilder.Append(sd.SeasonRunningTime);
+                outputBuilder.Append(string.Empty.PadRight(Padding));
+                outputBuilder.AppendLine(minutesText);
+
+                DrawLine(outputBuilder, length, '-');
+            });
+
+            DrawLine(outputBuilder, length, '=');
+
+            outputBuilder.Append(superPrefix);
+            outputBuilder.Append(fullTime);
+            outputBuilder.Append(string.Empty.PadRight(Padding));
+            outputBuilder.AppendLine(shortTime);
+
+            DrawLine(outputBuilder, length, '=');
+
+            _ClipboardServices.SetText(outputBuilder.ToString().TrimEnd());
+        }
+
+        private static void PrintEntry(string entry, StringBuilder outputBuilder, int prefixLength, int maxMinuteLength)
+        {
+            var minutesText = GetMinutesText(entry);
+
+            outputBuilder.Append(string.Empty.PadRight(prefixLength));
+            outputBuilder.Append(entry);
+            outputBuilder.Append(string.Empty.PadRight(Padding));
+            outputBuilder.AppendLine(minutesText.PadLeft(maxMinuteLength));
+        }
+
+        private static string GetMinutesText(string entry)
         {
             var seconds = MainHelper.CalcSeconds(entry);
 
@@ -157,19 +237,14 @@
 
             fractalMinutes = Math.Round(fractalMinutes, 0, MidpointRounding.AwayFromZero);
 
-            sb.Append(entry);
-            sb.Append("\t");
-            sb.AppendLine(fractalMinutes.ToString());
+            var minutesText = fractalMinutes.ToString();
+
+            return minutesText;
         }
 
-        private static void DrawLine(StringBuilder sb, int length, char symbol = '-')
+        private static void DrawLine(StringBuilder outputBuilder, int length, char symbol)
         {
-            for (var index = 0; index < length; index++)
-            {
-                sb.Append(symbol);
-            }
-
-            sb.AppendLine();
+            outputBuilder.AppendLine(string.Empty.PadRight(length, symbol));
         }
     }
 }
