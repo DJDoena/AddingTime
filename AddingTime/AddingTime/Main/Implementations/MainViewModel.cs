@@ -11,212 +11,173 @@
 
     internal sealed class MainViewModel : IMainViewModel
     {
-        private readonly IMainDataModel _DataModel;
+        private readonly IMainDataModel _dataModel;
 
-        private readonly IMainOutputModel _OutputModel;
+        private readonly IMainOutputModel _outputModel;
 
-        private readonly IClipboardServices _ClipboardServices;
+        private readonly IClipboardServices _clipboardServices;
 
-        private readonly IWindowFactory _WindowFactory;
+        private readonly IWindowFactory _windowFactory;
 
-        private readonly IUIServices _UIServices;
+        private readonly IUIServices _uiServices;
 
-        private String _Input;
+        private string _input;
 
-        private Int32 _SelectedEpisode;
+        private int _selectedEpisode;
 
-        private Int32 _SelectedDisc;
+        private int _selectedDisc;
 
-        private Int32 _SelectedSeason;
+        private int _selectedSeason;
 
-        private event PropertyChangedEventHandler _PropertyChanged;
+        private event PropertyChangedEventHandler _propertyChanged;
 
-        internal MainViewModel(IMainDataModel dataModel
-            , IMainOutputModel outputModel
-            , IClipboardServices clipboardServices
-            , IWindowFactory windowFactory
-            , IUIServices uiServices)
+        internal MainViewModel(IMainDataModel dataModel, IMainOutputModel outputModel, IClipboardServices clipboardServices, IWindowFactory windowFactory, IUIServices uiServices)
         {
-            _DataModel = dataModel ?? throw new ArgumentNullException(nameof(dataModel));
+            _dataModel = dataModel ?? throw new ArgumentNullException(nameof(dataModel));
 
-            _OutputModel = outputModel ?? throw new ArgumentNullException(nameof(outputModel));
+            _outputModel = outputModel ?? throw new ArgumentNullException(nameof(outputModel));
 
-            _ClipboardServices = clipboardServices ?? throw new ArgumentNullException(nameof(clipboardServices));
+            _clipboardServices = clipboardServices ?? throw new ArgumentNullException(nameof(clipboardServices));
 
-            _WindowFactory = windowFactory ?? throw new ArgumentNullException(nameof(windowFactory));
+            _windowFactory = windowFactory ?? throw new ArgumentNullException(nameof(windowFactory));
 
-            _UIServices = uiServices;
+            _uiServices = uiServices;
 
-            SelectedEpisode = -1;
+            this.SelectedEpisode = -1;
 
-            SelectedDisc = -1;
+            this.SelectedDisc = -1;
 
-            SelectedSeason = -1;
+            this.SelectedSeason = -1;
         }
 
         #region IViewModel
 
         #region Episodes
 
-        public String Input
+        public string Input
         {
-            get => _Input ?? String.Empty;
+            get => _input ?? string.Empty;
             set
             {
-                _Input = value;
+                _input = value;
 
-                OnInputChanged();
+                this.OnInputChanged();
             }
         }
 
-        public ObservableCollection<String> Episodes
-            => new ObservableCollection<String>(_DataModel.Episodes);
+        public ObservableCollection<string> Episodes => new ObservableCollection<string>(_dataModel.Episodes);
 
-        public Int32 SelectedEpisode
+        public int SelectedEpisode
         {
-            get => _SelectedEpisode;
+            get => _selectedEpisode;
             set
             {
-                _SelectedEpisode = value;
+                _selectedEpisode = value;
 
-                OnSelectedEpisodeChanged();
+                this.OnSelectedEpisodeChanged();
             }
         }
 
-        public String EpisodesFullTime
-            => _DataModel.EpisodesFullTime ?? String.Empty;
+        public string EpisodesFullTime => _dataModel.EpisodesFullTime ?? string.Empty;
 
-        public String EpisodesMiddleTime
-            => _DataModel.EpisodesMiddleTime ?? String.Empty;
+        public string EpisodesMiddleTime => _dataModel.EpisodesMiddleTime ?? string.Empty;
 
-        public String EpisodesShortTime
-            => _DataModel.EpisodesShortTime ?? String.Empty;
+        public string EpisodesShortTime => _dataModel.EpisodesShortTime ?? string.Empty;
 
-        public ICommand AddEpisodeCommand
-            => new RelayCommand(AddEpisode, CanAddEpisode);
+        public ICommand AddEpisodeCommand => new RelayCommand(this.AddEpisode, this.CanAddEpisode);
 
-        public ICommand AddFromClipboardCommand
-            => new RelayCommand(AddFromClipboard, CanAddFromClipboard);
+        public ICommand AddFromClipboardCommand => new RelayCommand(this.AddFromClipboard, this.CanAddFromClipboard);
 
-        public ICommand RemoveEpisodeCommand
-            => new RelayCommand(RemoveEpisode, CanRemoveEpisode);
+        public ICommand RemoveEpisodeCommand => new RelayCommand(this.RemoveEpisode, this.CanRemoveEpisode);
 
-        public ICommand ClearEpisodesCommand
-            => new RelayCommand(ClearEpisodes, CanClearEpisodes);
+        public ICommand ClearEpisodesCommand => new RelayCommand(this.ClearEpisodes, this.CanClearEpisodes);
 
-        public ICommand MoveEpisodesCommand
-            => new RelayCommand(MoveEpisodes, HasEpisodeFullTime);
+        public ICommand MoveEpisodesCommand => new RelayCommand(this.MoveEpisodes, this.HasEpisodeFullTime);
 
-        public ICommand CopyEpisodesCommand
-            => new RelayCommand(CopyEpisodes, HasEpisodeFullTime);
+        public ICommand CopyEpisodesCommand => new RelayCommand(this.CopyEpisodes, this.HasEpisodeFullTime);
 
-        public ICommand CopyAllEpisodesCommand
-            => new RelayCommand(CopyAllEpisodes, HasEpisodeFullTime);
+        public ICommand CopyAllEpisodesCommand => new RelayCommand(this.CopyAllEpisodes, this.HasEpisodeFullTime);
 
         #endregion
 
         #region Discs
 
-        public ObservableCollection<String> Discs
-            => new ObservableCollection<String>(_DataModel.Discs);
+        public ObservableCollection<string> Discs => new ObservableCollection<string>(_dataModel.Discs);
 
-        public Int32 SelectedDisc
+        public int SelectedDisc
         {
-            get => _SelectedDisc;
+            get => _selectedDisc;
             set
             {
-                _SelectedDisc = value;
+                _selectedDisc = value;
 
-                OnSelectedDiscChanged();
+                this.OnSelectedDiscChanged();
             }
         }
 
-        public String DiscsFullTime
-          => _DataModel.DiscsFullTime ?? String.Empty;
+        public string DiscsFullTime => _dataModel.DiscsFullTime ?? string.Empty;
 
-        public String DiscsMiddleTime
-            => _DataModel.DiscsMiddleTime ?? String.Empty;
+        public string DiscsMiddleTime => _dataModel.DiscsMiddleTime ?? string.Empty;
 
-        public String DiscsShortTime
-            => _DataModel.DiscsShortTime ?? String.Empty;
+        public string DiscsShortTime => _dataModel.DiscsShortTime ?? string.Empty;
 
-        public ICommand RemoveDiscCommand
-            => new RelayCommand(RemoveDisc, CanRemoveDisc);
+        public ICommand RemoveDiscCommand => new RelayCommand(this.RemoveDisc, this.CanRemoveDisc);
 
-        public ICommand ClearDiscsCommand
-            => new RelayCommand(ClearDiscs, CanClearDiscs);
+        public ICommand ClearDiscsCommand => new RelayCommand(this.ClearDiscs, this.CanClearDiscs);
 
-        public ICommand MoveDiscsCommand
-            => new RelayCommand(MoveDiscs, HasDiscFullTime);
+        public ICommand MoveDiscsCommand => new RelayCommand(this.MoveDiscs, this.HasDiscFullTime);
 
-        public ICommand CopyDiscsCommand
-            => new RelayCommand(CopyDiscs, HasDiscFullTime);
+        public ICommand CopyDiscsCommand => new RelayCommand(this.CopyDiscs, this.HasDiscFullTime);
 
-        public ICommand CopyAllDiscsCommand
-            => new RelayCommand(CopyAllDiscs, HasDiscFullTime);
+        public ICommand CopyAllDiscsCommand => new RelayCommand(this.CopyAllDiscs, this.HasDiscFullTime);
 
-        public ICommand CopyFullDiscsCommand
-            => new RelayCommand(CopyFullDiscs, HasDiscFullTime);
+        public ICommand CopyFullDiscsCommand => new RelayCommand(this.CopyFullDiscs, this.HasDiscFullTime);
 
         #endregion
 
         #region Seasons
 
-        public ObservableCollection<String> Seasons
-            => new ObservableCollection<String>(_DataModel.Seasons);
+        public ObservableCollection<string> Seasons => new ObservableCollection<string>(_dataModel.Seasons);
 
-        public Int32 SelectedSeason
+        public int SelectedSeason
         {
-            get => _SelectedSeason;
+            get => _selectedSeason;
             set
             {
-                _SelectedSeason = value;
+                _selectedSeason = value;
 
-                OnSelectedSeasonChanged();
+                this.OnSelectedSeasonChanged();
             }
         }
 
-        public String SeasonsFullTime
-          => _DataModel.SeasonsFullTime ?? String.Empty;
+        public string SeasonsFullTime => _dataModel.SeasonsFullTime ?? string.Empty;
 
-        public String SeasonsMiddleTime
-            => _DataModel.SeasonsMiddleTime ?? String.Empty;
+        public string SeasonsMiddleTime => _dataModel.SeasonsMiddleTime ?? string.Empty;
 
-        public String SeasonsShortTime
-            => _DataModel.SeasonsShortTime ?? String.Empty;
+        public string SeasonsShortTime => _dataModel.SeasonsShortTime ?? string.Empty;
 
-        public ICommand RemoveSeasonCommand
-            => new RelayCommand(RemoveSeason, CanRemoveSeason);
+        public ICommand RemoveSeasonCommand => new RelayCommand(this.RemoveSeason, this.CanRemoveSeason);
 
-        public ICommand ClearSeasonsCommand
-            => new RelayCommand(ClearSeasons, CanClearSeasons);
+        public ICommand ClearSeasonsCommand => new RelayCommand(this.ClearSeasons, this.CanClearSeasons);
 
-        public ICommand CopySeasonsCommand
-            => new RelayCommand(CopySeasons, HasSeasonFullTime);
+        public ICommand CopySeasonsCommand => new RelayCommand(this.CopySeasons, this.HasSeasonFullTime);
 
-        public ICommand CopyAllSeasonsCommand
-            => new RelayCommand(CopyAllSeasons, HasSeasonFullTime);
+        public ICommand CopyAllSeasonsCommand => new RelayCommand(this.CopyAllSeasons, this.HasSeasonFullTime);
 
-        public ICommand CopyFullSeasonsCommand
-            => new RelayCommand(CopyFullSeasons, HasSeasonFullTime);
+        public ICommand CopyFullSeasonsCommand => new RelayCommand(this.CopyFullSeasons, this.HasSeasonFullTime);
 
         #endregion
 
-        public ICommand ClearAllCommand
-            => new RelayCommand(ClearAll, CanClearAll);
+        public ICommand ClearAllCommand => new RelayCommand(this.ClearAll, this.CanClearAll);
 
 
-        public ICommand CheckForNewVersionCommand
-            => new RelayCommand(CheckForNewVersion);
+        public ICommand CheckForNewVersionCommand => new RelayCommand(this.CheckForNewVersion);
 
-        public ICommand OpenAboutWindowCommand
-            => new RelayCommand(OpenAboutWindow);
+        public ICommand OpenAboutWindowCommand => new RelayCommand(this.OpenAboutWindow);
 
-        public ICommand OpenHelpWindowCommand
-            => new RelayCommand(OpenHelpWindow);
+        public ICommand OpenHelpWindowCommand => new RelayCommand(this.OpenHelpWindow);
 
-        public ICommand OpenReadFromDriveWindowCommand
-          => new RelayCommand(OpenReadFromDriveWindow);
+        public ICommand OpenReadFromDriveWindowCommand => new RelayCommand(this.OpenReadFromDriveWindow);
 
         #endregion
 
@@ -226,20 +187,20 @@
         {
             add
             {
-                if (_PropertyChanged == null)
+                if (_propertyChanged == null)
                 {
-                    RegisterModelEvents();
+                    this.RegisterModelEvents();
                 }
 
-                _PropertyChanged += value;
+                _propertyChanged += value;
             }
             remove
             {
-                _PropertyChanged -= value;
+                _propertyChanged -= value;
 
-                if (_PropertyChanged == null)
+                if (_propertyChanged == null)
                 {
-                    UnregisterModelEvents();
+                    this.UnregisterModelEvents();
                 }
             }
         }
@@ -248,297 +209,244 @@
 
         private void RegisterModelEvents()
         {
-            _DataModel.EpisodesChanged += OnEpisodesChanged;
+            _dataModel.EpisodesChanged += this.OnEpisodesChanged;
 
-            _DataModel.EpisodesFullTimeChanged += OnEpisodesFullTimeChanged;
-            _DataModel.EpisodesMiddleTimeChanged += OnEpisodesMiddleTimeChanged;
-            _DataModel.EpisodesShortTimeChanged += OnEpisodesShortTimeChanged;
+            _dataModel.EpisodesFullTimeChanged += this.OnEpisodesFullTimeChanged;
+            _dataModel.EpisodesMiddleTimeChanged += this.OnEpisodesMiddleTimeChanged;
+            _dataModel.EpisodesShortTimeChanged += this.OnEpisodesShortTimeChanged;
 
-            _DataModel.DiscsChanged += OnDiscsChanged;
+            _dataModel.DiscsChanged += this.OnDiscsChanged;
 
-            _DataModel.DiscsFullTimeChanged += OnDiscsFullTimeChanged;
-            _DataModel.DiscsMiddleTimeChanged += OnDiscsMiddleTimeChanged;
-            _DataModel.DiscsShortTimeChanged += OnDiscsShortTimeChanged;
+            _dataModel.DiscsFullTimeChanged += this.OnDiscsFullTimeChanged;
+            _dataModel.DiscsMiddleTimeChanged += this.OnDiscsMiddleTimeChanged;
+            _dataModel.DiscsShortTimeChanged += this.OnDiscsShortTimeChanged;
 
-            _DataModel.SeasonsFullTimeChanged += OnSeasonsFullTimeChanged;
-            _DataModel.SeasonsMiddleTimeChanged += OnSeasonsMiddleTimeChanged;
-            _DataModel.SeasonsShortTimeChanged += OnSeasonsShortTimeChanged;
+            _dataModel.SeasonsFullTimeChanged += this.OnSeasonsFullTimeChanged;
+            _dataModel.SeasonsMiddleTimeChanged += this.OnSeasonsMiddleTimeChanged;
+            _dataModel.SeasonsShortTimeChanged += this.OnSeasonsShortTimeChanged;
 
-            _DataModel.SeasonsChanged += OnSeasonsChanged;
+            _dataModel.SeasonsChanged += this.OnSeasonsChanged;
         }
 
         private void UnregisterModelEvents()
         {
-            _DataModel.EpisodesChanged -= OnEpisodesChanged;
+            _dataModel.EpisodesChanged -= this.OnEpisodesChanged;
 
-            _DataModel.EpisodesFullTimeChanged -= OnEpisodesFullTimeChanged;
-            _DataModel.EpisodesMiddleTimeChanged -= OnEpisodesMiddleTimeChanged;
-            _DataModel.EpisodesShortTimeChanged -= OnEpisodesShortTimeChanged;
+            _dataModel.EpisodesFullTimeChanged -= this.OnEpisodesFullTimeChanged;
+            _dataModel.EpisodesMiddleTimeChanged -= this.OnEpisodesMiddleTimeChanged;
+            _dataModel.EpisodesShortTimeChanged -= this.OnEpisodesShortTimeChanged;
 
-            _DataModel.DiscsChanged -= OnDiscsChanged;
+            _dataModel.DiscsChanged -= this.OnDiscsChanged;
 
-            _DataModel.DiscsFullTimeChanged -= OnDiscsFullTimeChanged;
-            _DataModel.DiscsMiddleTimeChanged -= OnDiscsMiddleTimeChanged;
-            _DataModel.DiscsShortTimeChanged -= OnDiscsShortTimeChanged;
+            _dataModel.DiscsFullTimeChanged -= this.OnDiscsFullTimeChanged;
+            _dataModel.DiscsMiddleTimeChanged -= this.OnDiscsMiddleTimeChanged;
+            _dataModel.DiscsShortTimeChanged -= this.OnDiscsShortTimeChanged;
 
-            _DataModel.SeasonsChanged -= OnSeasonsChanged;
+            _dataModel.SeasonsChanged -= this.OnSeasonsChanged;
 
-            _DataModel.SeasonsFullTimeChanged -= OnSeasonsFullTimeChanged;
-            _DataModel.SeasonsMiddleTimeChanged -= OnSeasonsMiddleTimeChanged;
-            _DataModel.SeasonsShortTimeChanged -= OnSeasonsShortTimeChanged;
+            _dataModel.SeasonsFullTimeChanged -= this.OnSeasonsFullTimeChanged;
+            _dataModel.SeasonsMiddleTimeChanged -= this.OnSeasonsMiddleTimeChanged;
+            _dataModel.SeasonsShortTimeChanged -= this.OnSeasonsShortTimeChanged;
         }
 
-        private void RaisePropertyChanged(String attribute)
-            => _PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
+        private void RaisePropertyChanged(string attribute) => _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
 
         #region Episodes
 
-        private void OnSelectedEpisodeChanged()
-            => RaisePropertyChanged(nameof(SelectedEpisode));
+        private void OnSelectedEpisodeChanged() => this.RaisePropertyChanged(nameof(this.SelectedEpisode));
 
         private void OnInputChanged()
         {
-            RaisePropertyChanged(nameof(Input));
-            RaisePropertyChanged(nameof(AddEpisodeCommand));
+            this.RaisePropertyChanged(nameof(this.Input));
+            this.RaisePropertyChanged(nameof(this.AddEpisodeCommand));
         }
 
-        private void OnEpisodesChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(Episodes));
+        private void OnEpisodesChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.Episodes));
 
-        private void OnEpisodesFullTimeChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(EpisodesFullTime));
+        private void OnEpisodesFullTimeChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.EpisodesFullTime));
 
-        private void OnEpisodesMiddleTimeChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(EpisodesMiddleTime));
+        private void OnEpisodesMiddleTimeChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.EpisodesMiddleTime));
 
-        private void OnEpisodesShortTimeChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(EpisodesShortTime));
+        private void OnEpisodesShortTimeChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.EpisodesShortTime));
 
         private void AddEpisode()
         {
-            if (_DataModel.AddEpisode(Input))
+            if (_dataModel.AddEpisode(this.Input))
             {
-                Input = null;
+                this.Input = null;
             }
         }
 
-        private Boolean CanAddEpisode()
-            => String.IsNullOrEmpty(Input) == false;
+        private bool CanAddEpisode() => !string.IsNullOrEmpty(this.Input);
 
         private void AddFromClipboard()
         {
-            Input = _ClipboardServices.GetText();
+            this.Input = _clipboardServices.GetText();
 
-            AddEpisode();
+            this.AddEpisode();
         }
 
-        private Boolean CanAddFromClipboard()
-            => (_ClipboardServices.ContainsText);
+        private bool CanAddFromClipboard() => _clipboardServices.ContainsText;
 
         private void RemoveEpisode()
         {
-            Int32 selectedIndex = SelectedEpisode;
+            var selectedIndex = this.SelectedEpisode;
 
-            _DataModel.RemoveEpisode(selectedIndex);
+            _dataModel.RemoveEpisode(selectedIndex);
 
-            SelectedEpisode = (Episodes.Count > selectedIndex) ? selectedIndex : (selectedIndex - 1);
+            this.SelectedEpisode = this.Episodes.Count > selectedIndex ? selectedIndex : selectedIndex - 1;
         }
 
-        private Boolean CanRemoveEpisode()
-            => SelectedEpisode != -1;
+        private bool CanRemoveEpisode() => this.SelectedEpisode != -1;
 
-        private void ClearEpisodes()
-            => _DataModel.ClearEpisodes();
+        private void ClearEpisodes() => _dataModel.ClearEpisodes();
 
-        private Boolean CanClearEpisodes()
-            => Episodes.HasItems();
+        private bool CanClearEpisodes() => this.Episodes.HasItems();
 
         private void MoveEpisodes()
         {
-            _DataModel.AddDisc(EpisodesFullTime, _DataModel.Episodes);
+            _dataModel.AddDisc(this.EpisodesFullTime, _dataModel.Episodes);
 
-            ClearEpisodes();
+            this.ClearEpisodes();
         }
 
-        private Boolean HasEpisodeFullTime()
-            => String.IsNullOrEmpty(EpisodesFullTime) == false;
+        private bool HasEpisodeFullTime() => !string.IsNullOrEmpty(this.EpisodesFullTime);
 
-        private void CopyEpisodes()
-            => _OutputModel.CopyEpisodes();
+        private void CopyEpisodes() => _outputModel.CopyEpisodes();
 
-        private void CopyAllEpisodes()
-            => _OutputModel.CopyAllEpisodes();
+        private void CopyAllEpisodes() => _outputModel.CopyAllEpisodes();
 
         #endregion
 
         #region Discs 
 
-        private void OnSelectedDiscChanged()
-            => RaisePropertyChanged(nameof(SelectedDisc));
+        private void OnSelectedDiscChanged() => this.RaisePropertyChanged(nameof(this.SelectedDisc));
 
-        private void OnDiscsChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(Discs));
+        private void OnDiscsChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.Discs));
 
-        private void OnDiscsFullTimeChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(DiscsFullTime));
+        private void OnDiscsFullTimeChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.DiscsFullTime));
 
-        private void OnDiscsMiddleTimeChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(DiscsMiddleTime));
+        private void OnDiscsMiddleTimeChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.DiscsMiddleTime));
 
-        private void OnDiscsShortTimeChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(DiscsShortTime));
+        private void OnDiscsShortTimeChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.DiscsShortTime));
 
         private void RemoveDisc()
         {
-            Int32 selectedIndex = SelectedDisc;
+            int selectedIndex = this.SelectedDisc;
 
-            _DataModel.RemoveDisc(selectedIndex);
+            _dataModel.RemoveDisc(selectedIndex);
 
-            SelectedDisc = (Discs.Count > selectedIndex) ? selectedIndex : (selectedIndex - 1);
+            this.SelectedDisc = this.Discs.Count > selectedIndex ? selectedIndex : selectedIndex - 1;
         }
 
-        private Boolean CanRemoveDisc()
-            => SelectedDisc != -1;
+        private bool CanRemoveDisc() => this.SelectedDisc != -1;
 
-        private void ClearDiscs()
-            => _DataModel.ClearDiscs();
+        private void ClearDiscs() => _dataModel.ClearDiscs();
 
-        private Boolean CanClearDiscs()
-            => Discs.HasItems();
+        private bool CanClearDiscs() => this.Discs.HasItems();
 
         private void MoveDiscs()
         {
-            _DataModel.AddSeason(DiscsFullTime, _DataModel.DiscEpisodes);
+            _dataModel.AddSeason(this.DiscsFullTime, _dataModel.DiscEpisodes);
 
-            ClearDiscs();
+            this.ClearDiscs();
         }
 
-        private Boolean HasDiscFullTime()
-            => String.IsNullOrEmpty(DiscsFullTime) == false;
+        private bool HasDiscFullTime() => !string.IsNullOrEmpty(this.DiscsFullTime);
 
-        private void CopyDiscs()
-            => _OutputModel.CopyDiscs();
+        private void CopyDiscs() => _outputModel.CopyDiscs();
 
-        private void CopyAllDiscs()
-            => _OutputModel.CopyAllDiscs();
+        private void CopyAllDiscs() => _outputModel.CopyAllDiscs();
 
-        private void CopyFullDiscs()
-            => _OutputModel.CopyFullDiscs();
+        private void CopyFullDiscs() => _outputModel.CopyFullDiscs();
 
         #endregion
 
         #region Seasons 
 
-        private void OnSelectedSeasonChanged()
-            => RaisePropertyChanged(nameof(SelectedSeason));
+        private void OnSelectedSeasonChanged() => this.RaisePropertyChanged(nameof(this.SelectedSeason));
 
-        private void OnSeasonsChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(Seasons));
+        private void OnSeasonsChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.Seasons));
 
-        private void OnSeasonsFullTimeChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(SeasonsFullTime));
+        private void OnSeasonsFullTimeChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.SeasonsFullTime));
 
-        private void OnSeasonsMiddleTimeChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(SeasonsMiddleTime));
+        private void OnSeasonsMiddleTimeChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.SeasonsMiddleTime));
 
-        private void OnSeasonsShortTimeChanged(Object sender
-            , EventArgs e)
-            => RaisePropertyChanged(nameof(SeasonsShortTime));
+        private void OnSeasonsShortTimeChanged(object sender, EventArgs e) => this.RaisePropertyChanged(nameof(this.SeasonsShortTime));
 
         private void RemoveSeason()
         {
-            Int32 selectedIndex = SelectedSeason;
+            int selectedIndex = this.SelectedSeason;
 
-            _DataModel.RemoveSeason(selectedIndex);
+            _dataModel.RemoveSeason(selectedIndex);
 
-            SelectedSeason = (Seasons.Count > selectedIndex) ? selectedIndex : (selectedIndex - 1);
+            this.SelectedSeason = this.Seasons.Count > selectedIndex ? selectedIndex : selectedIndex - 1;
         }
 
-        private Boolean CanRemoveSeason()
-            => SelectedSeason != -1;
+        private bool CanRemoveSeason() => this.SelectedSeason != -1;
 
-        private void ClearSeasons()
-            => _DataModel.ClearSeasons();
+        private void ClearSeasons() => _dataModel.ClearSeasons();
 
-        private Boolean CanClearSeasons()
-            => Seasons.HasItems();
+        private bool CanClearSeasons() => this.Seasons.HasItems();
 
-        private Boolean HasSeasonFullTime()
-            => String.IsNullOrEmpty(SeasonsFullTime) == false;
+        private bool HasSeasonFullTime() => !string.IsNullOrEmpty(this.SeasonsFullTime);
 
-        private void CopySeasons()
-            => _OutputModel.CopySeasons();
+        private void CopySeasons() => _outputModel.CopySeasons();
 
-        private void CopyAllSeasons()
-            => _OutputModel.CopyAllSeasons();
+        private void CopyAllSeasons() => _outputModel.CopyAllSeasons();
 
-        private void CopyFullSeasons()
-            => _OutputModel.CopyFullSeasons();
+        private void CopyFullSeasons() => _outputModel.CopyFullSeasons();
 
         #endregion
 
         private void ClearAll()
         {
-            ClearEpisodes();
+            this.ClearEpisodes();
 
-            ClearDiscs();
+            this.ClearDiscs();
 
-            ClearSeasons();
+            this.ClearSeasons();
         }
 
-        private Boolean CanClearAll()
-            => CanClearEpisodes() || CanClearDiscs() || CanClearSeasons();
+        private bool CanClearAll() => this.CanClearEpisodes() || this.CanClearDiscs() || this.CanClearSeasons();
 
         private void CheckForNewVersion()
         {
             OnlineAccess.Init("Doena Soft.", "AddingTime");
-            OnlineAccess.CheckForNewVersion("http://doena-soft.de/dvdprofiler/3.9.0/versions.xml", null, "AddingTime", GetType().Assembly);
+            OnlineAccess.CheckForNewVersion("http://doena-soft.de/dvdprofiler/3.9.0/versions.xml", null, "AddingTime", this.GetType().Assembly);
         }
 
-        private void OpenAboutWindow()
-            => _WindowFactory.OpenAboutWindow();
+        private void OpenAboutWindow() => _windowFactory.OpenAboutWindow();
 
-        private void OpenHelpWindow()
-            => _WindowFactory.OpenHelpWindow();
+        private void OpenHelpWindow() => _windowFactory.OpenHelpWindow();
 
         private void OpenReadFromDriveWindow()
         {
             try
             {
-                TryOpenReadFromDriveWindow();
+                this.TryOpenReadFromDriveWindow();
             }
             catch (Exception ex)
             {
-                _UIServices.ShowMessageBox(ex.Message, "Error", Buttons.OK, Icon.Error);
+                _uiServices.ShowMessageBox(ex.Message, "Error", Buttons.OK, Icon.Error);
             }
         }
 
         private void TryOpenReadFromDriveWindow()
         {
-            _WindowFactory.OpenReadFromDriveWindow().ForEach(AddEpisode);
+            _windowFactory.OpenReadFromDriveWindow().ForEach(this.AddEpisode);
 
-            if (HasEpisodeFullTime())
+            if (this.HasEpisodeFullTime())
             {
-                MoveEpisodes();
+                this.MoveEpisodes();
             }
         }
 
         private void AddEpisode(TimeSpan runningTime)
         {
-            Input = runningTime.ToString();
+            this.Input = runningTime.ToString();
 
-            AddEpisode();
+            this.AddEpisode();
         }
     }
 }

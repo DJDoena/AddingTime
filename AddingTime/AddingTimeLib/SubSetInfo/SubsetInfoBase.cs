@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -12,13 +11,13 @@
 
         #region Properties
 
-        public abstract String Name { get; }
+        public abstract string Name { get; }
 
-        public abstract Boolean IsValid { get; }
+        public abstract bool IsValid { get; }
 
         public IEnumerable<ITrackInfo> Tracks
         {
-            get => IsValid ? GetTracks().ToList() : Enumerable.Empty<ITrackInfo>();
+            get => this.IsValid ? this.GetTracks().ToList() : Enumerable.Empty<ITrackInfo>();
         }
 
         #endregion
@@ -29,8 +28,7 @@
 
         #region Methods
 
-        public Int32 CompareTo(ISubsetInfo other)
-            => (other != null) ? (Name.CompareTo(other.Name)) : 1;
+        public int CompareTo(ISubsetInfo other) => other != null ? this.Name.CompareTo(other.Name) : 1;
 
         #endregion
 

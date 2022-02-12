@@ -5,25 +5,27 @@
 
     public sealed class DvdDiscReader : IDiscReader
     {
-        private readonly IIOServices _IOServices;
+        private readonly IIOServices _ioServices;
 
         public DvdDiscReader(IIOServices ioServices)
-            => _IOServices = ioServices ?? throw new ArgumentNullException(nameof(ioServices));
+        {
+            _ioServices = ioServices ?? throw new ArgumentNullException(nameof(ioServices));
+        }
 
         #region Methods
 
         public IDiscInfo GetDiscInfo(IDriveInfo drive)
         {
-            String path = _IOServices.Path.Combine(drive.RootFolder, "VIDEO_TS");
+            var path = _ioServices.Path.Combine(drive.RootFolder, "VIDEO_TS");
 
-            DiscInfoBase discInfo = new DvdDiscInfo(_IOServices);
+            var discInfo = new DvdDiscInfo(_ioServices);
 
-            if (_IOServices.File.Exists(_IOServices.Path.Combine(path, "VIDEO_TS.IFO")))
+            if (_ioServices.File.Exists(_ioServices.Path.Combine(path, "VIDEO_TS.IFO")))
             {
                 discInfo.Init(path);
             }
 
-            return (discInfo);
+            return discInfo;
         }
 
         #endregion

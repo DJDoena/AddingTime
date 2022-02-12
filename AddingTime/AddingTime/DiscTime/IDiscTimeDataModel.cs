@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using AbstractionLayer.IOServices;
@@ -9,7 +8,7 @@
     {
         ObservableCollection<ITreeNode> DiscTree { get; }
 
-        Int32 MinimumTrackLength { set; }
+        int MinimumTrackLength { set; }
 
         void Scan(IDriveInfo drive);
 

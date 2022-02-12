@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using BDInfoLib.BDROM;
@@ -9,14 +8,16 @@
     {
         #region Readonlies
 
-        private readonly TSPlaylistFile _PlayList;
+        private readonly TSPlaylistFile _playList;
 
         #endregion
 
         #region Constructor
 
         public BluRaySubsetInfo(TSPlaylistFile playList)
-            => _PlayList = playList;
+        {
+            _playList = playList;
+        }
 
         #endregion
 
@@ -24,11 +25,9 @@
 
         #region Properties
 
-        public override String Name
-            => _PlayList.StreamClips.FirstOrDefault()?.Name ?? _PlayList.Name;
+        public override string Name => _playList.StreamClips.FirstOrDefault()?.Name ?? _playList.Name;
 
-        public override Boolean IsValid
-            => _PlayList.IsValid;
+        public override bool IsValid => _playList.IsValid;
 
         #endregion
 
@@ -36,8 +35,7 @@
 
         #region Methods
 
-        protected override IEnumerable<ITrackInfo> GetTracks()
-            => _PlayList.StreamClips.Select(clip => new BluRayTrackInfo(clip));
+        protected override IEnumerable<ITrackInfo> GetTracks() => _playList.StreamClips.Select(clip => new BluRayTrackInfo(clip));
 
         #endregion
     }

@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -10,14 +9,16 @@
     {
         #region Readonlies
 
-        private readonly DvdTitleSet _TitleSet;
+        private readonly DvdTitleSet _titleSet;
 
         #endregion
 
         #region Constructor
 
         public DvdSubsetInfo(DvdTitleSet titleSet)
-            => _TitleSet = titleSet;
+        {
+            _titleSet = titleSet;
+        }
 
         #endregion
 
@@ -25,22 +26,21 @@
 
         #region Properties
 
-        public override String Name
+        public override string Name
         {
             get
             {
-                FileInfo fi = new FileInfo(_TitleSet.FileName);
+                var fi = new FileInfo(_titleSet.FileName);
 
-                String[] parts = fi.Name.Split('_');
+                var parts = fi.Name.Split('_');
 
-                String name = parts[0] + "_" + parts[1];
+                var name = parts[0] + "_" + parts[1];
 
-                return (name);
+                return name;
             }
         }
 
-        public override Boolean IsValid
-            => _TitleSet.IsValidTitleSet;
+        public override bool IsValid => _titleSet.IsValidTitleSet;
 
         #endregion
 
@@ -48,16 +48,15 @@
 
         #region Methods
 
-        protected override IEnumerable<ITrackInfo> GetTracks()
-            => GetChains().Select(chain => new DvdTrackInfo(chain));
+        protected override IEnumerable<ITrackInfo> GetTracks() => this.GetChains().Select(chain => new DvdTrackInfo(chain));
 
         private IEnumerable<ProgramGroupChain> GetChains()
         {
-            for (Int32 i = 1; i <= _TitleSet.ChainCount; i++)
+            for (var chainIndex = 1; chainIndex <= _titleSet.ChainCount; chainIndex++)
             {
-                ProgramGroupChain chain = _TitleSet.GetChain(i);
+                var chain = _titleSet.GetChain(chainIndex);
 
-                yield return (chain);
+                yield return chain;
             }
         }
 

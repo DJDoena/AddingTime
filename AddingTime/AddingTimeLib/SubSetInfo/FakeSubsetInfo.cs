@@ -2,25 +2,22 @@
 
 namespace DoenaSoft.DVDProfiler.AddingTime
 {
-    using System;
     using System.Collections.Generic;
 
     internal sealed class FakeSubsetInfo : SubsetInfoBase
     {
-        private static Int32 _Counter = 1;
+        private static int _id = 1;
 
-        private Int32 m_Counter = _Counter++;
+        private readonly int _subsetNumber = _id++;
 
-        public override Boolean IsValid
-            => true;
+        public override bool IsValid => true;
 
-        public override String Name
-            => "Fake Subset " + m_Counter;
+        public override string Name => "Fake Subset " + _subsetNumber;
 
         protected override IEnumerable<ITrackInfo> GetTracks()
         {
-            yield return (new FakeTrackInfo());
-            yield return (new FakeTrackInfo());
+            yield return new FakeTrackInfo();
+            yield return new FakeTrackInfo();
         }
     }
 }

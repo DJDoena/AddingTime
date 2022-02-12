@@ -6,13 +6,13 @@
 
     internal interface ITreeNode : INotifyPropertyChanged
     {
-        String Text { get; }
+        string Text { get; }
 
         TimeSpan RunningTime { get; }
 
-        Boolean IsChecked { get; set; }
+        bool IsChecked { get; set; }
 
-        Boolean CanBeChecked { get; }
+        bool CanBeChecked { get; }
 
         ObservableCollection<ITreeNode> Nodes { get; }
     }

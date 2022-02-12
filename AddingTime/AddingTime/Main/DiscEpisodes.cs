@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DoenaSoft.DVDProfiler.AddingTime.Main
+﻿namespace DoenaSoft.DVDProfiler.AddingTime.Main
 {
-    internal sealed class DiscEpisodes : Tuple<string, List<string>>
+    using System.Collections.Generic;
+    using System.Linq;
+
+    internal sealed class DiscEpisodes
     {
-        public string DiscRunningTime => this.Item1;
+        public string DiscRunningTime { get; }
 
-        public List<string> EpisodeRunningTimes => this.Item2;
+        public List<string> EpisodeRunningTimes { get; }
 
-        public DiscEpisodes(string discRunningTime, List<string> episodeRunningTimes) : base(discRunningTime, episodeRunningTimes)
+        public DiscEpisodes(string discRunningTime, IEnumerable<string> episodeRunningTimes)
         {
+            this.DiscRunningTime = discRunningTime;
+            this.EpisodeRunningTimes = episodeRunningTimes.ToList();
         }
     }
 }

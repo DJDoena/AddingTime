@@ -12,19 +12,19 @@
     {
         #region Readonlies
 
-        private readonly Object _ThreadLock;
+        private readonly object _threadLock;
 
-        protected readonly IIOServices _IOServices;
+        protected readonly IIOServices _ioServices;
 
         #endregion
 
         #region Fields
 
-        private IDriveInfo _DriveInfo;
+        private IDriveInfo _driveInfo;
 
-        private Thread _DiscScanner;
+        private Thread _discScanner;
 
-        private Timers.Timer _Timer;
+        private Timers.Timer _timer;
 
         #endregion
 
@@ -32,10 +32,9 @@
 
         #region Properties
 
-        public String DiscLabel
-            => _DriveInfo.Label;
+        public string DiscLabel => _driveInfo.DriveLabel;
 
-        public abstract Boolean IsValid { get; }
+        public abstract bool IsValid { get; }
 
         public abstract IEnumerable<ISubsetInfo> Subsets { get; }
 
@@ -47,91 +46,91 @@
 
         protected DiscInfoBase(IIOServices ioServices)
         {
-            _IOServices = ioServices;
+            _ioServices = ioServices;
 
-            _ThreadLock = new Object();
+            _threadLock = new object();
         }
 
         #endregion
 
         #region Methods
 
-        public virtual void Init(String path)
+        public virtual void Init(string path)
         {
             if (path == null)
             {
                 throw (new ArgumentNullException(nameof(path)));
             }
-            else if (_IOServices.Folder.Exists(path) == false)
+            else if (_ioServices.Folder.Exists(path) == false)
             {
                 throw (new ArgumentException("Path does not exist.", nameof(path)));
             }
 
-            _DriveInfo = GetDriveInfo(path);
+            _driveInfo = this.GetDriveInfo(path);
         }
 
-        protected void ScanAsync(Object parameter)
+        protected void ScanAsync(object parameter)
         {
-            _DiscScanner = new Thread(new ParameterizedThreadStart(Scan));
+            _discScanner = new Thread(new ParameterizedThreadStart(this.Scan));
 
-            _DiscScanner.Start(parameter);
+            _discScanner.Start(parameter);
 
-            StartTimer();
+            this.StartTimer();
 
-            while (_DiscScanner.ThreadState == System.Threading.ThreadState.Running)
+            while (_discScanner.ThreadState == System.Threading.ThreadState.Running)
             {
                 Thread.Sleep(250);
             }
 
-            StopTimer();
+            this.StopTimer();
         }
 
-        protected abstract void Scan(Object path);
+        protected abstract void Scan(object path);
 
         #region Timer
 
         private void StartTimer()
         {
-            _Timer = new Timers.Timer()
+            _timer = new Timers.Timer()
             {
                 Interval = 90000
             };
 
-            _Timer.Elapsed += OnTimerElapsed;
+            _timer.Elapsed += this.OnTimerElapsed;
 
-            _Timer.Start();
+            _timer.Start();
         }
 
         private void StopTimer()
         {
-            lock (_ThreadLock)
+            lock (_threadLock)
             {
-                if (_Timer != null)
+                if (_timer != null)
                 {
-                    _Timer.Stop();
+                    _timer.Stop();
 
-                    _Timer.Elapsed -= OnTimerElapsed;
+                    _timer.Elapsed -= this.OnTimerElapsed;
 
-                    _Timer = null;
+                    _timer = null;
                 }
             }
         }
 
-        private void OnTimerElapsed(Object sender
+        private void OnTimerElapsed(object sender
             , Timers.ElapsedEventArgs e)
         {
-            StopTimer();
+            this.StopTimer();
 
-            TryAbortThread();
+            this.TryAbortThread();
         }
 
         private void TryAbortThread()
         {
-            if ((_DiscScanner != null) && (_DiscScanner.ThreadState == System.Threading.ThreadState.Running))
+            if ((_discScanner != null) && (_discScanner.ThreadState == System.Threading.ThreadState.Running))
             {
                 try
                 {
-                    _DiscScanner.Abort();
+                    _discScanner.Abort();
                 }
                 catch
                 { }
@@ -140,8 +139,8 @@
 
         #endregion
 
-        private IDriveInfo GetDriveInfo(String path)
-            => _IOServices.GetDriveInfo(_IOServices.GetFolderInfo(path).Root.Name);
+        private IDriveInfo GetDriveInfo(string path)
+            => _ioServices.GetDriveInfo(_ioServices.GetFolderInfo(path).Root.Name);
 
         #endregion
     }

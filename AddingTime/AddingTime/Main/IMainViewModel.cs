@@ -1,6 +1,5 @@
 ﻿namespace DoenaSoft.DVDProfiler.AddingTime.Main
 {
-    using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Windows.Input;
@@ -9,17 +8,17 @@
     {
         #region Episodes
 
-        String Input { get; set; }
+        string Input { get; set; }
 
-        ObservableCollection<String> Episodes { get; }
+        ObservableCollection<string> Episodes { get; }
 
-        Int32 SelectedEpisode { get; set; }
+        int SelectedEpisode { get; set; }
 
-        String EpisodesFullTime { get; }
+        string EpisodesFullTime { get; }
 
-        String EpisodesMiddleTime { get; }
+        string EpisodesMiddleTime { get; }
 
-        String EpisodesShortTime { get; }
+        string EpisodesShortTime { get; }
 
         ICommand AddEpisodeCommand { get; }
 
@@ -39,15 +38,15 @@
 
         #region Discs
 
-        ObservableCollection<String> Discs { get; }
+        ObservableCollection<string> Discs { get; }
 
-        Int32 SelectedDisc { get; set; }
+        int SelectedDisc { get; set; }
 
-        String DiscsFullTime { get; }
+        string DiscsFullTime { get; }
 
-        String DiscsMiddleTime { get; }
+        string DiscsMiddleTime { get; }
 
-        String DiscsShortTime { get; }
+        string DiscsShortTime { get; }
 
         ICommand RemoveDiscCommand { get; }
 
@@ -65,15 +64,15 @@
 
         #region Seasons
 
-        ObservableCollection<String> Seasons { get; }
+        ObservableCollection<string> Seasons { get; }
 
-        Int32 SelectedSeason { get; set; }
+        int SelectedSeason { get; set; }
 
-        String SeasonsFullTime { get; }
+        string SeasonsFullTime { get; }
 
-        String SeasonsMiddleTime { get; }
+        string SeasonsMiddleTime { get; }
 
-        String SeasonsShortTime { get; }
+        string SeasonsShortTime { get; }
 
         ICommand RemoveSeasonCommand { get; }
 

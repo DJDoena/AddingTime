@@ -14,41 +14,39 @@
 
     internal sealed class DiscTimeViewModel : IDiscTimeViewModel
     {
-        private readonly IDiscTimeDataModel _DataModel;
+        private readonly IDiscTimeDataModel _dataModel;
 
-        private readonly IUIServices _UIServices;
+        private readonly IUIServices _uiServices;
 
-        private static IDriveViewModel _SelectedDrive;
+        private static IDriveViewModel _selectedDrive;
 
-        private static Int32 _MinimumLength;
+        private static int _minimumLength;
 
-        static Boolean _ShowAnyDVDWarning;
+        private static bool _showAnyDVDWarning;
 
         static DiscTimeViewModel()
         {
-            _SelectedDrive = null;
+            _selectedDrive = null;
 
-            _MinimumLength = 5;
+            _minimumLength = 5;
 
-            _ShowAnyDVDWarning = true;
+            _showAnyDVDWarning = true;
         }
 
-        internal DiscTimeViewModel(IDiscTimeDataModel dataModel
-            , IIOServices ioServices
-            , IUIServices uiServices)
+        internal DiscTimeViewModel(IDiscTimeDataModel dataModel, IIOServices ioServices, IUIServices uiServices)
         {
             if (ioServices == null)
             {
                 throw (new ArgumentNullException(nameof(ioServices)));
             }
 
-            _DataModel = dataModel ?? throw new ArgumentNullException(nameof(dataModel));
+            _dataModel = dataModel ?? throw new ArgumentNullException(nameof(dataModel));
 
-            _UIServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
+            _uiServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
 
-            _DataModel.MinimumTrackLength = MinimumLength;
+            _dataModel.MinimumTrackLength = this.MinimumLength;
 
-            Drives = GetDrives(ioServices);
+            this.Drives = this.GetDrives(ioServices);
 
 #if FAKE
 
@@ -56,84 +54,75 @@
 
 #endif
 
-            SelectedDrive = Drives.FirstOrDefault(d => d.Actual.DriveLetter == _SelectedDrive?.Actual.DriveLetter) ?? Drives.FirstOrDefault();
+            this.SelectedDrive = this.Drives.FirstOrDefault(d => d.Actual.DriveLetter == _selectedDrive?.Actual.DriveLetter) ?? this.Drives.FirstOrDefault();
         }
 
         #region  IDiscTimeViewModel
 
         public IDriveViewModel SelectedDrive
         {
-            get => _SelectedDrive;
+            get => _selectedDrive;
             set
             {
-                if (value != _SelectedDrive)
+                if (value != _selectedDrive)
                 {
-                    _SelectedDrive = value;
+                    _selectedDrive = value;
 
-                    RaisePropertyChanged(nameof(SelectedDrive));
+                    this.RaisePropertyChanged(nameof(this.SelectedDrive));
                 }
             }
         }
 
-        public Int32 MinimumLength
+        public int MinimumLength
         {
-            get => _MinimumLength;
+            get => _minimumLength;
             set
             {
-                _DataModel.MinimumTrackLength = value;
+                _dataModel.MinimumTrackLength = value;
 
-                if (value != _MinimumLength)
+                if (value != _minimumLength)
                 {
-                    _MinimumLength = value;
+                    _minimumLength = value;
 
-                    RaisePropertyChanged(nameof(MinimumLength));
+                    this.RaisePropertyChanged(nameof(this.MinimumLength));
                 }
             }
         }
 
-        public IEnumerable<TimeSpan> RunningTimes
-            => _DataModel.GetCheckedNodes().Select(node => node.RunningTime);
+        public IEnumerable<TimeSpan> RunningTimes => _dataModel.GetCheckedNodes().Select(node => node.RunningTime);
 
         public ObservableCollection<IDriveViewModel> Drives { get; }
 
-        public ICommand ScanCommand
-            => new RelayCommand(Scan, CanScan);
+        public ICommand ScanCommand => new RelayCommand(this.Scan, this.CanScan);
 
-        public ICommand SetSitcomLengthCommand
-            => new RelayCommand(SetSitcomLength);
+        public ICommand SetSitcomLengthCommand => new RelayCommand(this.SetSitcomLength);
 
-        public ICommand SetDramaLengthCommand
-            => new RelayCommand(SetDramaLength);
+        public ICommand SetDramaLengthCommand => new RelayCommand(this.SetDramaLength);
 
-        public ICommand SetMovieLengthCommand
-            => new RelayCommand(SetMovieLength);
+        public ICommand SetMovieLengthCommand => new RelayCommand(this.SetMovieLength);
 
-        public ObservableCollection<ITreeNode> DiscTree
-            => _DataModel.DiscTree;
+        public ObservableCollection<ITreeNode> DiscTree => _dataModel.DiscTree;
 
-        public ICommand CheckAllNodesCommand
-            => new RelayCommand(CheckAllNodes);
+        public ICommand CheckAllNodesCommand => new RelayCommand(this.CheckAllNodes);
 
         public void CheckForDecrypter()
         {
-            IEnumerable<Process> anydvd = Process.GetProcessesByName("AnyDVDtray").Union(Process.GetProcessesByName("DVDFabPasskey"));
+            var anydvd = Process.GetProcessesByName("AnyDVDtray").Union(Process.GetProcessesByName("DVDFabPasskey"));
 
-            if ((anydvd.HasItems() == false) && (_ShowAnyDVDWarning))
+            if (!anydvd.HasItems() && _showAnyDVDWarning)
             {
-                _UIServices.ShowMessageBox("For Blu-ray discs, make sure RedFox AnyDVD or DVDFab Passkey is enabled or else you will not get useful results."
+                _uiServices.ShowMessageBox("For Blu-ray discs, make sure RedFox AnyDVD or DVDFab Passkey is enabled or else you will not get useful results."
                     + Environment.NewLine + "For DVDs it will not hurt either.", "AnyDVD / Passkey", Buttons.OK, Icon.Information);
 
-                _ShowAnyDVDWarning = false;
+                _showAnyDVDWarning = false;
             }
         }
 
         public event EventHandler<CloseEventArgs> Closing;
 
-        public ICommand AcceptCommand
-            => new RelayCommand(Accept);
+        public ICommand AcceptCommand => new RelayCommand(this.Accept);
 
-        public ICommand CancelCommand
-            => new RelayCommand(Cancel);
+        public ICommand CancelCommand => new RelayCommand(this.Cancel);
 
         #endregion
 
@@ -143,46 +132,35 @@
 
         #endregion
 
-        private void RaisePropertyChanged(String attribute)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
+        private void RaisePropertyChanged(string attribute) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
 
         private void Scan()
         {
-            RefreshDrives();
+            this.RefreshDrives();
 
-            _DataModel.Scan(SelectedDrive.Actual);
+            _dataModel.Scan(this.SelectedDrive.Actual);
 
-            RaisePropertyChanged(nameof(DiscTree));
+            this.RaisePropertyChanged(nameof(this.DiscTree));
         }
 
-        private void RefreshDrives()
-            => Drives.ForEach(drive => drive.Refresh());
+        private void RefreshDrives() => this.Drives.ForEach(drive => drive.Refresh());
 
-        private Boolean CanScan()
-            => SelectedDrive != null;
+        private bool CanScan() => this.SelectedDrive != null;
 
-        private void SetSitcomLength()
-            => MinimumLength = 15;
+        private void SetSitcomLength() => this.MinimumLength = 15;
 
-        private void SetDramaLength()
-            => MinimumLength = 35;
+        private void SetDramaLength() => this.MinimumLength = 35;
 
-        private void SetMovieLength()
-            => MinimumLength = 60;
+        private void SetMovieLength() => this.MinimumLength = 60;
 
-        private void CheckAllNodes()
-            => _DataModel.CheckAllNodes();
+        private void CheckAllNodes() => _dataModel.CheckAllNodes();
 
-        private void Accept()
-            => Close(Result.OK);
+        private void Accept() => this.Close(Result.OK);
 
-        private void Cancel()
-            => Close(Result.Cancel);
+        private void Cancel() => this.Close(Result.Cancel);
 
-        private void Close(Result result)
-            => Closing?.Invoke(this, new CloseEventArgs(result));
+        private void Close(Result result) => Closing?.Invoke(this, new CloseEventArgs(result));
 
-        private ObservableCollection<IDriveViewModel> GetDrives(IIOServices ioServices)
-            => new ObservableCollection<IDriveViewModel>(ioServices.GetDriveInfos(System.IO.DriveType.CDRom).Select(drive => new DriveViewModel(drive)));
+        private ObservableCollection<IDriveViewModel> GetDrives(IIOServices ioServices) => new ObservableCollection<IDriveViewModel>(ioServices.GetDriveInfos(System.IO.DriveType.CDRom).Select(drive => new DriveViewModel(drive)));
     }
 }

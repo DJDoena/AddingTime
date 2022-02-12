@@ -1,12 +1,11 @@
 ﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime
 {
-    using System;
     using System.ComponentModel;
     using AbstractionLayer.IOServices;
 
-    interface IDriveViewModel : INotifyPropertyChanged
+    internal interface IDriveViewModel : INotifyPropertyChanged
     {
-        String Label { get; }
+        string Label { get; }
 
         IDriveInfo Actual { get; }
 

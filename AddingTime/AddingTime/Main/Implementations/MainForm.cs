@@ -8,161 +8,159 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
     internal partial class MainForm : Form
     {
-        private readonly IMainViewModel _ViewModel;
+        private readonly IMainViewModel _viewModel;
 
         public MainForm(IMainViewModel viewModel)
         {
-            _ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+            _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
 
-            InitializeComponent();
+            this.InitializeComponent();
 
-            Load += OnFormLoad;
+            Load += this.OnFormLoad;
 
-            _ViewModel.PropertyChanged += OnViewModelChanged;
+            _viewModel.PropertyChanged += this.OnViewModelChanged;
 
-            RegisterControlEvents();
+            this.RegisterControlEvents();
 
-            FormClosed += OnFormClosed;
+            FormClosed += this.OnFormClosed;
 
-            Icon = Properties.Resource.djdsoft;
+            this.Icon = Properties.Resource.djdsoft;
         }
 
-        private void OnFormClosed(Object sender
-            , FormClosedEventArgs e)
+        private void OnFormClosed(object sender, FormClosedEventArgs e)
         {
-            FormClosed -= OnFormClosed;
+            FormClosed -= this.OnFormClosed;
 
-            _ViewModel.PropertyChanged -= OnViewModelChanged;
+            _viewModel.PropertyChanged -= this.OnViewModelChanged;
 
-            UnregisterControlEvents();
+            this.UnregisterControlEvents();
 
-            Load -= OnFormLoad;
+            Load -= this.OnFormLoad;
         }
 
         private void RegisterControlEvents()
         {
-            ReadFromDriveToolStripMenuItem.Click += OnReadFromDriveToolStripMenuItemClick;
-            ReadMeToolStripMenuItem.Click += OnReadMeToolStripMenuItemClick;
-            CheckForUpdateToolStripMenuItem.Click += OnCheckForUpdateToolStripMenuItemClick;
-            AboutToolStripMenuItem.Click += OnAboutToolStripMenuItemClick;
+            ReadFromDriveToolStripMenuItem.Click += this.OnReadFromDriveToolStripMenuItemClick;
+            ReadMeToolStripMenuItem.Click += this.OnReadMeToolStripMenuItemClick;
+            CheckForUpdateToolStripMenuItem.Click += this.OnCheckForUpdateToolStripMenuItemClick;
+            AboutToolStripMenuItem.Click += this.OnAboutToolStripMenuItemClick;
 
-            InputTextBox.TextChanged += OnInputTextBoxTextChanged;
+            InputTextBox.TextChanged += this.OnInputTextBoxTextChanged;
 
-            EpisodesListBox.SelectedIndexChanged += OnEpisodeListBoxSelectedIndexChanged;
+            EpisodesListBox.SelectedIndexChanged += this.OnEpisodeListBoxSelectedIndexChanged;
 
-            AddButton.Click += OnAddButtonClick;
-            AddFromClipboardButton.Click += OnAddFromClipboardButtonClick;
+            AddButton.Click += this.OnAddButtonClick;
+            AddFromClipboardButton.Click += this.OnAddFromClipboardButtonClick;
 
-            RemoveEpisodeButton.Click += OnRemoveEpisodeButtonClick;
-            ClearEpisodesButton.Click += OnClearButtonClick;
+            RemoveEpisodeButton.Click += this.OnRemoveEpisodeButtonClick;
+            ClearEpisodesButton.Click += this.OnClearButtonClick;
 
-            MoveEpisodeButton.Click += OnMoveEpisodeButtonClick;
+            MoveEpisodeButton.Click += this.OnMoveEpisodeButtonClick;
 
-            CopyEpisodesButton.Click += OnCopyButtonClick;
-            CopyAllEpisodesButton.Click += OnCopyAllButtonClick;
+            CopyEpisodesButton.Click += this.OnCopyButtonClick;
+            CopyAllEpisodesButton.Click += this.OnCopyAllButtonClick;
 
-            DiscsListBox.SelectedIndexChanged += OnDiscsListBoxSelectedIndexChanged;
+            DiscsListBox.SelectedIndexChanged += this.OnDiscsListBoxSelectedIndexChanged;
 
-            ClearAllButton.Click += OnClearAllButtonClick;
+            ClearAllButton.Click += this.OnClearAllButtonClick;
 
-            RemoveDiscButton.Click += OnRemoveDiscButtonClick;
-            ClearDiscsButton.Click += OnClearDiscsButtonClick;
+            RemoveDiscButton.Click += this.OnRemoveDiscButtonClick;
+            ClearDiscsButton.Click += this.OnClearDiscsButtonClick;
 
-            CopyDiscsButton.Click += OnCopyDiscsButtonClick;
-            CopyAllDiscsButton.Click += OnCopyAllDiscsButtonClick;
-            CopyFullDiscsButton.Click += OnCopyFullDiscsButtonClick;
+            CopyDiscsButton.Click += this.OnCopyDiscsButtonClick;
+            CopyAllDiscsButton.Click += this.OnCopyAllDiscsButtonClick;
+            CopyFullDiscsButton.Click += this.OnCopyFullDiscsButtonClick;
         }
 
         private void UnregisterControlEvents()
         {
-            ReadFromDriveToolStripMenuItem.Click -= OnReadFromDriveToolStripMenuItemClick;
-            ReadMeToolStripMenuItem.Click -= OnReadMeToolStripMenuItemClick;
-            CheckForUpdateToolStripMenuItem.Click -= OnCheckForUpdateToolStripMenuItemClick;
-            AboutToolStripMenuItem.Click -= OnAboutToolStripMenuItemClick;
+            ReadFromDriveToolStripMenuItem.Click -= this.OnReadFromDriveToolStripMenuItemClick;
+            ReadMeToolStripMenuItem.Click -= this.OnReadMeToolStripMenuItemClick;
+            CheckForUpdateToolStripMenuItem.Click -= this.OnCheckForUpdateToolStripMenuItemClick;
+            AboutToolStripMenuItem.Click -= this.OnAboutToolStripMenuItemClick;
 
-            InputTextBox.TextChanged -= OnInputTextBoxTextChanged;
+            InputTextBox.TextChanged -= this.OnInputTextBoxTextChanged;
 
-            EpisodesListBox.SelectedIndexChanged -= OnEpisodeListBoxSelectedIndexChanged;
+            EpisodesListBox.SelectedIndexChanged -= this.OnEpisodeListBoxSelectedIndexChanged;
 
-            AddButton.Click -= OnAddButtonClick;
-            AddFromClipboardButton.Click -= OnAddFromClipboardButtonClick;
+            AddButton.Click -= this.OnAddButtonClick;
+            AddFromClipboardButton.Click -= this.OnAddFromClipboardButtonClick;
 
-            RemoveEpisodeButton.Click -= OnRemoveEpisodeButtonClick;
-            ClearEpisodesButton.Click -= OnClearButtonClick;
+            RemoveEpisodeButton.Click -= this.OnRemoveEpisodeButtonClick;
+            ClearEpisodesButton.Click -= this.OnClearButtonClick;
 
-            MoveEpisodeButton.Click -= OnMoveEpisodeButtonClick;
+            MoveEpisodeButton.Click -= this.OnMoveEpisodeButtonClick;
 
-            CopyEpisodesButton.Click -= OnCopyButtonClick;
-            CopyAllEpisodesButton.Click -= OnCopyAllButtonClick;
+            CopyEpisodesButton.Click -= this.OnCopyButtonClick;
+            CopyAllEpisodesButton.Click -= this.OnCopyAllButtonClick;
 
-            DiscsListBox.SelectedIndexChanged -= OnDiscsListBoxSelectedIndexChanged;
+            DiscsListBox.SelectedIndexChanged -= this.OnDiscsListBoxSelectedIndexChanged;
 
-            ClearAllButton.Click -= OnClearAllButtonClick;
+            ClearAllButton.Click -= this.OnClearAllButtonClick;
 
-            RemoveDiscButton.Click -= OnRemoveDiscButtonClick;
-            ClearDiscsButton.Click -= OnClearDiscsButtonClick;
+            RemoveDiscButton.Click -= this.OnRemoveDiscButtonClick;
+            ClearDiscsButton.Click -= this.OnClearDiscsButtonClick;
 
-            CopyDiscsButton.Click -= OnCopyDiscsButtonClick;
-            CopyAllDiscsButton.Click -= OnCopyAllDiscsButtonClick;
-            CopyFullDiscsButton.Click -= OnCopyFullDiscsButtonClick;
+            CopyDiscsButton.Click -= this.OnCopyDiscsButtonClick;
+            CopyAllDiscsButton.Click -= this.OnCopyAllDiscsButtonClick;
+            CopyFullDiscsButton.Click -= this.OnCopyFullDiscsButtonClick;
         }
 
-        private void OnViewModelChanged(Object sender
-            , PropertyChangedEventArgs e)
+        private void OnViewModelChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case (nameof(_ViewModel.Input)):
+                case nameof(_viewModel.Input):
                     {
-                        OnViewModelInputChanged();
+                        this.OnViewModelInputChanged();
 
                         break;
                     }
-                case (nameof(_ViewModel.Episodes)):
+                case nameof(_viewModel.Episodes):
                     {
-                        OnViewModelEpisodesChanged();
+                        this.OnViewModelEpisodesChanged();
 
                         break;
                     }
-                case (nameof(_ViewModel.SelectedEpisode)):
+                case nameof(_viewModel.SelectedEpisode):
                     {
-                        RemoveEpisodeButton.Enabled = CanExecute(_ViewModel.RemoveEpisodeCommand);
+                        RemoveEpisodeButton.Enabled = CanExecute(_viewModel.RemoveEpisodeCommand);
 
                         break;
                     }
-                case (nameof(_ViewModel.EpisodesFullTime)):
+                case nameof(_viewModel.EpisodesFullTime):
                     {
-                        OnViewModelEpisodesFullTimeChanged();
+                        this.OnViewModelEpisodesFullTimeChanged();
 
                         break;
                     }
-                case (nameof(_ViewModel.EpisodesMiddleTime)):
+                case nameof(_viewModel.EpisodesMiddleTime):
                     {
-                        EpisodesMiddleTimeTextBox.Text = _ViewModel.EpisodesMiddleTime;
+                        EpisodesMiddleTimeTextBox.Text = _viewModel.EpisodesMiddleTime;
 
                         break;
                     }
-                case (nameof(_ViewModel.EpisodesShortTime)):
+                case nameof(_viewModel.EpisodesShortTime):
                     {
-                        EpisodesShortTimeTextBox.Text = _ViewModel.EpisodesShortTime;
+                        EpisodesShortTimeTextBox.Text = _viewModel.EpisodesShortTime;
 
                         break;
                     }
-                case (nameof(_ViewModel.Discs)):
+                case nameof(_viewModel.Discs):
                     {
-                        OnViewModelDiscsChanged();
+                        this.OnViewModelDiscsChanged();
 
                         break;
                     }
-                case (nameof(_ViewModel.SelectedDisc)):
+                case nameof(_viewModel.SelectedDisc):
                     {
-                        RemoveDiscButton.Enabled = CanExecute(_ViewModel.RemoveDiscCommand);
+                        RemoveDiscButton.Enabled = CanExecute(_viewModel.RemoveDiscCommand);
 
                         break;
                     }
-                case (nameof(_ViewModel.DiscsFullTime)):
+                case nameof(_viewModel.DiscsFullTime):
                     {
-                        OnViewModelDiscsFullTimeChanged();
+                        this.OnViewModelDiscsFullTimeChanged();
 
                         break;
                     }
@@ -171,198 +169,173 @@ namespace DoenaSoft.DVDProfiler.AddingTime.Main.Implementations
 
         private void OnViewModelDiscsFullTimeChanged()
         {
-            DiscsFullTimeTextBox.Text = _ViewModel.DiscsFullTime;
+            DiscsFullTimeTextBox.Text = _viewModel.DiscsFullTime;
 
-            CopyDiscsButton.Enabled = CanExecute(_ViewModel.CopyDiscsCommand);
+            CopyDiscsButton.Enabled = CanExecute(_viewModel.CopyDiscsCommand);
 
-            CopyAllDiscsButton.Enabled = CanExecute(_ViewModel.CopyAllDiscsCommand);
+            CopyAllDiscsButton.Enabled = CanExecute(_viewModel.CopyAllDiscsCommand);
 
-            CopyFullDiscsButton.Enabled = CanExecute(_ViewModel.CopyFullDiscsCommand);
+            CopyFullDiscsButton.Enabled = CanExecute(_viewModel.CopyFullDiscsCommand);
         }
 
         private void OnViewModelDiscsChanged()
         {
             DiscsListBox.Items.Clear();
 
-            DiscsListBox.Items.AddRange(_ViewModel.Discs.ToArray());
+            DiscsListBox.Items.AddRange(_viewModel.Discs.ToArray());
 
-            ClearDiscsButton.Enabled = CanExecute(_ViewModel.ClearDiscsCommand);
+            ClearDiscsButton.Enabled = CanExecute(_viewModel.ClearDiscsCommand);
 
-            ClearAllButton.Enabled = CanExecute(_ViewModel.ClearAllCommand);
+            ClearAllButton.Enabled = CanExecute(_viewModel.ClearAllCommand);
         }
 
         private void OnViewModelEpisodesFullTimeChanged()
         {
-            EpisodesFullTimeTextBox.Text = _ViewModel.EpisodesFullTime;
+            EpisodesFullTimeTextBox.Text = _viewModel.EpisodesFullTime;
 
-            MoveEpisodeButton.Enabled = CanExecute(_ViewModel.MoveEpisodesCommand);
+            MoveEpisodeButton.Enabled = CanExecute(_viewModel.MoveEpisodesCommand);
 
-            CopyEpisodesButton.Enabled = CanExecute(_ViewModel.CopyEpisodesCommand);
+            CopyEpisodesButton.Enabled = CanExecute(_viewModel.CopyEpisodesCommand);
 
-            CopyAllEpisodesButton.Enabled = CanExecute(_ViewModel.CopyAllEpisodesCommand);
+            CopyAllEpisodesButton.Enabled = CanExecute(_viewModel.CopyAllEpisodesCommand);
         }
 
         private void OnViewModelEpisodesChanged()
         {
             EpisodesListBox.Items.Clear();
 
-            EpisodesListBox.Items.AddRange(_ViewModel.Episodes.ToArray());
+            EpisodesListBox.Items.AddRange(_viewModel.Episodes.ToArray());
 
-            ClearEpisodesButton.Enabled = CanExecute(_ViewModel.ClearEpisodesCommand);
+            ClearEpisodesButton.Enabled = CanExecute(_viewModel.ClearEpisodesCommand);
 
-            ClearAllButton.Enabled = CanExecute(_ViewModel.ClearAllCommand);
+            ClearAllButton.Enabled = CanExecute(_viewModel.ClearAllCommand);
         }
 
         private void OnViewModelInputChanged()
         {
-            InputTextBox.Text = _ViewModel.Input;
+            InputTextBox.Text = _viewModel.Input;
 
-            AddButton.Enabled = CanExecute(_ViewModel.AddEpisodeCommand);
+            AddButton.Enabled = CanExecute(_viewModel.AddEpisodeCommand);
         }
 
-        private static Boolean CanExecute(ICommand command)
-            => command.CanExecute(null);
+        private static bool CanExecute(ICommand command) => command.CanExecute(null);
 
-        private static void ExecuteCommand(ICommand command)
-            => command.Execute(null);
+        private static void ExecuteCommand(ICommand command) => command.Execute(null);
 
-        private void OnAddButtonClick(Object sender
-            , EventArgs e)
+        private void OnAddButtonClick(object sender, EventArgs e)
         {
-            ExecuteCommand(_ViewModel.AddEpisodeCommand);
+            ExecuteCommand(_viewModel.AddEpisodeCommand);
 
             InputTextBox.Focus();
         }
 
-        private void OnClearButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.ClearEpisodesCommand);
+        private void OnClearButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.ClearEpisodesCommand);
 
-        private void OnCopyButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.CopyEpisodesCommand);
+        private void OnCopyButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.CopyEpisodesCommand);
 
-        private void OnCopyAllButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.CopyAllEpisodesCommand);
+        private void OnCopyAllButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.CopyAllEpisodesCommand);
 
-        private void OnAddFromClipboardButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.AddFromClipboardCommand);
+        private void OnAddFromClipboardButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.AddFromClipboardCommand);
 
-        private void OnRemoveEpisodeButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.RemoveEpisodeCommand);
+        private void OnRemoveEpisodeButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.RemoveEpisodeCommand);
 
-        private void OnRemoveDiscButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.RemoveDiscCommand);
+        private void OnRemoveDiscButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.RemoveDiscCommand);
 
-        private void OnClearDiscsButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.ClearDiscsCommand);
+        private void OnClearDiscsButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.ClearDiscsCommand);
 
-        private void OnCopyDiscsButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.CopyDiscsCommand);
+        private void OnCopyDiscsButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.CopyDiscsCommand);
 
-        private void OnCopyAllDiscsButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.CopyAllDiscsCommand);
+        private void OnCopyAllDiscsButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.CopyAllDiscsCommand);
 
-        private void OnMoveEpisodeButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.MoveEpisodesCommand);
+        private void OnMoveEpisodeButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.MoveEpisodesCommand);
 
-        private void OnClearAllButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.ClearAllCommand);
+        private void OnClearAllButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.ClearAllCommand);
 
-        private void OnCopyFullDiscsButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.CopyFullDiscsCommand);
+        private void OnCopyFullDiscsButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.CopyFullDiscsCommand);
 
-        private void OnFormLoad(Object sender
-            , EventArgs e)
+        private void OnFormLoad(object sender, EventArgs e)
         {
-            ToolTip tt = new ToolTip();
+            var tt = new ToolTip();
             tt.SetToolTip(InputTextBox, "Enter the time as hours:minutes:seconds or minutes:seconds - but you can use \":\", \".\" or \",\" as seperator");
+
             tt = new ToolTip();
             tt.SetToolTip(EpisodesListBox, "Shows the added times");
+
             tt = new ToolTip();
             tt.SetToolTip(EpisodesFullTimeTextBox, "Shows the summed up times as hours:minutes:seconds");
+
             tt = new ToolTip();
             tt.SetToolTip(EpisodesMiddleTimeTextBox, "Shows the summed up times as minutes with 2 decimals");
+
             tt = new ToolTip();
             tt.SetToolTip(EpisodesShortTimeTextBox, "Shows the summed up times as minutes with 0 decimals");
 
             tt = new ToolTip();
             tt.SetToolTip(AddButton, "Adds the time entered in the TextBox into the ListBox");
+
             tt = new ToolTip();
             tt.SetToolTip(AddFromClipboardButton, "Adds the time from the clipboard into the left list");
+
             tt = new ToolTip();
             tt.SetToolTip(RemoveEpisodeButton, "Removes the selected entry from the left list");
+
             tt = new ToolTip();
             tt.SetToolTip(ClearEpisodesButton, "Clears all contents from the left list");
+
             tt = new ToolTip();
             tt.SetToolTip(MoveEpisodeButton, "Moves the summed up time to the right list");
+
             tt = new ToolTip();
             tt.SetToolTip(CopyEpisodesButton, "Copies the summed up times as minutes with 0 decimals into the clipboard");
+
             tt = new ToolTip();
             tt.SetToolTip(CopyAllEpisodesButton, "Copies the summed up times as hours:minutes:seconds and as minutes with 0 decimals into the clipboard");
 
             tt = new ToolTip();
             tt.SetToolTip(DiscsListBox, "Shows the added times");
+
             tt = new ToolTip();
             tt.SetToolTip(DiscsFullTimeTextBox, "Shows the summed up times as hours:minutes:seconds");
+
             tt = new ToolTip();
             tt.SetToolTip(DiscsMiddleTimeTextBox, "Shows the summed up times as minutes with 2 decimals");
+
             tt = new ToolTip();
             tt.SetToolTip(DiscsShortTimeTextBox, "Shows the summed up times as minutes with 0 decimals");
 
             tt = new ToolTip();
             tt.SetToolTip(ClearAllButton, "Clears all contents");
+
             tt = new ToolTip();
             tt.SetToolTip(RemoveDiscButton, "Removes the selected entry from the right list");
+
             tt = new ToolTip();
             tt.SetToolTip(ClearDiscsButton, "Clears all contents from the right list");
+
             tt = new ToolTip();
             tt.SetToolTip(CopyDiscsButton, "Copies the summed up times as minutes with 0 decimals into the clipboard");
+
             tt = new ToolTip();
             tt.SetToolTip(CopyAllDiscsButton, "Copies the summed up times as hours:minutes:seconds and as minutes with 0 decimals into the clipboard");
+
             tt = new ToolTip();
             tt.SetToolTip(CopyFullDiscsButton, "Copies the summed up times fancy fromatted into the clipboard");
         }
 
-        private void CheckForNewVersion()
-            => ExecuteCommand(_ViewModel.CheckForNewVersionCommand);
+        private void CheckForNewVersion() => ExecuteCommand(_viewModel.CheckForNewVersionCommand);
 
-        private void OnReadMeToolStripMenuItemClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.OpenHelpWindowCommand);
+        private void OnReadMeToolStripMenuItemClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.OpenHelpWindowCommand);
 
-        private void OnAboutToolStripMenuItemClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.OpenAboutWindowCommand);
+        private void OnAboutToolStripMenuItemClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.OpenAboutWindowCommand);
 
-        private void OnCheckForUpdateToolStripMenuItemClick(Object sender
-            , EventArgs e)
-            => CheckForNewVersion();
+        private void OnCheckForUpdateToolStripMenuItemClick(object sender, EventArgs e) => this.CheckForNewVersion();
 
-        private void OnDiscsListBoxSelectedIndexChanged(Object sender
-            , EventArgs e)
-            => _ViewModel.SelectedDisc = DiscsListBox.SelectedIndex;
+        private void OnDiscsListBoxSelectedIndexChanged(object sender, EventArgs e) => _viewModel.SelectedDisc = DiscsListBox.SelectedIndex;
 
-        private void OnInputTextBoxTextChanged(Object sender
-            , EventArgs e)
-            => _ViewModel.Input = InputTextBox.Text;
+        private void OnInputTextBoxTextChanged(object sender, EventArgs e) => _viewModel.Input = InputTextBox.Text;
 
-        private void OnEpisodeListBoxSelectedIndexChanged(Object sender
-            , EventArgs e)
-            => _ViewModel.SelectedEpisode = EpisodesListBox.SelectedIndex;
+        private void OnEpisodeListBoxSelectedIndexChanged(object sender, EventArgs e) => _viewModel.SelectedEpisode = EpisodesListBox.SelectedIndex;
 
-        private void OnReadFromDriveToolStripMenuItemClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.OpenReadFromDriveWindowCommand);
+        private void OnReadFromDriveToolStripMenuItemClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.OpenReadFromDriveWindowCommand);
     }
 }

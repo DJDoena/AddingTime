@@ -8,27 +8,25 @@
     using AbstractionLayer.IOServices.Implementations;
     using AbstractionLayer.UIServices;
     using AbstractionLayer.UIServices.Implementations;
-    using DiscTime;
     using DiscTime.Implementations;
     using DVDProfilerHelper;
-    using Main;
     using Main.Implementations;
 
     internal sealed class FormFactory : IWindowFactory
     {
-        private readonly IUIServices _UIServices;
+        private readonly IUIServices _uiServices;
 
-        private readonly IClipboardServices _ClipboardServices;
+        private readonly IClipboardServices _clipboardServices;
 
-        private readonly IIOServices _IOServices;
+        private readonly IIOServices _ioServices;
 
         public FormFactory()
         {
-            _IOServices = new IOServices();
+            _ioServices = new IOServices();
 
-            _UIServices = new FormUIServices();
+            _uiServices = new FormUIServices();
 
-            _ClipboardServices = new FormClipboardServices();
+            _clipboardServices = new FormClipboardServices();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -38,20 +36,20 @@
 
         public void OpenMainWindow()
         {
-            IMainDataModel dataModel = new MainDataModel(_UIServices);
+            var dataModel = new MainDataModel(_uiServices);
 
-            IMainOutputModel outputModel = new MainOutputModel(dataModel, _UIServices, _ClipboardServices);
+            var outputModel = new MainOutputModel(dataModel, _uiServices, _clipboardServices);
 
-            IMainViewModel viewModel = new MainViewModel(dataModel, outputModel, _ClipboardServices, this, _UIServices);
+            var viewModel = new MainViewModel(dataModel, outputModel, _clipboardServices, this, _uiServices);
 
-            MainForm form = new MainForm(viewModel);
+            var form = new MainForm(viewModel);
 
             Application.Run(form);
         }
 
         public void OpenAboutWindow()
         {
-            using (AboutBox form = new AboutBox(GetType().Assembly))
+            using (var form = new AboutBox(this.GetType().Assembly))
             {
                 form.ShowDialog();
             }
@@ -59,7 +57,7 @@
 
         public void OpenHelpWindow()
         {
-            using (HelpForm form = new HelpForm())
+            using (var form = new HelpForm())
             {
                 form.ShowDialog();
             }
@@ -67,19 +65,19 @@
 
         public IEnumerable<TimeSpan> OpenReadFromDriveWindow()
         {
-            IDiscTimeDataModel dataModel = new DiscTimeDataModel(_IOServices, _UIServices);
+            var dataModel = new DiscTimeDataModel(_ioServices, _uiServices);
 
-            IDiscTimeViewModel viewModel = new DiscTimeViewModel(dataModel, _IOServices, _UIServices);
+            var viewModel = new DiscTimeViewModel(dataModel, _ioServices, _uiServices);
 
-            using (DiscTimeForm form = new DiscTimeForm(viewModel, _UIServices))
+            using (var form = new DiscTimeForm(viewModel))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    return (viewModel.RunningTimes);
+                    return viewModel.RunningTimes;
                 }
             }
 
-            return (Enumerable.Empty<TimeSpan>());
+            return Enumerable.Empty<TimeSpan>();
         }
 
         #endregion

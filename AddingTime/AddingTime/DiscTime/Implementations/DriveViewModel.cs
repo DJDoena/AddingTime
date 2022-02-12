@@ -1,13 +1,14 @@
 ﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 {
-    using System;
     using System.ComponentModel;
     using AbstractionLayer.IOServices;
 
     internal sealed class DriveViewModel : IDriveViewModel
     {
         public DriveViewModel(IDriveInfo actual)
-            => Actual = actual;
+        {
+            this.Actual = actual;
+        }
 
         #region INotifyPropertyChanged
 
@@ -16,17 +17,15 @@
         #endregion
 
         #region IDriveViewModel
-        public String Label
-            => Actual.Label;
+
+        public string Label => this.Actual.DriveLabel;
 
         public IDriveInfo Actual { get; private set; }
 
-        public void Refresh()
-            => RaisePropertyChanged(nameof(Label));
+        public void Refresh() => this.RaisePropertyChanged(nameof(this.Label));
 
         #endregion
 
-        private void RaisePropertyChanged(String attribute)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
+        private void RaisePropertyChanged(string attribute) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
     }
 }

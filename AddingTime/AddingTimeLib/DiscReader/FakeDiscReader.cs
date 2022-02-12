@@ -6,8 +6,7 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
     internal sealed class FakeDiscReader : IDiscReader
     {
-        public IDiscInfo GetDiscInfo(IDriveInfo drive)
-            => new FakeDiscInfo();
+        public IDiscInfo GetDiscInfo(IDriveInfo drive) => new FakeDiscInfo();
     }
 }
 

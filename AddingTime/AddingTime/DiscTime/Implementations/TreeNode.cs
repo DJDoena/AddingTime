@@ -6,52 +6,52 @@
 
     internal sealed class TreeNode : ITreeNode
     {
-        private Boolean _IsChecked;
+        private bool _isChecked;
 
-        internal TreeNode(String text)
-            : this(text, new TimeSpan())
-            => CanBeChecked = false;
-
-        internal TreeNode(String text,
-            TimeSpan runningTime)
+        internal TreeNode(string text) : this(text, new TimeSpan())
         {
-            Text = text;
+            this.CanBeChecked = false;
+        }
 
-            RunningTime = runningTime;
+        internal TreeNode(string text, TimeSpan runningTime)
+        {
+            this.Text = text;
 
-            CanBeChecked = true;
+            this.RunningTime = runningTime;
 
-            Nodes = new ObservableCollection<ITreeNode>();
+            this.CanBeChecked = true;
+
+            this.Nodes = new ObservableCollection<ITreeNode>();
         }
 
         #region ITreeNode
 
         public TimeSpan RunningTime { get; }
 
-        public String Text { get; }
+        public string Text { get; }
 
         public ObservableCollection<ITreeNode> Nodes { get; }
 
-        public Boolean IsChecked
+        public bool IsChecked
         {
-            get => _IsChecked;
+            get => _isChecked;
             set
             {
-                if (CanBeChecked == false)
+                if (!this.CanBeChecked)
                 {
                     throw (new ArgumentException("This node cannot be checked"));
                 }
 
-                if (value != _IsChecked)
+                if (value != _isChecked)
                 {
-                    _IsChecked = value;
+                    _isChecked = value;
 
-                    RaisePropertyChanged(nameof(IsChecked));
+                    this.RaisePropertyChanged(nameof(this.IsChecked));
                 }
             }
         }
 
-        public Boolean CanBeChecked { get; }
+        public bool CanBeChecked { get; }
 
         #endregion
 
@@ -61,7 +61,6 @@
 
         #endregion
 
-        private void RaisePropertyChanged(String attribute)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
+        private void RaisePropertyChanged(string attribute) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(attribute));
     }
 }

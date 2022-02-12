@@ -10,7 +10,7 @@
     {
         IDriveViewModel SelectedDrive { get; set; }
 
-        Int32 MinimumLength { get; set; }
+        int MinimumLength { get; set; }
 
         IEnumerable<TimeSpan> RunningTimes { get; }
 

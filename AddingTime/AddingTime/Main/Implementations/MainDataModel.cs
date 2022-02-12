@@ -5,111 +5,111 @@
     using System.Globalization;
     using System.Linq;
     using AbstractionLayer.UIServices;
-    using DoenaSoft.ToolBox.Extensions;
+    using ToolBox.Extensions;
 
     internal sealed class MainDataModel : IMainDataModel
     {
-        private readonly IUIServices _UIServices;
+        private readonly IUIServices _uiServices;
 
-        private readonly List<string> _Episodes;
+        private readonly List<string> _episodes;
 
-        private readonly List<DiscEpisodes> _Discs;
+        private readonly List<DiscEpisodes> _discs;
 
-        private readonly List<SeasonDiscEpisodes> _Seasons;
+        private readonly List<SeasonDiscEpisodes> _seasons;
 
         public MainDataModel(IUIServices uiServices)
         {
-            _UIServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
+            _uiServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
 
-            _Episodes = new List<string>(10);
+            _episodes = new List<string>(10);
 
-            _Discs = new List<DiscEpisodes>(6);
+            _discs = new List<DiscEpisodes>(6);
 
-            _Seasons = new List<SeasonDiscEpisodes>(6);
+            _seasons = new List<SeasonDiscEpisodes>(6);
         }
 
         #region IMainModel
 
         #region Episodes
 
-        public IEnumerable<string> Episodes => _Episodes.Select(e => e);
+        public IEnumerable<string> Episodes => _episodes.Select(e => e);
 
         public event EventHandler EpisodesChanged;
 
-        public String EpisodesFullTime { get; private set; }
+        public string EpisodesFullTime { get; private set; }
 
         public event EventHandler EpisodesFullTimeChanged;
 
-        public String EpisodesMiddleTime { get; private set; }
+        public string EpisodesMiddleTime { get; private set; }
 
         public event EventHandler EpisodesMiddleTimeChanged;
 
-        public String EpisodesShortTime { get; private set; }
+        public string EpisodesShortTime { get; private set; }
 
         public event EventHandler EpisodesShortTimeChanged;
 
-        public Boolean AddEpisode(string input)
+        public bool AddEpisode(string input)
         {
-            if (FormatInput(input, out String text))
+            if (this.FormatInput(input, out string text))
             {
-                _Episodes.Add(text);
+                _episodes.Add(text);
 
-                OnEpisodesChanged();
+                this.OnEpisodesChanged();
 
-                return (true);
+                return true;
             }
 
-            return (false);
+            return false;
         }
 
         public void ClearEpisodes()
         {
-            _Episodes.Clear();
+            _episodes.Clear();
 
-            OnEpisodesChanged();
+            this.OnEpisodesChanged();
         }
 
-        public void RemoveEpisode(Int32 index)
+        public void RemoveEpisode(int index)
         {
-            if (index >= _Episodes.Count)
+            if (index >= _episodes.Count)
             {
-                throw (new ArgumentException("Invalid index", nameof(index)));
+                throw new ArgumentException("Invalid index", nameof(index));
             }
 
-            _Episodes.RemoveAt(index);
+            _episodes.RemoveAt(index);
 
-            OnEpisodesChanged();
+            this.OnEpisodesChanged();
         }
 
         #endregion
 
         #region Discs
 
-        public IEnumerable<string> Discs => _Discs.Select(d => d.DiscRunningTime);
+        public IEnumerable<string> Discs => _discs.Select(d => d.DiscRunningTime);
 
-        public IEnumerable<DiscEpisodes> DiscEpisodes => _Discs;
+        public IEnumerable<DiscEpisodes> DiscEpisodes => _discs;
 
         public event EventHandler DiscsChanged;
 
-        public String DiscsFullTime { get; private set; }
+        public string DiscsFullTime { get; private set; }
 
         public event EventHandler DiscsFullTimeChanged;
 
-        public String DiscsMiddleTime { get; private set; }
+        public string DiscsMiddleTime { get; private set; }
 
         public event EventHandler DiscsMiddleTimeChanged;
 
-        public String DiscsShortTime { get; private set; }
+        public string DiscsShortTime { get; private set; }
 
         public event EventHandler DiscsShortTimeChanged;
 
         public void AddDisc(string input)
         {
-            if (FormatInput(input, out string text))
+            if (this.FormatInput(input, out string text))
             {
-                _Discs.Add(new DiscEpisodes(text, new List<string>(0)));
+                _discs.Add(new DiscEpisodes(text, new List<string>(0)));
 
-                OnDiscsChanged();
+                this.OnDiscsChanged();
             }
         }
 
@@ -117,67 +117,67 @@
         {
             if (episodeInputs != null)
             {
-                if (FormatInput(discInput, out var discText))
+                if (this.FormatInput(discInput, out var discText))
                 {
-                    _Discs.Add(new DiscEpisodes(discText, episodeInputs.ToList()));
+                    _discs.Add(new DiscEpisodes(discText, episodeInputs.ToList()));
 
-                    OnDiscsChanged();
+                    this.OnDiscsChanged();
                 }
             }
             else
             {
-                AddDisc(discInput);
+                this.AddDisc(discInput);
             }
         }
 
-        public void RemoveDisc(Int32 index)
+        public void RemoveDisc(int index)
         {
-            if (index >= _Discs.Count)
+            if (index >= _discs.Count)
             {
-                throw (new ArgumentException("Invalid index", nameof(index)));
+                throw new ArgumentException("Invalid index", nameof(index));
             }
 
-            _Discs.RemoveAt(index);
+            _discs.RemoveAt(index);
 
-            OnDiscsChanged();
+            this.OnDiscsChanged();
         }
 
         public void ClearDiscs()
         {
-            _Discs.Clear();
+            _discs.Clear();
 
-            OnDiscsChanged();
+            this.OnDiscsChanged();
         }
 
         #endregion
 
         #region Seasons
 
-        public IEnumerable<string> Seasons => _Seasons.Select(s => s.SeasonRunningTime);
+        public IEnumerable<string> Seasons => _seasons.Select(s => s.SeasonRunningTime);
 
-        public IEnumerable<SeasonDiscEpisodes> SeasonDiscs => _Seasons;
+        public IEnumerable<SeasonDiscEpisodes> SeasonDiscs => _seasons;
 
         public event EventHandler SeasonsChanged;
 
-        public String SeasonsFullTime { get; private set; }
+        public string SeasonsFullTime { get; private set; }
 
         public event EventHandler SeasonsFullTimeChanged;
 
-        public String SeasonsMiddleTime { get; private set; }
+        public string SeasonsMiddleTime { get; private set; }
 
         public event EventHandler SeasonsMiddleTimeChanged;
 
-        public String SeasonsShortTime { get; private set; }
+        public string SeasonsShortTime { get; private set; }
 
         public event EventHandler SeasonsShortTimeChanged;
 
         public void AddSeason(string discInput)
         {
-            if (FormatInput(discInput, out string discText))
+            if (this.FormatInput(discInput, out string discText))
             {
-                _Seasons.Add(new SeasonDiscEpisodes(discText, new List<DiscEpisodes>(0)));
+                _seasons.Add(new SeasonDiscEpisodes(discText, new List<DiscEpisodes>(0)));
 
-                OnSeasonsChanged();
+                this.OnSeasonsChanged();
             }
         }
 
@@ -185,36 +185,36 @@
         {
             if (discInputs != null)
             {
-                if (FormatInput(seasonInput, out var seasonText))
+                if (this.FormatInput(seasonInput, out var seasonText))
                 {
-                    _Seasons.Add(new SeasonDiscEpisodes(seasonText, discInputs.ToList()));
+                    _seasons.Add(new SeasonDiscEpisodes(seasonText, discInputs));
 
-                    OnSeasonsChanged();
+                    this.OnSeasonsChanged();
                 }
             }
             else
             {
-                AddSeason(seasonInput);
+                this.AddSeason(seasonInput);
             }
         }
 
         public void RemoveSeason(int index)
         {
-            if (index >= _Seasons.Count)
+            if (index >= _seasons.Count)
             {
-                throw (new ArgumentException("Invalid index", nameof(index)));
+                throw new ArgumentException("Invalid index", nameof(index));
             }
 
-            _Seasons.RemoveAt(index);
+            _seasons.RemoveAt(index);
 
-            OnSeasonsChanged();
+            this.OnSeasonsChanged();
         }
 
         public void ClearSeasons()
         {
-            _Seasons.Clear();
+            _seasons.Clear();
 
-            OnSeasonsChanged();
+            this.OnSeasonsChanged();
         }
 
         #endregion
@@ -231,7 +231,7 @@
 
             if ((split.Length != 2) && (split.Length != 3))
             {
-                _UIServices.ShowMessageBox("Invalid Time Format!", "Error", Buttons.OK, Icon.Warning);
+                _uiServices.ShowMessageBox("Invalid Time Format!", "Error", Buttons.OK, Icon.Warning);
 
                 return false;
             }
@@ -242,14 +242,14 @@
             {
                 if (!int.TryParse(part, out int temp))
                 {
-                    _UIServices.ShowMessageBox($"Not a Number: {part}", "Error", Buttons.OK, Icon.Warning);
+                    _uiServices.ShowMessageBox($"Not a Number: {part}", "Error", Buttons.OK, Icon.Warning);
 
                     return false;
                 }
 
                 if (temp < 0 || temp > 59)
                 {
-                    _UIServices.ShowMessageBox($"Invalid Time Part: {part}", "Error", Buttons.OK, Icon.Warning);
+                    _uiServices.ShowMessageBox($"Invalid Time Part: {part}", "Error", Buttons.OK, Icon.Warning);
 
                     return false;
                 }
@@ -269,30 +269,30 @@
 
         private void OnEpisodesChanged()
         {
-            Calc(_Episodes, SetEpisodesFullTime, SetEpisodesMiddleTime, SetEpisodesShortTime);
+            Calc(_episodes, this.SetEpisodesFullTime, this.SetEpisodesMiddleTime, this.SetEpisodesShortTime);
 
             EpisodesChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SetEpisodesFullTime(String text)
+        private void SetEpisodesFullTime(string text)
         {
-            EpisodesFullTime = text;
+            this.EpisodesFullTime = text;
 
-            RaisePropertyChanged(EpisodesFullTimeChanged);
+            this.RaisePropertyChanged(EpisodesFullTimeChanged);
         }
 
-        private void SetEpisodesMiddleTime(String text)
+        private void SetEpisodesMiddleTime(string text)
         {
-            EpisodesMiddleTime = text;
+            this.EpisodesMiddleTime = text;
 
-            RaisePropertyChanged(EpisodesMiddleTimeChanged);
+            this.RaisePropertyChanged(EpisodesMiddleTimeChanged);
         }
 
-        private void SetEpisodesShortTime(String text)
+        private void SetEpisodesShortTime(string text)
         {
-            EpisodesShortTime = text;
+            this.EpisodesShortTime = text;
 
-            RaisePropertyChanged(EpisodesShortTimeChanged);
+            this.RaisePropertyChanged(EpisodesShortTimeChanged);
         }
 
         #endregion
@@ -301,62 +301,62 @@
 
         private void OnDiscsChanged()
         {
-            Calc(Discs, SetDiscsFullTime, SetDiscsMiddleTime, SetDiscsShortTime);
+            Calc(this.Discs, this.SetDiscsFullTime, this.SetDiscsMiddleTime, this.SetDiscsShortTime);
 
             DiscsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SetDiscsFullTime(String text)
+        private void SetDiscsFullTime(string text)
         {
-            DiscsFullTime = text;
+            this.DiscsFullTime = text;
 
-            RaisePropertyChanged(DiscsFullTimeChanged);
+            this.RaisePropertyChanged(DiscsFullTimeChanged);
         }
 
-        private void SetDiscsMiddleTime(String text)
+        private void SetDiscsMiddleTime(string text)
         {
-            DiscsMiddleTime = text;
+            this.DiscsMiddleTime = text;
 
-            RaisePropertyChanged(DiscsMiddleTimeChanged);
+            this.RaisePropertyChanged(DiscsMiddleTimeChanged);
         }
 
-        private void SetDiscsShortTime(String text)
+        private void SetDiscsShortTime(string text)
         {
-            DiscsShortTime = text;
+            this.DiscsShortTime = text;
 
-            RaisePropertyChanged(DiscsShortTimeChanged);
+            this.RaisePropertyChanged(DiscsShortTimeChanged);
         }
 
         #endregion
 
-        #region Seasons    
+        #region Seasons
 
         private void OnSeasonsChanged()
         {
-            Calc(Seasons, SetSeasonsFullTime, SetSeasonsMiddleTime, SetSeasonsShortTime);
+            Calc(this.Seasons, this.SetSeasonsFullTime, this.SetSeasonsMiddleTime, this.SetSeasonsShortTime);
 
             SeasonsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SetSeasonsFullTime(String text)
+        private void SetSeasonsFullTime(string text)
         {
-            SeasonsFullTime = text;
+            this.SeasonsFullTime = text;
 
-            RaisePropertyChanged(SeasonsFullTimeChanged);
+            this.RaisePropertyChanged(SeasonsFullTimeChanged);
         }
 
-        private void SetSeasonsMiddleTime(String text)
+        private void SetSeasonsMiddleTime(string text)
         {
-            SeasonsMiddleTime = text;
+            this.SeasonsMiddleTime = text;
 
-            RaisePropertyChanged(SeasonsMiddleTimeChanged);
+            this.RaisePropertyChanged(SeasonsMiddleTimeChanged);
         }
 
-        private void SetSeasonsShortTime(String text)
+        private void SetSeasonsShortTime(string text)
         {
-            SeasonsShortTime = text;
+            this.SeasonsShortTime = text;
 
-            RaisePropertyChanged(SeasonsShortTimeChanged);
+            this.RaisePropertyChanged(SeasonsShortTimeChanged);
         }
 
         #endregion
@@ -374,21 +374,21 @@
                 return;
             }
 
-            Int32 seconds = 0;
+            var seconds = 0;
 
             entries.ForEach(entry => seconds += MainHelper.CalcSeconds(entry));
 
-            Decimal fractalMinutes = MainHelper.CalcFractalMinutes(seconds);
+            var fractalMinutes = MainHelper.CalcFractalMinutes(seconds);
 
-            Int32 hours = seconds / 3600;
+            var hours = seconds / 3600;
 
             seconds -= hours * 3600;
 
-            Int32 minutes = seconds / 60;
+            var minutes = seconds / 60;
 
             seconds -= minutes * 60;
 
-            String text = $"{hours:00}:{minutes:00}:{seconds:00}";
+            var text = $"{hours:00}:{minutes:00}:{seconds:00}";
 
             setFullTime(text);
 
@@ -401,7 +401,6 @@
             setshortTime(text);
         }
 
-        private void RaisePropertyChanged(EventHandler handler)
-            => handler?.Invoke(this, EventArgs.Empty);
+        private void RaisePropertyChanged(EventHandler handler) => handler?.Invoke(this, EventArgs.Empty);
     }
 }

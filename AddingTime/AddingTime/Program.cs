@@ -6,7 +6,6 @@ namespace DoenaSoft.DVDProfiler.AddingTime
     public static class Program
     {
         [STAThread]
-        public static void Main()
-            => (new FormFactory()).OpenMainWindow();
+        public static void Main() => (new FormFactory()).OpenMainWindow();
     }
 }

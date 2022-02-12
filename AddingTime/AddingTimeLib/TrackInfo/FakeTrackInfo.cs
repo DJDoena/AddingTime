@@ -6,12 +6,11 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
     internal sealed class FakeTrackInfo : TrackInfoBase
     {
-        private static Int32 _Counter = 1;
+        private static int _id = 1;
 
-        private readonly Int32 _Hours = _Counter++;
+        private readonly int _hours = _id++;
 
-        public override TimeSpan RunningTime
-            => new TimeSpan(_Hours, 2, 3);
+        public override TimeSpan RunningTime => new TimeSpan(_hours, 2, 3);
     }
 }
 

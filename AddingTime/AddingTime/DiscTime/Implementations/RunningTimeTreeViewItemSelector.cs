@@ -6,9 +6,7 @@
 
     internal sealed class RunningTimeTreeViewItemSelector : DataTemplateSelector
     {
-        public override DataTemplate SelectTemplate(Object item
-            , DependencyObject container)
-            => (((ITreeNode)item).CanBeChecked) ? RunningTime : Header;
+        public override DataTemplate SelectTemplate(object item, DependencyObject container) => (((ITreeNode)item).CanBeChecked) ? this.RunningTime : this.Header;
 
         public DataTemplate Header { get; set; }
 

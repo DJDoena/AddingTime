@@ -7,25 +7,25 @@
     {
         #region Episodes
 
-        IEnumerable<String> Episodes { get; }
+        IEnumerable<string> Episodes { get; }
 
         event EventHandler EpisodesChanged;
 
-        String EpisodesFullTime { get; }
+        string EpisodesFullTime { get; }
 
         event EventHandler EpisodesFullTimeChanged;
 
-        String EpisodesMiddleTime { get; }
+        string EpisodesMiddleTime { get; }
 
         event EventHandler EpisodesMiddleTimeChanged;
 
-        String EpisodesShortTime { get; }
+        string EpisodesShortTime { get; }
 
         event EventHandler EpisodesShortTimeChanged;
 
-        Boolean AddEpisode(String input);
+        bool AddEpisode(string input);
 
-        void RemoveEpisode(Int32 index);
+        void RemoveEpisode(int index);
 
         void ClearEpisodes();
 
@@ -33,21 +33,21 @@
 
         #region Discs
 
-        IEnumerable<String> Discs { get; }
+        IEnumerable<string> Discs { get; }
 
         IEnumerable<DiscEpisodes> DiscEpisodes { get; }
 
         event EventHandler DiscsChanged;
 
-        String DiscsFullTime { get; }
+        string DiscsFullTime { get; }
 
         event EventHandler DiscsFullTimeChanged;
 
-        String DiscsMiddleTime { get; }
+        string DiscsMiddleTime { get; }
 
         event EventHandler DiscsMiddleTimeChanged;
 
-        String DiscsShortTime { get; }
+        string DiscsShortTime { get; }
 
         event EventHandler DiscsShortTimeChanged;
 
@@ -55,7 +55,7 @@
 
         void AddDisc(string discInput, IEnumerable<string> episodeInputs);
 
-        void RemoveDisc(Int32 index);
+        void RemoveDisc(int index);
 
         void ClearDiscs();
 
@@ -69,15 +69,15 @@
 
         event EventHandler SeasonsChanged;
 
-        String SeasonsFullTime { get; }
+        string SeasonsFullTime { get; }
 
         event EventHandler SeasonsFullTimeChanged;
 
-        String SeasonsMiddleTime { get; }
+        string SeasonsMiddleTime { get; }
 
         event EventHandler SeasonsMiddleTimeChanged;
 
-        String SeasonsShortTime { get; }
+        string SeasonsShortTime { get; }
 
         event EventHandler SeasonsShortTimeChanged;
 
@@ -85,7 +85,7 @@
 
         void AddSeason(string seasonInput, IEnumerable<DiscEpisodes> discInputs);
 
-        void RemoveSeason(Int32 index);
+        void RemoveSeason(int index);
 
         void ClearSeasons();
 

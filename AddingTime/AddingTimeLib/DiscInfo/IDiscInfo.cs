@@ -1,15 +1,14 @@
 ﻿namespace DoenaSoft.DVDProfiler.AddingTime
 {
-    using System;
     using System.Collections.Generic;
 
     public interface IDiscInfo
     {
         #region Properties
 
-        String DiscLabel { get; }
+        string DiscLabel { get; }
 
-        Boolean IsValid { get; }
+        bool IsValid { get; }
 
         IEnumerable<ISubsetInfo> Subsets { get; }
 

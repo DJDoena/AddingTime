@@ -2,27 +2,23 @@
 
 namespace DoenaSoft.DVDProfiler.AddingTime
 {
-    using System;
     using AbstractionLayer.IOServices;
 
     public sealed class FakeDrive : IDriveInfo
     {
         #region IDriveInfo
 
-        public Boolean IsReady
-            => true;
+        public bool IsReady => true;
 
-        public String Label
-            => DriveLetter + " [Fake]";
+        public string DriveLabel => $"{this.DriveLetter} {this.VolumeLabel}";
 
-        public String RootFolder
-            => @"F:\";
+        public string VolumeLabel => "[Fake]";
 
-        public String DriveLetter
-            => RootFolder.Substring(0, 2);
+        public string RootFolder => @"F:\";
 
-        public UInt64 AvailableFreeSpace
-            => 0;
+        public string DriveLetter => this.RootFolder.Substring(0, 2);
+
+        public ulong AvailableFreeSpace => 0;
 
         #endregion
     }

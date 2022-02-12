@@ -1,7 +1,6 @@
 ﻿namespace DoenaSoft.DVDProfiler.AddingTime.DiscTime.Implementations
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
@@ -13,118 +12,112 @@
 
     internal partial class DiscTimeForm : Forms.Form
     {
-        private readonly IDiscTimeViewModel _ViewModel;
+        private readonly IDiscTimeViewModel _viewModel;
 
-        private readonly IUIServices _UIServices;
-
-        public DiscTimeForm(IDiscTimeViewModel viewModel
-            , IUIServices uiServices)
+        public DiscTimeForm(IDiscTimeViewModel viewModel)
         {
-            _ViewModel = viewModel;
+            _viewModel = viewModel;
 
-            _UIServices = uiServices;
+            this.InitializeComponent();
 
-            InitializeComponent();
+            this.PrepareForm();
 
-            PrepareForm();
-
-            Icon = Properties.Resource.djdsoft;
+            this.Icon = Properties.Resource.djdsoft;
         }
 
         private void PrepareForm()
         {
-            Load += OnFormLoad;
+            Load += this.OnFormLoad;
 
-            _ViewModel.PropertyChanged += OnViewModelChanged;
-            _ViewModel.Closing += OnViewModelClosing;
+            _viewModel.PropertyChanged += this.OnViewModelChanged;
+            _viewModel.Closing += this.OnViewModelClosing;
 
-            RegisterControlEvents();
+            this.RegisterControlEvents();
 
-            FormClosed += OnFormClosed;
+            FormClosed += this.OnFormClosed;
 
-            FillDrivesComboBox();
+            this.FillDrivesComboBox();
 
-            OnViewModelMinimumLengthChanged();
+            this.OnViewModelMinimumLengthChanged();
         }
 
         private void FillDrivesComboBox()
         {
-            IEnumerable<String> labels = _ViewModel.Drives.Select(drive => drive.Label);
+            var labels = _viewModel.Drives.Select(drive => drive.Label);
 
             DriveComboBox.Items.AddRange(labels.ToArray());
 
-            DriveComboBox.SelectedItem = _ViewModel.SelectedDrive;
+            DriveComboBox.SelectedItem = _viewModel.SelectedDrive;
 
-            OnViewModelSelectedDriveChanged();
+            this.OnViewModelSelectedDriveChanged();
         }
 
-        private void OnViewModelClosing(Object sender, CloseEventArgs e)
+        private void OnViewModelClosing(object sender, CloseEventArgs e)
         {
-            DialogResult = (e.Result == Result.OK) ? Forms.DialogResult.OK : Forms.DialogResult.Cancel;
+            this.DialogResult = (e.Result == Result.OK) ? Forms.DialogResult.OK : Forms.DialogResult.Cancel;
 
-            Close();
+            this.Close();
         }
 
-        private void OnFormClosed(Object sender
-            , Forms.FormClosedEventArgs e)
+        private void OnFormClosed(object sender, Forms.FormClosedEventArgs e)
         {
-            FormClosed -= OnFormClosed;
+            FormClosed -= this.OnFormClosed;
 
-            _ViewModel.PropertyChanged -= OnViewModelChanged;
-            _ViewModel.Closing -= OnViewModelClosing;
+            _viewModel.PropertyChanged -= this.OnViewModelChanged;
+            _viewModel.Closing -= this.OnViewModelClosing;
 
-            UnregisterControlEvents();
+            this.UnregisterControlEvents();
 
-            Load -= OnFormLoad;
+            Load -= this.OnFormLoad;
         }
 
         private void RegisterControlEvents()
         {
-            DriveComboBox.SelectedIndexChanged += OnDriveComboBoxSelectedIndexChanged;
+            DriveComboBox.SelectedIndexChanged += this.OnDriveComboBoxSelectedIndexChanged;
 
-            MinimumTrackLengthUpDown.ValueChanged += OnMinimumTrackLengthUpDownValueChanged;
+            MinimumTrackLengthUpDown.ValueChanged += this.OnMinimumTrackLengthUpDownValueChanged;
 
-            DiscTreeView.AfterCheck += OnDiscTreeViewAfterCheck;
+            DiscTreeView.AfterCheck += this.OnDiscTreeViewAfterCheck;
 
-            ScanButton.Click += OnScanButtonClick;
+            ScanButton.Click += this.OnScanButtonClick;
 
-            MovieButton.Click += OnMovieButtonClick;
-            SitcomButton.Click += OnSitcomButtonClick;
-            DramaButton.Click += OnDramaButtonClick;
+            MovieButton.Click += this.OnMovieButtonClick;
+            SitcomButton.Click += this.OnSitcomButtonClick;
+            DramaButton.Click += this.OnDramaButtonClick;
 
-            SelectAllButton.Click += OnSelectAllButtonClick;
+            SelectAllButton.Click += this.OnSelectAllButtonClick;
 
-            OKButton.Click += OnOKButtonClick;
-            AbortButton.Click += OnAbortButtonClick;
+            OKButton.Click += this.OnOKButtonClick;
+            AbortButton.Click += this.OnAbortButtonClick;
         }
 
         private void UnregisterControlEvents()
         {
-            DriveComboBox.SelectedIndexChanged -= OnDriveComboBoxSelectedIndexChanged;
+            DriveComboBox.SelectedIndexChanged -= this.OnDriveComboBoxSelectedIndexChanged;
 
-            MinimumTrackLengthUpDown.ValueChanged -= OnMinimumTrackLengthUpDownValueChanged;
+            MinimumTrackLengthUpDown.ValueChanged -= this.OnMinimumTrackLengthUpDownValueChanged;
 
-            DiscTreeView.AfterCheck -= OnDiscTreeViewAfterCheck;
+            DiscTreeView.AfterCheck -= this.OnDiscTreeViewAfterCheck;
 
-            ScanButton.Click -= OnScanButtonClick;
+            ScanButton.Click -= this.OnScanButtonClick;
 
-            MovieButton.Click -= OnMovieButtonClick;
-            SitcomButton.Click -= OnSitcomButtonClick;
-            DramaButton.Click -= OnDramaButtonClick;
+            MovieButton.Click -= this.OnMovieButtonClick;
+            SitcomButton.Click -= this.OnSitcomButtonClick;
+            DramaButton.Click -= this.OnDramaButtonClick;
 
-            SelectAllButton.Click -= OnSelectAllButtonClick;
+            SelectAllButton.Click -= this.OnSelectAllButtonClick;
 
-            OKButton.Click -= OnOKButtonClick;
-            AbortButton.Click -= OnAbortButtonClick;
+            OKButton.Click -= this.OnOKButtonClick;
+            AbortButton.Click -= this.OnAbortButtonClick;
         }
 
         #region OnViewModelDiscTreeChanged
 
         private void OnViewModelDiscTreeChanged()
         {
-            DestroyTreeView();
+            this.DestroyTreeView();
 
-            BuildTreeView();
+            this.BuildTreeView();
 
             DiscTreeView.ExpandAll();
         }
@@ -133,57 +126,52 @@
 
         private void DestroyTreeView()
         {
-            DestroyTreeView(DiscTreeView.Nodes);
+            this.DestroyTreeView(DiscTreeView.Nodes);
 
             DiscTreeView.Nodes.Clear();
         }
 
-        private void DestroyTreeView(Forms.TreeNodeCollection nodes)
-            => nodes.OfType<Forms.TreeNode>().ForEach(DestroyTreeNode);
+        private void DestroyTreeView(Forms.TreeNodeCollection nodes) => nodes.OfType<Forms.TreeNode>().ForEach(this.DestroyTreeNode);
 
         private void DestroyTreeNode(Forms.TreeNode node)
         {
-            ITreeNode vmNode = (ITreeNode)(node.Tag);
+            var vmNode = (ITreeNode)node.Tag;
 
             if (vmNode.CanBeChecked)
             {
-                vmNode.PropertyChanged -= OnViewModelNodeIsCheckedChanged;
+                vmNode.PropertyChanged -= this.OnViewModelNodeIsCheckedChanged;
             }
 
-            DestroyTreeView(node.Nodes);
+            this.DestroyTreeView(node.Nodes);
         }
 
         #endregion
 
         #region BuildTreeView
 
-        private void BuildTreeView()
-            => BuildTreeView(DiscTreeView.Nodes, _ViewModel.DiscTree);
+        private void BuildTreeView() => this.BuildTreeView(DiscTreeView.Nodes, _viewModel.DiscTree);
 
-        private void BuildTreeView(Forms.TreeNodeCollection nodes
-            , ObservableCollection<ITreeNode> vmNodes)
-            => vmNodes.ForEach(vmNode => BuildTreeNode(nodes, vmNode));
+        private void BuildTreeView(Forms.TreeNodeCollection nodes, ObservableCollection<ITreeNode> vmNodes) => vmNodes.ForEach(vmNode => this.BuildTreeNode(nodes, vmNode));
 
-        private void BuildTreeNode(Forms.TreeNodeCollection nodes
-            , ITreeNode vmNode)
+        private void BuildTreeNode(Forms.TreeNodeCollection nodes, ITreeNode vmNode)
         {
-            Forms.TreeNode node = new Forms.TreeNode(vmNode.Text)
+            var node = new Forms.TreeNode(vmNode.Text)
             {
-                Tag = vmNode
+                Tag = vmNode,
             };
 
             nodes.Add(node);
 
             if (vmNode.CanBeChecked)
             {
-                vmNode.PropertyChanged += OnViewModelNodeIsCheckedChanged;
+                vmNode.PropertyChanged += this.OnViewModelNodeIsCheckedChanged;
             }
             else
             {
-                HideCheckBox(DiscTreeView, node);
+                this.HideCheckBox(DiscTreeView, node);
             }
 
-            BuildTreeView(node.Nodes, vmNode.Nodes);
+            this.BuildTreeView(node.Nodes, vmNode.Nodes);
         }
 
         #region HideCheckBox
@@ -227,18 +215,15 @@
         /// <summary>
         /// Hides the checkbox for the specified node on a TreeView control.
         /// </summary>
-        private void HideCheckBox(Forms.TreeView treeView
-            , Forms.TreeNode node)
+        private void HideCheckBox(Forms.TreeView treeView, Forms.TreeNode node)
         {
-            TVITEM treeViewItem = new TVITEM();
-
-            treeViewItem.hItem = node.Handle;
-
-            treeViewItem.mask = TVIF_STATE;
-
-            treeViewItem.stateMask = TVIS_STATEIMAGEMASK;
-
-            treeViewItem.state = 0;
+            var treeViewItem = new TVITEM
+            {
+                hItem = node.Handle,
+                mask = TVIF_STATE,
+                stateMask = TVIS_STATEIMAGEMASK,
+                state = 0,
+            };
 
             SendMessage(treeView.Handle, TVM_SETITEM, IntPtr.Zero, ref treeViewItem);
         }
@@ -251,139 +236,110 @@
 
         #region OnViewModelNodeIsCheckedChanged
 
-        private void OnViewModelNodeIsCheckedChanged(Object sender
-            , PropertyChangedEventArgs e)
-            => UpdateTreeView(DiscTreeView.Nodes, (ITreeNode)sender);
+        private void OnViewModelNodeIsCheckedChanged(object sender, PropertyChangedEventArgs e) => this.UpdateTreeView(DiscTreeView.Nodes, (ITreeNode)sender);
 
-        private Boolean UpdateTreeView(Forms.TreeNodeCollection nodes
-            , ITreeNode vmCompareNode)
-            => nodes.OfType<Forms.TreeNode>().HasItemsWhere(node => UpdateTreeNode(node, vmCompareNode));
+        private bool UpdateTreeView(Forms.TreeNodeCollection nodes, ITreeNode vmCompareNode) => nodes.OfType<Forms.TreeNode>().HasItemsWhere(node => this.UpdateTreeNode(node, vmCompareNode));
 
-        private Boolean UpdateTreeNode(Forms.TreeNode node, ITreeNode vmCompareNode)
+        private bool UpdateTreeNode(Forms.TreeNode node, ITreeNode vmCompareNode)
         {
-            ITreeNode vmCurrentNode = (ITreeNode)(node.Tag);
+            var vmCurrentNode = (ITreeNode)node.Tag;
 
             if (vmCurrentNode == vmCompareNode)
             {
                 node.Checked = vmCompareNode.IsChecked;
 
-                return (true);
+                return true;
             }
 
-            if (UpdateTreeView(node.Nodes, vmCompareNode))
+            if (this.UpdateTreeView(node.Nodes, vmCompareNode))
             {
-                return (true);
+                return true;
             }
 
-            return (false);
+            return false;
         }
 
         #endregion
 
-        private void OnOKButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.AcceptCommand);
+        private void OnOKButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.AcceptCommand);
 
-        private void OnAbortButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.CancelCommand);
+        private void OnAbortButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.CancelCommand);
 
         private void OnViewModelDrivesChanges()
         {
-            for (Int32 i = 0; i < _ViewModel.Drives.Count; i++)
+            for (var driveIndex = 0; driveIndex < _viewModel.Drives.Count; driveIndex++)
             {
-                DriveComboBox.Items[i] = _ViewModel.Drives[i].Label;
+                DriveComboBox.Items[driveIndex] = _viewModel.Drives[driveIndex].Label;
             }
         }
 
-        private void OnFormLoad(Object sender
-            , EventArgs e)
-            => _ViewModel.CheckForDecrypter();
+        private void OnFormLoad(object sender, EventArgs e) => _viewModel.CheckForDecrypter();
 
-        private void OnDiscTreeViewAfterCheck(Object sender
-            , Forms.TreeViewEventArgs e)
+        private void OnDiscTreeViewAfterCheck(object sender, Forms.TreeViewEventArgs e)
         {
-            Forms.TreeNode node = e.Node;
+            var node = e.Node;
 
-            ITreeNode vmNode = (ITreeNode)(node.Tag);
+            var vmNode = (ITreeNode)node.Tag;
 
             vmNode.IsChecked = node.Checked;
         }
 
-        private void OnViewModelChanged(Object sender
-            , PropertyChangedEventArgs e)
+        private void OnViewModelChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case (nameof(_ViewModel.Drives)):
+                case nameof(_viewModel.Drives):
                     {
-                        OnViewModelDrivesChanges();
+                        this.OnViewModelDrivesChanges();
 
                         break;
                     }
-                case (nameof(_ViewModel.SelectedDrive)):
+                case nameof(_viewModel.SelectedDrive):
                     {
-                        OnViewModelSelectedDriveChanged();
+                        this.OnViewModelSelectedDriveChanged();
 
                         break;
                     }
-                case (nameof(_ViewModel.DiscTree)):
+                case nameof(_viewModel.DiscTree):
                     {
-                        OnViewModelDiscTreeChanged();
+                        this.OnViewModelDiscTreeChanged();
 
                         break;
                     }
-                case (nameof(_ViewModel.MinimumLength)):
+                case nameof(_viewModel.MinimumLength):
                     {
-                        OnViewModelMinimumLengthChanged();
+                        this.OnViewModelMinimumLengthChanged();
 
                         break;
                     }
             }
         }
 
-        private void OnViewModelMinimumLengthChanged()
-            => MinimumTrackLengthUpDown.Value = _ViewModel.MinimumLength;
+        private void OnViewModelMinimumLengthChanged() => MinimumTrackLengthUpDown.Value = _viewModel.MinimumLength;
 
         private void OnViewModelSelectedDriveChanged()
         {
-            DriveComboBox.SelectedItem = _ViewModel.SelectedDrive;
+            DriveComboBox.SelectedItem = _viewModel.SelectedDrive;
 
-            ScanButton.Enabled = CanExecute(_ViewModel.ScanCommand);
+            ScanButton.Enabled = CanExecute(_viewModel.ScanCommand);
         }
 
-        private void OnMinimumTrackLengthUpDownValueChanged(Object sender
-            , EventArgs e)
-            => _ViewModel.MinimumLength = Convert.ToInt32(MinimumTrackLengthUpDown.Value);
+        private void OnMinimumTrackLengthUpDownValueChanged(object sender, EventArgs e) => _viewModel.MinimumLength = Convert.ToInt32(MinimumTrackLengthUpDown.Value);
 
-        private void OnDriveComboBoxSelectedIndexChanged(Object sender
-            , EventArgs e)
-            => _ViewModel.SelectedDrive = (IDriveViewModel)(DriveComboBox.SelectedItem);
+        private void OnDriveComboBoxSelectedIndexChanged(object sender, EventArgs e) => _viewModel.SelectedDrive = (IDriveViewModel)(DriveComboBox.SelectedItem);
 
-        private void OnScanButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.ScanCommand);
+        private void OnScanButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.ScanCommand);
 
-        private void OnSitcomButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.SetSitcomLengthCommand);
+        private void OnSitcomButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.SetSitcomLengthCommand);
 
-        private void OnDramaButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.SetDramaLengthCommand);
+        private void OnDramaButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.SetDramaLengthCommand);
 
-        private void OnMovieButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.SetMovieLengthCommand);
+        private void OnMovieButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.SetMovieLengthCommand);
 
-        private void OnSelectAllButtonClick(Object sender
-            , EventArgs e)
-            => ExecuteCommand(_ViewModel.CheckAllNodesCommand);
+        private void OnSelectAllButtonClick(object sender, EventArgs e) => ExecuteCommand(_viewModel.CheckAllNodesCommand);
 
-        private static Boolean CanExecute(ICommand command)
-            => command.CanExecute(null);
+        private static bool CanExecute(ICommand command) => command.CanExecute(null);
 
-        private static void ExecuteCommand(ICommand command)
-            => command.Execute(null);
+        private static void ExecuteCommand(ICommand command) => command.Execute(null);
     }
 }

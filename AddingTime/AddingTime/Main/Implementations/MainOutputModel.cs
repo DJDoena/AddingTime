@@ -11,56 +11,50 @@
     {
         private const int Padding = 3;
 
-        private readonly IMainDataModel _DataModel;
+        private readonly IMainDataModel _dataModel;
 
-        private readonly IUIServices _UIServices;
+        private readonly IUIServices _uiIServices;
 
-        private readonly IClipboardServices _ClipboardServices;
+        private readonly IClipboardServices _clipboardServices;
 
-        public MainOutputModel(IMainDataModel dataModel
-            , IUIServices uiServices
-            , IClipboardServices clipboardServices)
+        public MainOutputModel(IMainDataModel dataModel, IUIServices uiServices, IClipboardServices clipboardServices)
         {
-            _DataModel = dataModel ?? throw new ArgumentNullException(nameof(dataModel));
+            _dataModel = dataModel ?? throw new ArgumentNullException(nameof(dataModel));
 
-            _UIServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
+            _uiIServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
 
-            _ClipboardServices = clipboardServices ?? throw new ArgumentNullException(nameof(clipboardServices));
+            _clipboardServices = clipboardServices ?? throw new ArgumentNullException(nameof(clipboardServices));
         }
 
         #region IMainOutputModel
 
         #region Episodes
 
-        public void CopyEpisodes()
-            => _ClipboardServices.SetText(_DataModel.EpisodesShortTime);
+        public void CopyEpisodes() => _clipboardServices.SetText(_dataModel.EpisodesShortTime);
 
-        public void CopyAllEpisodes()
-            => _ClipboardServices.SetText(_DataModel.EpisodesFullTime + string.Empty.PadRight(Padding) + _DataModel.EpisodesShortTime);
+        public void CopyAllEpisodes() => _clipboardServices.SetText(_dataModel.EpisodesFullTime + string.Empty.PadRight(Padding) + _dataModel.EpisodesShortTime);
 
         #endregion
 
         #region Discs
 
-        public void CopyDiscs()
-            => _ClipboardServices.SetText(_DataModel.DiscsShortTime);
+        public void CopyDiscs() => _clipboardServices.SetText(_dataModel.DiscsShortTime);
 
-        public void CopyAllDiscs()
-            => _ClipboardServices.SetText(_DataModel.DiscsFullTime + string.Empty.PadRight(Padding) + _DataModel.DiscsShortTime);
+        public void CopyAllDiscs() => _clipboardServices.SetText(_dataModel.DiscsFullTime + string.Empty.PadRight(Padding) + _dataModel.DiscsShortTime);
 
         public void CopyFullDiscs()
         {
-            if (_UIServices.ShowMessageBox("Details per disc (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
+            if (_uiIServices.ShowMessageBox("Details per disc (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
             {
-                CopyFull(_DataModel.DiscsFullTime, _DataModel.DiscsShortTime, _DataModel.Discs, "Season: ", '-');
+                this.CopyFull(_dataModel.DiscsFullTime, _dataModel.DiscsShortTime, _dataModel.Discs, "Season: ", '-');
             }
             else
             {
-                var discEpisodes = _DataModel.DiscEpisodes.Select(de => de.EpisodeRunningTimes);
+                var discEpisodes = _dataModel.DiscEpisodes.Select(de => de.EpisodeRunningTimes);
 
-                var discs = _DataModel.DiscEpisodes.Select(de => de.DiscRunningTime);
+                var discs = _dataModel.DiscEpisodes.Select(de => de.DiscRunningTime);
 
-                CopyFullDetails(_DataModel.DiscsFullTime, _DataModel.DiscsShortTime, discEpisodes, discs, "Season: ", "Disc:   ");
+                this.CopyFullDetails(_dataModel.DiscsFullTime, _dataModel.DiscsShortTime, discEpisodes, discs, "Season: ", "Disc:   ");
             }
         }
 
@@ -69,27 +63,25 @@
 
         #region Seasons
 
-        public void CopySeasons()
-            => _ClipboardServices.SetText(_DataModel.SeasonsShortTime);
+        public void CopySeasons() => _clipboardServices.SetText(_dataModel.SeasonsShortTime);
 
-        public void CopyAllSeasons()
-            => _ClipboardServices.SetText(_DataModel.SeasonsFullTime + string.Empty.PadRight(Padding) + _DataModel.SeasonsShortTime);
+        public void CopyAllSeasons() => _clipboardServices.SetText(_dataModel.SeasonsFullTime + string.Empty.PadRight(Padding) + _dataModel.SeasonsShortTime);
 
         public void CopyFullSeasons()
         {
-            if (_UIServices.ShowMessageBox("Details per season (Yes = per season, No = per disc/per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
+            if (_uiIServices.ShowMessageBox("Details per season (Yes = per season, No = per disc/per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
             {
-                CopyFull(_DataModel.SeasonsFullTime, _DataModel.SeasonsShortTime, _DataModel.Seasons, "Series: ", '=');
+                this.CopyFull(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, _dataModel.Seasons, "Series: ", '=');
             }
-            else if (_UIServices.ShowMessageBox("Details per season (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
+            else if (_uiIServices.ShowMessageBox("Details per season (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
             {
-                var seasonDiscs = _DataModel.SeasonDiscs.Select(sd => sd.DiscRunningTimes.Select(drt => drt.DiscRunningTime));
+                var seasonDiscs = _dataModel.SeasonDiscs.Select(sd => sd.DiscRunningTimes.Select(drt => drt.DiscRunningTime));
 
-                CopyFullDetails(_DataModel.SeasonsFullTime, _DataModel.SeasonsShortTime, seasonDiscs, _DataModel.Seasons, "Series: ", "Season: ");
+                this.CopyFullDetails(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, seasonDiscs, _dataModel.Seasons, "Series: ", "Season: ");
             }
             else
             {
-                CopyExtendedDetails(_DataModel.SeasonsFullTime, _DataModel.SeasonsShortTime, _DataModel.SeasonDiscs);
+                this.CopyExtendedDetails(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, _dataModel.SeasonDiscs);
             }
         }
 
@@ -99,26 +91,26 @@
 
         private void CopyFull(string fullTime, string shortTime, IEnumerable<string> entries, string summaryPrefix, char lineSymbol)
         {
+            var outputBuilder = new StringBuilder();
+
             var discsFullTimeLength = fullTime?.Length ?? 0;
 
             var discsShortTimeLength = shortTime?.Length ?? 0;
 
-            var sb = new StringBuilder();
-
-            entries.ForEach(entry => PrintEntry(entry, sb, summaryPrefix.Length, discsShortTimeLength));
+            entries.ForEach(entry => PrintEntry(entry, outputBuilder, summaryPrefix.Length, discsShortTimeLength));
 
             var length = discsFullTimeLength + Padding + discsShortTimeLength + summaryPrefix.Length;
 
-            DrawLine(sb, length, lineSymbol);
+            DrawLine(outputBuilder, length, lineSymbol);
 
-            sb.Append(summaryPrefix);
-            sb.Append(fullTime);
-            sb.Append(string.Empty.PadRight(Padding));
-            sb.AppendLine(shortTime);
+            outputBuilder.Append(summaryPrefix);
+            outputBuilder.Append(fullTime);
+            outputBuilder.Append(string.Empty.PadRight(Padding));
+            outputBuilder.AppendLine(shortTime);
 
-            DrawLine(sb, length, lineSymbol);
+            DrawLine(outputBuilder, length, lineSymbol);
 
-            _ClipboardServices.SetText(sb.ToString().TrimEnd());
+            _clipboardServices.SetText(outputBuilder.ToString().TrimEnd());
         }
 
         private void CopyFullDetails(string fullTime, string shortTime, IEnumerable<IEnumerable<string>> subEntries, IEnumerable<string> mainEntries, string superPrefix, string mainPrefix)
@@ -138,7 +130,7 @@
 
             DrawLine(outputBuilder, length, '=');
 
-            _ClipboardServices.SetText(outputBuilder.ToString().TrimEnd());
+            _clipboardServices.SetText(outputBuilder.ToString().TrimEnd());
         }
 
         private static int GetLineLength(string fullTime, string shortTime)
@@ -216,7 +208,7 @@
 
             DrawLine(outputBuilder, length, '=');
 
-            _ClipboardServices.SetText(outputBuilder.ToString().TrimEnd());
+            _clipboardServices.SetText(outputBuilder.ToString().TrimEnd());
         }
 
         private static void PrintEntry(string entry, StringBuilder outputBuilder, int prefixLength, int maxMinuteLength)

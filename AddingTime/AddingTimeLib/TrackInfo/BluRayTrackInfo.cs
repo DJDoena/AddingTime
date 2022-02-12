@@ -7,14 +7,16 @@
     {
         #region Readonlies
 
-        private readonly TSStreamClip _Clip;
+        private readonly TSStreamClip _clip;
 
         #endregion
 
         #region Constructor
 
         public BluRayTrackInfo(TSStreamClip clip)
-            => _Clip = clip;
+        {
+            _clip = clip;
+        }
 
         #endregion
 
@@ -26,13 +28,13 @@
         {
             get
             {
-                Int64 ticks = (Int64)(_Clip.Length * Math.Pow(10, 7));
+                var ticks = (long)(_clip.Length * Math.Pow(10, 7));
 
-                TimeSpan time = new TimeSpan(ticks);
+                var time = new TimeSpan(ticks);
 
                 time = new TimeSpan(time.Hours, time.Minutes, time.Seconds);
 
-                return (time);
+                return time;
             }
         }
 

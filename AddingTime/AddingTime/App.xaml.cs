@@ -5,7 +5,6 @@
 
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
-            => (new WindowFactory()).OpenMainWindow();
+        protected override void OnStartup(StartupEventArgs e) => (new WindowFactory()).OpenMainWindow();
     }
 }

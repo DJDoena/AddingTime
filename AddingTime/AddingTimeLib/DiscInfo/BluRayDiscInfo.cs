@@ -6,21 +6,21 @@
     using AbstractionLayer.IOServices;
     using BDInfoLib;
     using BDInfoLib.BDROM;
-    using ToolBox.Extensions;
 
     internal sealed class BluRayDiscInfo : DiscInfoBase
     {
         #region Properties
 
-        private BDROM _BluRay;
+        private BDROM _bluRay;
 
         #endregion
 
         #region Constructor
 
-        public BluRayDiscInfo(IIOServices ioServices)
-            : base(ioServices)
-            => _BluRay = null;
+        public BluRayDiscInfo(IIOServices ioServices) : base(ioServices)
+        {
+            _bluRay = null;
+        }
 
         #endregion
 
@@ -28,13 +28,12 @@
 
         #region Properties
 
-        public override Boolean IsValid
-            => _BluRay != null;
+        public override bool IsValid => _bluRay != null;
 
         public override IEnumerable<ISubsetInfo> Subsets
         {
-            get => _BluRay != null
-                ? _BluRay.PlaylistFiles.Values.Where(playlist => playlist.StreamClips.Count > 0).Select(playlist => new BluRaySubsetInfo(playlist)).ToList()
+            get => _bluRay != null
+                ? _bluRay.PlaylistFiles.Values.Where(playlist => playlist.StreamClips.Count > 0).Select(playlist => new BluRaySubsetInfo(playlist)).ToList()
                 : Enumerable.Empty<ISubsetInfo>();
         }
 
@@ -44,26 +43,26 @@
 
         #region Methods
 
-        public override void Init(String path)
+        public override void Init(string path)
         {
             base.Init(path);
 
             BDInfoSettings.FilterShortPlaylists = false;
 
-            ScanAsync(path);
+            this.ScanAsync(path);
         }
 
-        protected override void Scan(Object parameter)
+        protected override void Scan(object parameter)
         {
             try
             {
-                String path = (String)parameter;
+                var path = (string)parameter;
 
-                BDROM bluRay = new BDROM(path);
+                var bluRay = new BDROM(path);
 
                 bluRay.Scan();
 
-                _BluRay = bluRay;
+                _bluRay = bluRay;
             }
             catch (OutOfMemoryException)
             {

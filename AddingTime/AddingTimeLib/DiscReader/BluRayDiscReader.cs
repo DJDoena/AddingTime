@@ -5,25 +5,27 @@
 
     public sealed class BluRayDiscReader : IDiscReader
     {
-        private readonly IIOServices _IOServices;
+        private readonly IIOServices _ioServices;
 
         public BluRayDiscReader(IIOServices ioServices)
-            => _IOServices = ioServices ?? throw new ArgumentNullException(nameof(ioServices));
+        {
+            _ioServices = ioServices ?? throw new ArgumentNullException(nameof(ioServices));
+        }
 
         #region Methods
 
         public IDiscInfo GetDiscInfo(IDriveInfo drive)
         {
-            String path = _IOServices.Path.Combine(drive.RootFolder, "BDMV");
+            var path = _ioServices.Path.Combine(drive.RootFolder, "BDMV");
 
-            DiscInfoBase discInfo = new BluRayDiscInfo(_IOServices);
+            var discInfo = new BluRayDiscInfo(_ioServices);
 
-            if (_IOServices.File.Exists(_IOServices.Path.Combine(path, "INDEX.BDMV")))
+            if (_ioServices.File.Exists(_ioServices.Path.Combine(path, "INDEX.BDMV")))
             {
                 discInfo.Init(path);
             }
 
-            return (discInfo);
+            return discInfo;
         }
 
         #endregion

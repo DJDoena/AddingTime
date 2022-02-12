@@ -7,9 +7,9 @@
     {
         #region Properties
 
-        String Name { get; }
+        string Name { get; }
 
-        Boolean IsValid { get; }
+        bool IsValid { get; }
 
         IEnumerable<ITrackInfo> Tracks { get; }
 

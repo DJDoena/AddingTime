@@ -7,14 +7,16 @@
     {
         #region Readonlies
 
-        private readonly ProgramGroupChain _Chain;
+        private readonly ProgramGroupChain _chain;
 
         #endregion
 
         #region Constructor
 
         public DvdTrackInfo(ProgramGroupChain chain)
-            => _Chain = chain;
+        {
+            _chain = chain;
+        }
 
         #endregion
 
@@ -22,8 +24,7 @@
 
         #region Properties
 
-        public override TimeSpan RunningTime
-            => new TimeSpan(0, 0, (Int32)(_Chain.PlaybackTime));
+        public override TimeSpan RunningTime => new TimeSpan(0, 0, (int)(_chain.PlaybackTime));
 
         #endregion
 
