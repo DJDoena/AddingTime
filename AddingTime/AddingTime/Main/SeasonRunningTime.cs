@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    internal sealed class SeasonRunningTime
+    internal sealed class SeasonRunningTime : RunningTimeBase
     {
-        public int RunningTime => this.DiscRunningTimes.Sum(rt => rt.RunningTime);
+        public override int RunningTime => this.DiscRunningTimes.Sum(rt => rt.RunningTime);
 
         public IEnumerable<DiscRunningTime> DiscRunningTimes { get; }
 

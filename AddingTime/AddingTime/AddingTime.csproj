@@ -72,7 +72,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Main\EpisodeRunningTime.cs" />
     <Compile Include="Main\DiscRunningTime.cs" />
+    <Compile Include="Main\RunningTimeBase.cs" />
     <Compile Include="Main\SeasonRunningTime.cs" />
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -7,7 +7,7 @@
     {
         #region Episodes
 
-        IEnumerable<int> EpisodeRunningTimes { get; }
+        IEnumerable<EpisodeRunningTime> Episodes { get; }
 
         event EventHandler EpisodesChanged;
 
@@ -33,8 +33,6 @@
 
         #region Discs
 
-        IEnumerable<int> DiscRunningTimes { get; }
-
         IEnumerable<DiscRunningTime> Discs { get; }
 
         event EventHandler DiscsChanged;
@@ -51,7 +49,7 @@
 
         event EventHandler DiscsShortTimeChanged;
 
-        void AddDisc(IEnumerable<int> episodeInputs);
+        void AddDisc(IEnumerable<EpisodeRunningTime> episodeInputs);
 
         void RemoveDisc(int index);
 
@@ -60,8 +58,6 @@
         #endregion
 
         #region Seasons
-
-        IEnumerable<int> SeasonRunningTimes { get; }
 
         IEnumerable<SeasonRunningTime> Seasons { get; }
 

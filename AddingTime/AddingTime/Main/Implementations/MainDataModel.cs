@@ -11,7 +11,7 @@
     {
         private readonly IUIServices _uiServices;
 
-        private readonly List<int> _episodes;
+        private readonly List<EpisodeRunningTime> _episodes;
 
         private readonly List<DiscRunningTime> _discs;
 
@@ -21,7 +21,7 @@
         {
             _uiServices = uiServices ?? throw new ArgumentNullException(nameof(uiServices));
 
-            _episodes = new List<int>(10);
+            _episodes = new List<EpisodeRunningTime>(10);
 
             _discs = new List<DiscRunningTime>(6);
 
@@ -32,8 +32,7 @@
 
         #region Episodes
 
-        public IEnumerable<int> EpisodeRunningTimes => _episodes;
-
+        public IEnumerable<EpisodeRunningTime> Episodes => _episodes;
         public event EventHandler EpisodesChanged;
 
         public string EpisodesFullTime { get; private set; }
@@ -54,7 +53,7 @@
             {
                 var seconds = MainHelper.CalcSeconds(text);
 
-                _episodes.Add(seconds);
+                _episodes.Add(new EpisodeRunningTime(seconds));
 
                 this.OnEpisodesChanged();
 
@@ -87,8 +86,6 @@
 
         #region Discs
 
-        public IEnumerable<int> DiscRunningTimes => _discs.Select(d => d.RunningTime);
-
         public IEnumerable<DiscRunningTime> Discs => _discs;
 
         public event EventHandler DiscsChanged;
@@ -105,7 +102,7 @@
 
         public event EventHandler DiscsShortTimeChanged;
 
-        public void AddDisc(IEnumerable<int> episodeInputs)
+        public void AddDisc(IEnumerable<EpisodeRunningTime> episodeInputs)
         {
             _discs.Add(new DiscRunningTime(episodeInputs));
 
@@ -134,8 +131,6 @@
         #endregion
 
         #region Seasons
-
-        public IEnumerable<int> SeasonRunningTimes => _seasons.Select(s => s.RunningTime);
 
         public IEnumerable<SeasonRunningTime> Seasons => _seasons;
 
@@ -263,7 +258,7 @@
 
         private void OnDiscsChanged()
         {
-            Calc(this.DiscRunningTimes, this.SetDiscsFullTime, this.SetDiscsMiddleTime, this.SetDiscsShortTime);
+            Calc(this.Discs, this.SetDiscsFullTime, this.SetDiscsMiddleTime, this.SetDiscsShortTime);
 
             DiscsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -295,7 +290,7 @@
 
         private void OnSeasonsChanged()
         {
-            Calc(this.SeasonRunningTimes, this.SetSeasonsFullTime, this.SetSeasonsMiddleTime, this.SetSeasonsShortTime);
+            Calc(this.Seasons, this.SetSeasonsFullTime, this.SetSeasonsMiddleTime, this.SetSeasonsShortTime);
 
             SeasonsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -323,7 +318,7 @@
 
         #endregion
 
-        private static void Calc(IEnumerable<int> entries, Action<string> setFullTime, Action<string> setMiddleTime, Action<string> setshortTime)
+        private static void Calc(IEnumerable<RunningTimeBase> entries, Action<string> setFullTime, Action<string> setMiddleTime, Action<string> setshortTime)
         {
             if (!entries.Any())
             {
@@ -336,7 +331,7 @@
                 return;
             }
 
-            var seconds = entries.Sum();
+            var seconds = entries.Sum(e => e.RunningTime);
 
             var text = MainHelper.FormatTime(seconds);
 

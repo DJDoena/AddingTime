@@ -3,15 +3,15 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    internal sealed class DiscRunningTime
+    internal sealed class DiscRunningTime : RunningTimeBase
     {
-        public int RunningTime => this.EpisodeRunningTimes.Sum(rt => rt);
+        public override int RunningTime => this.EpisodeRunningTimes.Sum(rt => rt.RunningTime);
 
-        public IEnumerable<int> EpisodeRunningTimes { get; }
+        public IEnumerable<EpisodeRunningTime> EpisodeRunningTimes { get; }
 
-        public DiscRunningTime(IEnumerable<int> episodeRunningTimes)
+        public DiscRunningTime(IEnumerable<EpisodeRunningTime> episodeRunningTimes)
         {
-            this.EpisodeRunningTimes = new List<int>(episodeRunningTimes);
+            this.EpisodeRunningTimes = new List<EpisodeRunningTime>(episodeRunningTimes);
         }
     }
 }

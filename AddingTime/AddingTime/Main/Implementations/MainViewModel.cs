@@ -66,7 +66,7 @@
             }
         }
 
-        public ObservableCollection<string> Episodes => new ObservableCollection<string>(_dataModel.EpisodeRunningTimes.Select(e => MainHelper.FormatTime(e)));
+        public ObservableCollection<string> Episodes => new ObservableCollection<string>(_dataModel.Episodes.Select(e => e.RunningTimeText));
 
         public int SelectedEpisode
         {
@@ -103,7 +103,7 @@
 
         #region Discs
 
-        public ObservableCollection<string> Discs => new ObservableCollection<string>(_dataModel.DiscRunningTimes.Select(d => MainHelper.FormatTime(d)));
+        public ObservableCollection<string> Discs => new ObservableCollection<string>(_dataModel.Discs.Select(d => d.RunningTimeText));
 
         public int SelectedDisc
         {
@@ -138,7 +138,7 @@
 
         #region Seasons
 
-        public ObservableCollection<string> Seasons => new ObservableCollection<string>(_dataModel.SeasonRunningTimes.Select(s => MainHelper.FormatTime(s)));
+        public ObservableCollection<string> Seasons => new ObservableCollection<string>(_dataModel.Seasons.Select(s => s.RunningTimeText));
 
         public int SelectedSeason
         {
@@ -306,7 +306,7 @@
 
         private void MoveEpisodes()
         {
-            _dataModel.AddDisc(_dataModel.EpisodeRunningTimes);
+            _dataModel.AddDisc(_dataModel.Episodes);
 
             this.ClearEpisodes();
         }
