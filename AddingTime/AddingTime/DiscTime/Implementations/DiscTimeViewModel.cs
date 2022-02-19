@@ -151,7 +151,7 @@
 
         private void SetDramaLength() => this.MinimumLength = 35;
 
-        private void SetMovieLength() => this.MinimumLength = 60;
+        private void SetMovieLength() => this.MinimumLength = 70;
 
         private void CheckAllNodes() => _dataModel.CheckAllNodes();
 

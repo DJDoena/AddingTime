@@ -61,9 +61,8 @@
                       Margin="5,5,5,5" VerticalAlignment="Center" />
 
             <Button Grid.Column="5" Grid.Row="0" 
-                    Command="{Binding SetDramaLengthCommand}" Content="Drama"
+                    Command="{Binding SetMovieLengthCommand}" Content="Movie"
                     Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-
 
             <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
                        Text="Minimum Track Length in Minutes:"
@@ -78,9 +77,8 @@
                     Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 
             <Button Grid.Column="5" Grid.Row="1" 
-                    Command="{Binding SetMovieLengthCommand}" Content="Movie"
+                    Command="{Binding SetDramaLengthCommand}" Content="Drama"
                     Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-
 
             <TreeView Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="5" Grid.RowSpan="7"
                       ItemsSource="{Binding DiscTree}" ItemTemplateSelector="{Binding Source={StaticResource RunningTimeTreeViewItemSelector}}"
