@@ -35,23 +35,20 @@ Name: "full"; Description: "Full installation"
 
 [Files]
 Source: "djdsoft.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DVDProfilerHelper.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DVDProfilerHelper.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.DVDProfilerHelper.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "AddingTime.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "AddingTime.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "AddingTimeLib.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "AddingTimeLib.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "BDInfoLib.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "BDInfoLib.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DvdNavigatorCrm.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DvdNavigatorCrm.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.AddingTime.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.AddingTime.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.BDInfo.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.BDInfo.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.DvdNavigator.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.DvdNavigator.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Xceed.Wpf.Toolkit.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "AbstractionLayer.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "AbstractionLayer.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ToolBox.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ToolBox.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.AbstractionLayer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DoenaSoft.ToolBox.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "de\DVDProfilerHelper.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
+Source: "de\DoenaSoft.DVDProfilerHelper.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
 
 Source: "Readme\readme.html"; DestDir: "{app}\Readme"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files

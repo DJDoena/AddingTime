@@ -1,9 +1,0 @@
-[submodule "DVDProfilerHelper"]
-	path = DVDProfilerHelper
-	url = https://github.com/DJDoena/DVDProfilerHelper.git
-[submodule "AbstractionLayer"]
-	path = AbstractionLayer
-	url = https://github.com/DJDoena/AbstractionLayer.git
-[submodule "ToolBox"]
-	path = ToolBox
-	url = https://github.com/DJDoena/ToolBox.git
