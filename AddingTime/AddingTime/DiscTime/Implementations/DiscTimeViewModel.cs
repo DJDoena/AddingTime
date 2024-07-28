@@ -9,7 +9,7 @@
     using System.Windows.Input;
     using AbstractionLayer.IOServices;
     using AbstractionLayer.UIServices;
-    using ToolBox.Commands;
+    using DoenaSoft.AbstractionLayer.Commands;
     using ToolBox.Extensions;
 
     internal sealed class DiscTimeViewModel : IDiscTimeViewModel

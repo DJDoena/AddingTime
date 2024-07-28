@@ -16,7 +16,7 @@
 
         public IDiscInfo GetDiscInfo(IDriveInfo drive)
         {
-            var path = _ioServices.Path.Combine(drive.RootFolder, "BDMV");
+            var path = _ioServices.Path.Combine(drive.RootFolderName, "BDMV");
 
             var discInfo = new BluRayDiscInfo(_ioServices);
 

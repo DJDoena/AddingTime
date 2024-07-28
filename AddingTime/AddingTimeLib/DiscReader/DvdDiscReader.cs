@@ -16,7 +16,7 @@
 
         public IDiscInfo GetDiscInfo(IDriveInfo drive)
         {
-            var path = _ioServices.Path.Combine(drive.RootFolder, "VIDEO_TS");
+            var path = _ioServices.Path.Combine(drive.RootFolderName, "VIDEO_TS");
 
             var discInfo = new DvdDiscInfo(_ioServices);
 

@@ -6,8 +6,8 @@
     using System.Linq;
     using System.Windows.Input;
     using AbstractionLayer.UIServices;
+    using DoenaSoft.AbstractionLayer.Commands;
     using DVDProfilerHelper;
-    using ToolBox.Commands;
     using ToolBox.Extensions;
 
     internal sealed class MainViewModel : IMainViewModel

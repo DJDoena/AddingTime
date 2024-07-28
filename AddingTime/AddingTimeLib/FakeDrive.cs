@@ -14,11 +14,20 @@ namespace DoenaSoft.DVDProfiler.AddingTime
 
         public string VolumeLabel => "[Fake]";
 
-        public string RootFolder => @"F:\";
+        public string RootFolderName => @"F:\";
 
-        public string DriveLetter => this.RootFolder.Substring(0, 2);
+        public string DriveLetter => this.RootFolderName.Substring(0, 2);
 
         public ulong AvailableFreeSpace => 0;
+
+        public IIOServices IOServices
+            => throw new System.NotImplementedException();
+
+        public ulong TotalSpace
+            => throw new System.NotImplementedException();
+
+        public IFolderInfo RootFolder
+            => throw new System.NotImplementedException();
 
         #endregion
     }

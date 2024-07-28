@@ -5,9 +5,7 @@
     using System.Linq;
     using System.Windows.Forms;
     using AbstractionLayer.IOServices;
-    using AbstractionLayer.IOServices.Implementations;
     using AbstractionLayer.UIServices;
-    using AbstractionLayer.UIServices.Implementations;
     using DiscTime.Implementations;
     using DVDProfilerHelper;
     using Main.Implementations;

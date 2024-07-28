@@ -1,114 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2FF1451A-D1C9-45B8-9F61-694D02C13A22}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DoenaSoft.DVDProfiler.AddingTime</RootNamespace>
-    <AssemblyName>DoenaSoft.AddingTime</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>AddingTimeLib.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FAKE|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\FAKE\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;FAKE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\AddingTime.AssemblyInfo.cs">
-      <Link>Properties\AddingTime.AssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="DiscInfoFactory.cs" />
-    <Compile Include="DiscInfo\FakeDiscInfo.cs" />
-    <Compile Include="FakeDrive.cs" />
-    <Compile Include="DiscReader\FakeDiscReader.cs" />
-    <Compile Include="SubSetInfo\FakeSubsetInfo.cs" />
-    <Compile Include="SubSetInfo\SubsetInfoBase.cs" />
-    <Compile Include="SubsetStructurer.cs" />
-    <Compile Include="TrackInfo\BluRayTrackInfo.cs" />
-    <Compile Include="SubSetInfo\BluRaySubsetInfo.cs" />
-    <Compile Include="DiscInfo\BluRayDiscInfo.cs" />
-    <Compile Include="DiscReader\BluRayDiscReader.cs" />
-    <Compile Include="DiscInfo\DiscInfoBase.cs" />
-    <Compile Include="TrackInfo\FakeTrackInfo.cs" />
-    <Compile Include="TrackInfo\TrackInfoBase.cs" />
-    <Compile Include="TrackInfo\DvdTrackInfo.cs" />
-    <Compile Include="SubSetInfo\DvdSubsetInfo.cs" />
-    <Compile Include="DiscInfo\DvdDiscInfo.cs" />
-    <Compile Include="DiscReader\DvdDiscReader.cs" />
-    <Compile Include="DiscReader\IDiscReader.cs" />
-    <Compile Include="TrackInfo\ITrackInfo.cs" />
-    <Compile Include="SubSetInfo\ISubsetInfo.cs" />
-    <Compile Include="DiscInfo\IDiscInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BDInfo\BDInfoLib.csproj">
-      <Project>{cf10debe-9a1b-4cd6-b566-e6013c1e6cb9}</Project>
-      <Name>BDInfoLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DvdNavigatorCrm\DvdNavigatorCrm.csproj">
-      <Project>{17cec523-aa01-4410-8bfa-4cab1c97dd69}</Project>
-      <Name>DvdNavigatorCrm</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="AddingTimeLib.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DoenaSoft.AbstractionLayer">
-      <Version>2.0.4</Version>
-    </PackageReference>
-    <PackageReference Include="DoenaSoft.ToolBox">
-      <Version>1.0.7</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<Platforms>x86</Platforms>
+		<Configurations>Debug;Release;FAKE</Configurations>
+		<OutputType>Library</OutputType>
+		<RootNamespace>DoenaSoft.DVDProfiler.AddingTime</RootNamespace>
+		<AssemblyName>DoenaSoft.AddingTime</AssemblyName>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>AddingTimeLib.snk</AssemblyOriginatorKeyFile>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Include="..\AddingTime.AssemblyInfo.cs" Link="AddingTime.AssemblyInfo.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="2.0.9" />
+	  <PackageReference Include="DoenaSoft.ToolBox" Version="2.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\BDInfo\BDInfoLib.csproj" />
+	  <ProjectReference Include="..\DvdNavigatorCrm\DvdNavigatorCrm.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -1,184 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{46863891-CA1D-4073-B9D5-0591B2EEA7AD}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DoenaSoft.DVDProfiler.AddingTime</RootNamespace>
-    <AssemblyName>AddingTime</AssemblyName>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <ApplicationIcon>djdsoft.ico</ApplicationIcon>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\AddingTime\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>DoenaSoft.DVDProfiler.AddingTime.App</StartupObject>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FAKE|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\FAKE\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;FAKE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\AddingTime.AssemblyInfo.cs">
-      <Link>Properties\AddingTime.AssemblyInfo.cs</Link>
-    </Compile>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Main\EpisodeRunningTime.cs" />
-    <Compile Include="Main\DiscRunningTime.cs" />
-    <Compile Include="Main\RunningTimeBase.cs" />
-    <Compile Include="Main\SeasonRunningTime.cs" />
-    <Compile Include="Properties\Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <Page Include="DiscTime\Implementations\DiscTimeWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Main\Implementations\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DiscTime\IDriveViewModel.cs" />
-    <Compile Include="DiscTime\Implementations\DiscTimeDataModel.cs" />
-    <Compile Include="DiscTime\Implementations\DiscTimeViewModel.cs" />
-    <Compile Include="DiscTime\Implementations\DiscTimeWindow.xaml.cs">
-      <DependentUpon>DiscTimeWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DiscTime\Implementations\DriveViewModel.cs" />
-    <Compile Include="DiscTime\Implementations\RunningTimeTreeViewItemSelector.cs" />
-    <Compile Include="DiscTime\Implementations\TreeNode.cs" />
-    <Compile Include="DiscTime\CloseEventArgs.cs" />
-    <Compile Include="DiscTime\IDiscTimeDataModel.cs" />
-    <Compile Include="DiscTime\IDiscTimeViewModel.cs" />
-    <Compile Include="DiscTime\Implementations\DiscTimeForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DiscTime\Implementations\DiscTimeForm.Designer.cs">
-      <DependentUpon>DiscTimeForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DiscTime\ITreeNode.cs" />
-    <Compile Include="Implementations\FormFactory.cs" />
-    <Compile Include="Implementations\WindowFactory.cs" />
-    <Compile Include="IWindowFactory.cs" />
-    <Compile Include="Main\Implementations\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Main\IMainOutputModel.cs" />
-    <Compile Include="Main\MainHelper.cs" />
-    <Compile Include="Main\Implementations\MainOutputModel.cs" />
-    <Compile Include="Main\Implementations\MainDataModel.cs" />
-    <Compile Include="Main\IMainDataModel.cs" />
-    <Compile Include="Main\IMainViewModel.cs" />
-    <Compile Include="Main\Implementations\MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Main\Implementations\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Main\Implementations\MainViewModel.cs" />
-    <Compile Include="Program.cs" />
-    <EmbeddedResource Include="DiscTime\Implementations\DiscTimeForm.resx">
-      <DependentUpon>DiscTimeForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Main\Implementations\MainForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="djdsoft.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Content Include="Readme\readme.html">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AddingTimeLib\AddingTimeLib.csproj">
-      <Project>{2ff1451a-d1c9-45b8-9f61-694d02c13a22}</Project>
-      <Name>AddingTimeLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DoenaSoft.AbstractionLayer">
-      <Version>2.0.4</Version>
-    </PackageReference>
-    <PackageReference Include="DoenaSoft.DVDProfilerHelper">
-      <Version>2.2.9</Version>
-    </PackageReference>
-    <PackageReference Include="DoenaSoft.ToolBox">
-      <Version>1.0.7</Version>
-    </PackageReference>
-    <PackageReference Include="Extended.Wpf.Toolkit">
-      <Version>4.4.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>copy /y ..\..\..\djdsoft.ico .
-"%25ProgramFiles(x86)%25\Inno Setup 6\iscc.exe"  ..\..\..\..\AddingTimeSetup\Setup.iss</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net472</TargetFrameworks>
+		<Platforms>x86</Platforms>
+		<Configurations>Debug;Release;FAKE</Configurations>
+		<OutputType>WinExe</OutputType>
+		<UseWindowsForms>true</UseWindowsForms>
+		<UseWPF>true</UseWPF>
+		<RootNamespace>DoenaSoft.DVDProfiler.AddingTime</RootNamespace>
+		<AssemblyName>AddingTime</AssemblyName>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<StartupObject>DoenaSoft.DVDProfiler.AddingTime.App</StartupObject>
+		<ApplicationIcon>djdsoft.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Include="..\AddingTime.AssemblyInfo.cs" Link="AddingTime.AssemblyInfo.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.WinForms" Version="1.1.9" />
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="2.0.1" />
+	  <PackageReference Include="DoenaSoft.DVDProfiler.Helper" Version="3.0.9" />
+	  <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\AddingTimeLib\AddingTimeLib.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="djdsoft.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="djdsoft.ico">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Readme\readme.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="&quot;%25ProgramFiles(x86)%25\Inno Setup 6\iscc.exe&quot; ..\AddingTimeSetup\Setup.iss" />
+	</Target>
+
 </Project>
