@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AssemblyName>DiscScanner</AssemblyName>
+		<RootNamespace>DoenaSoft.DVDProfiler.AddingTime.DiscScanner</RootNamespace>
+		<OutputType>Exe</OutputType>
 		<TargetFramework>net472</TargetFramework>
 		<Platforms>x86</Platforms>
 		<Configurations>Debug;Release;FAKE</Configurations>
-		<OutputType>Exe</OutputType>
-		<RootNamespace>DoenaSoft.DVDProfiler.AddingTime.DiscScanner</RootNamespace>
-		<AssemblyName>DiscScanner</AssemblyName>
 		<DebugType>portable</DebugType>
 	</PropertyGroup>
 

@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AssemblyName>DoenaSoft.BDInfo</AssemblyName>
+		<RootNamespace>BDInfoLib</RootNamespace>
+		<OutputType>Library</OutputType>
 		<TargetFrameworks>net472</TargetFrameworks>
 		<Platforms>x86</Platforms>
-		<OutputType>Library</OutputType>
-		<RootNamespace>BDInfoLib</RootNamespace>
-		<AssemblyName>DoenaSoft.BDInfo</AssemblyName>
+		<DebugType>portable</DebugType>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>BDInfoLib.snk</AssemblyOriginatorKeyFile>
+		<Title>BDInfo</Title>
+		<Description>Blu-ray Video and Audio Specifications Collection Library</Description>
+		<Company>Cinema Squid</Company>
 		<Copyright>Copyright © Cinema Squid 2011</Copyright>
 		<Version>0.9.0.1</Version>
 		<FileVersion>0.9.0.1</FileVersion>
-		<DebugType>portable</DebugType>
-		<Title>BDInfo</Title>
-		<Company>Cinema Squid</Company>
-		<Description>Blu-ray Video and Audio Specifications Collection Library</Description>
 	</PropertyGroup>
 
 	<ItemGroup>

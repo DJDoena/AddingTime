@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AssemblyName>AddingTime</AssemblyName>
+		<RootNamespace>DoenaSoft.DVDProfiler.AddingTime</RootNamespace>
+		<OutputType>WinExe</OutputType>
 		<TargetFrameworks>net472</TargetFrameworks>
 		<Platforms>x86</Platforms>
 		<Configurations>Debug;Release;FAKE</Configurations>
-		<OutputType>WinExe</OutputType>
+		<ApplicationIcon>djdsoft.ico</ApplicationIcon>
 		<UseWindowsForms>true</UseWindowsForms>
 		<UseWPF>true</UseWPF>
-		<RootNamespace>DoenaSoft.DVDProfiler.AddingTime</RootNamespace>
-		<AssemblyName>AddingTime</AssemblyName>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<StartupObject>DoenaSoft.DVDProfiler.AddingTime.App</StartupObject>
-		<ApplicationIcon>djdsoft.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>

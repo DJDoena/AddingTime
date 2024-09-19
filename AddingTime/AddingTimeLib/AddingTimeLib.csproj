@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AssemblyName>DoenaSoft.AddingTime</AssemblyName>
+		<RootNamespace>DoenaSoft.DVDProfiler.AddingTime</RootNamespace>
+		<OutputType>Library</OutputType>
 		<TargetFramework>net472</TargetFramework>
 		<Platforms>x86</Platforms>
 		<Configurations>Debug;Release;FAKE</Configurations>
-		<OutputType>Library</OutputType>
-		<RootNamespace>DoenaSoft.DVDProfiler.AddingTime</RootNamespace>
-		<AssemblyName>DoenaSoft.AddingTime</AssemblyName>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>AddingTimeLib.snk</AssemblyOriginatorKeyFile>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
 
 	<ItemGroup>

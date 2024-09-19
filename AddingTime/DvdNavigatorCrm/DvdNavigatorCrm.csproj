@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<AssemblyName>DoenaSoft.DvdNavigator</AssemblyName>
+		<RootNamespace>DvdNavigatorCrm</RootNamespace>
+		<OutputType>Library</OutputType>
 		<TargetFrameworks>net472;net6.0-windows;net8.0-windows</TargetFrameworks>
 		<Platforms>x86</Platforms>
-		<OutputType>Library</OutputType>
 		<UseWindowsForms>true</UseWindowsForms>
-		<RootNamespace>DvdNavigatorCrm</RootNamespace>
-		<AssemblyName>DoenaSoft.DvdNavigator</AssemblyName>
+		<DebugType>portable</DebugType>
 		<SignAssembly>True</SignAssembly>
 		<AssemblyOriginatorKeyFile>DvdNavigatorCrm.snk</AssemblyOriginatorKeyFile>
+		<Title>DvdNavigatorCrm</Title>
+		<Company>Chris Meadowcroft</Company>
 		<Copyright>Copyright Chris Meadowcroft</Copyright>
 		<Version>0.9.0.1</Version>
 		<FileVersion>0.9.0.1</FileVersion>
-		<DebugType>portable</DebugType>
-		<Title>DvdNavigatorCrm</Title>
-		<Company>Chris Meadowcroft</Company>
 	</PropertyGroup>
 
 </Project>
