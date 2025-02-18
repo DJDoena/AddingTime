@@ -13,17 +13,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\AddingTime.AssemblyInfo.cs" Link="AddingTime.AssemblyInfo.cs" />
+	  <Compile Include="..\AddingTime.AssemblyInfo.cs" Link="Properties\AddingTime.AssemblyInfo.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="2.0.9" />
-	  <PackageReference Include="DoenaSoft.ToolBox" Version="2.0.2" />
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.IO" Version="3.0.1" />
+	  <PackageReference Include="DoenaSoft.ToolBox" Version="3.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\BDInfo\BDInfoLib.csproj" />
 	  <ProjectReference Include="..\DvdNavigatorCrm\DvdNavigatorCrm.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Properties\" />
 	</ItemGroup>
 
 </Project>

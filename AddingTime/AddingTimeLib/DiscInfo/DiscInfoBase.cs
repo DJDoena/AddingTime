@@ -140,7 +140,7 @@
         #endregion
 
         private IDriveInfo GetDriveInfo(string path)
-            => _ioServices.GetDriveInfo(_ioServices.GetFolderInfo(path).Root.Name);
+            => _ioServices.GetDrive(_ioServices.GetFolder(path).Root.Name);
 
         #endregion
     }

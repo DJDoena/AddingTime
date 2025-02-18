@@ -22,7 +22,7 @@
 
 #else
 
-            IEnumerable<IDriveInfo> drives = _IOServices.GetDriveInfos(System.IO.DriveType.CDRom);
+            IEnumerable<IDriveInfo> drives = _IOServices.GetDrives(System.IO.DriveType.CDRom);
 
 #endif
 

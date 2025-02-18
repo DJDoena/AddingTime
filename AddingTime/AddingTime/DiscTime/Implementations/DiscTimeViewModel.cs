@@ -161,6 +161,7 @@
 
         private void Close(Result result) => Closing?.Invoke(this, new CloseEventArgs(result));
 
-        private ObservableCollection<IDriveViewModel> GetDrives(IIOServices ioServices) => new ObservableCollection<IDriveViewModel>(ioServices.GetDriveInfos(System.IO.DriveType.CDRom).Select(drive => new DriveViewModel(drive)));
+        private ObservableCollection<IDriveViewModel> GetDrives(IIOServices ioServices)
+            => new ObservableCollection<IDriveViewModel>(ioServices.GetDrives(System.IO.DriveType.CDRom).Select(drive => new DriveViewModel(drive)));
     }
 }

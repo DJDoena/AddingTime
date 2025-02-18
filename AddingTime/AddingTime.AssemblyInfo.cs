@@ -5,9 +5,9 @@
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Doena Soft.")]
 [assembly: AssemblyProduct("AddingTime")]
-[assembly: AssemblyCopyright("Copyright © Doena Soft. 2008 - 2024")]
+[assembly: AssemblyCopyright("Copyright © Doena Soft. 2008 - 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("4.0.0.9")]
-[assembly: AssemblyFileVersion("4.0.0.9")]
+[assembly: AssemblyVersion("4.0.1")]
+[assembly: AssemblyFileVersion("4.0.1")]
