@@ -45,12 +45,12 @@
                 }
                 else
                 {
-                    _uiServices.ShowMessageBox("Disc could not be read!", "Error", Buttons.OK, Icon.Warning);
+                    _uiServices.ShowMessageBox("Disc could not be read!", "Error", MessageButtons.OK, MessageIcon.Warning);
                 }
             }
             else
             {
-                _uiServices.ShowMessageBox("The drive is not ready!", "Error", Buttons.OK, Icon.Warning);
+                _uiServices.ShowMessageBox("The drive is not ready!", "Error", MessageButtons.OK, MessageIcon.Warning);
             }
         }
 

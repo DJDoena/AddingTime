@@ -429,7 +429,7 @@
             }
             catch (Exception ex)
             {
-                _uiServices.ShowMessageBox(ex.Message, "Error", Buttons.OK, Icon.Error);
+                _uiServices.ShowMessageBox(ex.Message, "Error", MessageButtons.OK, MessageIcon.Error);
             }
         }
 

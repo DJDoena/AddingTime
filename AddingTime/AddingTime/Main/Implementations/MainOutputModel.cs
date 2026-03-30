@@ -44,7 +44,7 @@
 
         public void CopyFullDiscs()
         {
-            if (_uiIServices.ShowMessageBox("Details per disc (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
+            if (_uiIServices.ShowMessageBox("Details per disc (Yes = per disc, No = per episode)?", "Details", MessageButtons.YesNo, MessageIcon.Question) == MessageResult.Yes)
             {
                 this.CopyFull(_dataModel.DiscsFullTime, _dataModel.DiscsShortTime, _dataModel.Discs, "Season: ", '-');
             }
@@ -69,11 +69,11 @@
 
         public void CopyFullSeasons()
         {
-            if (_uiIServices.ShowMessageBox("Details per season (Yes = per season, No = per disc/per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
+            if (_uiIServices.ShowMessageBox("Details per season (Yes = per season, No = per disc/per episode)?", "Details", MessageButtons.YesNo, MessageIcon.Question) == MessageResult.Yes)
             {
                 this.CopyFull(_dataModel.SeasonsFullTime, _dataModel.SeasonsShortTime, _dataModel.Seasons, "Series: ", '=');
             }
-            else if (_uiIServices.ShowMessageBox("Details per season (Yes = per disc, No = per episode)?", "Details", Buttons.YesNo, Icon.Question) == Result.Yes)
+            else if (_uiIServices.ShowMessageBox("Details per season (Yes = per disc, No = per episode)?", "Details", MessageButtons.YesNo, MessageIcon.Question) == MessageResult.Yes)
             {
                 var seasonRunningTimes = _dataModel.Seasons.Select(s => s.DiscRunningTimes);
 

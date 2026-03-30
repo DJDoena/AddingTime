@@ -19,10 +19,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="DoenaSoft.AbstractionLayer.WinForms" Version="1.1.9" />
-	  <PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="2.0.1" />
-	  <PackageReference Include="DoenaSoft.DVDProfiler.Helper" Version="3.0.12" />
-	  <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25103.5738" />
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.IO.Default" Version="1.0.2" />
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.WinForms" Version="2.0.4" />
+	  <PackageReference Include="DoenaSoft.AbstractionLayer.WPF" Version="3.0.4" />
+	  <PackageReference Include="DoenaSoft.DVDProfiler.Helper" Version="4.0.1" />
+	  <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

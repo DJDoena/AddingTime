@@ -188,7 +188,7 @@
 
             if ((split.Length != 2) && (split.Length != 3))
             {
-                _uiServices.ShowMessageBox("Invalid Time Format!", "Error", Buttons.OK, Icon.Warning);
+                _uiServices.ShowMessageBox("Invalid Time Format!", "Error", MessageButtons.OK, MessageIcon.Warning);
 
                 return false;
             }
@@ -199,14 +199,14 @@
             {
                 if (!int.TryParse(part, out int temp))
                 {
-                    _uiServices.ShowMessageBox($"Not a Number: {part}", "Error", Buttons.OK, Icon.Warning);
+                    _uiServices.ShowMessageBox($"Not a Number: {part}", "Error", MessageButtons.OK, MessageIcon.Warning);
 
                     return false;
                 }
 
                 if (temp < 0 || temp > 59)
                 {
-                    _uiServices.ShowMessageBox($"Invalid Time Part: {part}", "Error", Buttons.OK, Icon.Warning);
+                    _uiServices.ShowMessageBox($"Invalid Time Part: {part}", "Error", MessageButtons.OK, MessageIcon.Warning);
 
                     return false;
                 }

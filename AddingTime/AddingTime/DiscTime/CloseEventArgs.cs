@@ -5,8 +5,8 @@
 
     internal sealed class CloseEventArgs : EventArgs
     {
-        public Result Result { get; }
+        public MessageResult Result { get; }
 
-        public CloseEventArgs(Result result) => this.Result = result;
+        public CloseEventArgs(MessageResult result) => this.Result = result;
     }
 }

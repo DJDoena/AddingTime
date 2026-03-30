@@ -112,7 +112,7 @@
             if (!anydvd.HasItems() && _showAnyDVDWarning)
             {
                 _uiServices.ShowMessageBox("For Blu-ray discs, make sure RedFox AnyDVD or DVDFab Passkey is enabled or else you will not get useful results."
-                    + Environment.NewLine + "For DVDs it will not hurt either.", "AnyDVD / Passkey", Buttons.OK, Icon.Information);
+                    + Environment.NewLine + "For DVDs it will not hurt either.", "AnyDVD / Passkey", MessageButtons.OK, MessageIcon.Information);
 
                 _showAnyDVDWarning = false;
             }
@@ -155,11 +155,11 @@
 
         private void CheckAllNodes() => _dataModel.CheckAllNodes();
 
-        private void Accept() => this.Close(Result.OK);
+        private void Accept() => this.Close(MessageResult.OK);
 
-        private void Cancel() => this.Close(Result.Cancel);
+        private void Cancel() => this.Close(MessageResult.Cancel);
 
-        private void Close(Result result) => Closing?.Invoke(this, new CloseEventArgs(result));
+        private void Close(MessageResult result) => Closing?.Invoke(this, new CloseEventArgs(result));
 
         private ObservableCollection<IDriveViewModel> GetDrives(IIOServices ioServices)
             => new ObservableCollection<IDriveViewModel>(ioServices.GetDrives(System.IO.DriveType.CDRom).Select(drive => new DriveViewModel(drive)));
