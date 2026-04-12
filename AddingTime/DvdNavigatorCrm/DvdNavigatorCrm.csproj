@@ -4,7 +4,7 @@
 		<AssemblyName>DoenaSoft.DvdNavigator</AssemblyName>
 		<RootNamespace>DvdNavigatorCrm</RootNamespace>
 		<OutputType>Library</OutputType>
-		<TargetFrameworks>net472;net6.0-windows;net8.0-windows</TargetFrameworks>
+		<TargetFrameworks>net472;net8.0-windows;net10.0-windows</TargetFrameworks>
 		<Platforms>x86</Platforms>
 		<UseWindowsForms>true</UseWindowsForms>
 		<DebugType>portable</DebugType>
